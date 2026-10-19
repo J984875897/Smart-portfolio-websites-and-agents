@@ -1,0 +1,25 @@
+..........F.....                                                         [100%]
+=================================== FAILURES ===================================
+_________________________ test_validation_and_maturity _________________________
+
+    def test_validation_and_maturity():
+        from portfolio.data.daily_monthly import aggregate_daily_prices
+        from portfolio.data.trading_calendar import trading_schedule
+        with pytest.raises(ValueError): trading_schedule('XNYS', '2025-1-01', '2025-02-01')
+        with pytest.raises(ValueError): trading_schedule('OTHER', '2025-01-01', '2025-02-01')
+        with pytest.raises(ValueError): aggregate_daily_prices(sample(), symbol='SPY', start_month='2025-01', end_month='2025-01', as_of='2025-02-01')
+>       with pytest.raises(ValueError): aggregate_daily_prices(sample(), symbol='SPY', start_month='2025-01', end_month='2025-01', as_of='February 2, 2025 00:00 UTC')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_monthly.py:66: Failed
+=============================== warnings summary ===============================
+tests/test_daily_monthly.py::test_calendar_official_dates_and_dst
+tests/test_daily_monthly.py::test_calendar_official_dates_and_dst
+  /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/exchange_calendars/exchange_calendar_xhkg.py:363: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+    easter_monday = EasterMonday.dates(years[0], years[-1] + 1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_daily_monthly.py::test_validation_and_maturity - Failed: DI...
+1 failed, 15 passed, 2 warnings in 0.59s

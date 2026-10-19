@@ -1,0 +1,115 @@
+{
+  "checks": [
+    {
+      "tab": "收益估计",
+      "width": 1440,
+      "bodyWidth": 1440,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "相关性",
+      "width": 1440,
+      "bodyWidth": 1440,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "风险与分散化",
+      "width": 1440,
+      "bodyWidth": 1440,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "方法与导出",
+      "width": 1440,
+      "bodyWidth": 1440,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "收益估计",
+      "width": 720,
+      "bodyWidth": 720,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "相关性",
+      "width": 720,
+      "bodyWidth": 720,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "风险与分散化",
+      "width": 720,
+      "bodyWidth": 720,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "方法与导出",
+      "width": 720,
+      "bodyWidth": 720,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "收益估计",
+      "width": 390,
+      "bodyWidth": 390,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "相关性",
+      "width": 390,
+      "bodyWidth": 390,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "风险与分散化",
+      "width": 390,
+      "bodyWidth": 390,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    },
+    {
+      "tab": "方法与导出",
+      "width": 390,
+      "bodyWidth": 390,
+      "exception": false,
+      "tabs": 4,
+      "charts": 2
+    }
+  ],
+  "exported": {
+    "correlation.csv": {
+      "bytes": 203333
+    },
+    "risk_evidence.json": {
+      "bytes": 18823
+    },
+    "risk_comparison.csv": {
+      "bytes": 390
+    }
+  },
+  "weight_change_clears": true,
+  "actual_upload_valid": true,
+  "custom_dr_one": true,
+  "invalid_upload_clears": true
+}

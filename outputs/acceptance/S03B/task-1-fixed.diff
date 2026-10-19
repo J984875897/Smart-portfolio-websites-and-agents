@@ -1,0 +1,392 @@
+--- before/src/portfolio/data/alignment.py
++++ after/src/portfolio/data/alignment.py
+@@ -0,0 +1,125 @@
++"""Fixed monthly windows based on importer-declared availability evidence."""
++from dataclasses import dataclass
++from datetime import datetime
++import hashlib
++import re
++import pandas as pd
++from .returns import strict_date, finite_number
++from .quality import CURRENCIES
++
++TIMING_FIELDS = ['asset_id','date','market_timezone','price_start_at','price_end_at','fx_start_at','fx_end_at','available_at','source_name']
++
++@dataclass
++class AlignmentResult:
++    report: pd.DataFrame
++    coverage: pd.DataFrame
++    matrix: pd.DataFrame
++    window_start: str
++    window_end: str
++    decision_at: str
++
++
++def _instant(value):
++    if not isinstance(value,str) or 'T' not in value:
++        return None
++    try:
++        parsed=datetime.fromisoformat(value)
++        if parsed.utcoffset() is None: return None
++        return pd.Timestamp(parsed).tz_convert('UTC')
++    except (ValueError, TypeError, OverflowError): return None
++
++
++def align_monthly(reconciliation, timing, *, asset_ids, end_month, decision_at, months=60):
++    """Derive coverage without changing inputs; every failed period prevents inclusion."""
++    if not isinstance(end_month,str) or not re.fullmatch(r'\d{4}-\d{2}',end_month): raise ValueError('end_month must be YYYY-MM')
++    try: end=pd.Period(end_month,freq='M')
++    except ValueError: raise ValueError('invalid end_month') from None
++    decision=_instant(decision_at)
++    if decision is None: raise ValueError('decision_at must be aware ISO datetime')
++    if isinstance(months,bool) or not isinstance(months,int) or months<=0: raise ValueError('months must be a positive integer')
++    if end>pd.Period(decision.tz_convert('Asia/Hong_Kong').strftime('%Y-%m'),freq='M'): raise ValueError('future end_month')
++    if not reconciliation.columns.is_unique or not timing.columns.is_unique: raise ValueError('columns must be unique')
++    aids=sorted(set(asset_ids))
++    if any(not isinstance(x,str) or not x.strip() for x in aids): raise ValueError('invalid asset_ids')
++    periods=pd.period_range(end=end,periods=months,freq='M')
++    dates=[p.end_time.date().isoformat() for p in periods]
++    def groups(frame):
++        output={}
++        for row in frame.to_dict('records'):
++            date=strict_date(row.get('date'))
++            if date: output.setdefault((row.get('asset_id'),date.strftime('%Y-%m')),[]).append(row)
++        return output
++    rec=groups(reconciliation)
++    # pandas retains attrs after slicing/reordering; positional provenance would
++    # silently point at the wrong physical source row. Bind the complete frame.
++    if 'raw_bytes' in timing.attrs:
++        from .importer import read_file
++        try:
++            loaded=read_file(timing.attrs['raw_bytes'],filename=timing.attrs.get('source_file'),sheet_name=timing.attrs.get('source_sheet') or 0)
++        except (ValueError, TypeError, IndexError, KeyError) as exc:
++            raise ValueError('file-backed timing must be an unchanged read_file frame') from exc
++        if not timing.equals(loaded) or not timing.index.equals(loaded.index):
++            raise ValueError('file-backed timing must be an unchanged read_file frame; reload the original file')
++        # Only reparsed metadata is authoritative, including physical CSV lines.
++        timing=loaded
++    evidence=timing.copy(deep=True)
++    digest=hashlib.sha256(timing.attrs.get('raw_bytes',timing.to_csv(index=False).encode())).hexdigest()
++    rows=evidence.to_dict('records'); physical=timing.attrs.get('source_rows',list(range(2,len(rows)+2)))
++    for i,row in enumerate(rows):
++        for field,value in [('source_file',timing.attrs.get('source_file','dataframe.csv')),('source_sheet',timing.attrs.get('source_sheet','')),('source_row',physical[i]),('source_hash',digest)]:
++            if 'raw_bytes' in timing.attrs or field not in row: row[field]=value
++    times=groups(pd.DataFrame(rows))
++    coverage=[]; reports=[]; columns={}
++    for aid in aids:
++        asset_rows=[]
++        for p,date in zip(periods,dates):
++            rr=rec.get((aid,str(p)),[]); tt=times.get((aid,str(p)),[])
++            reasons=[]
++            row={'asset_id':aid,'date':date,'status':'blocked','reason':'','hkd_return':float('nan'),'reconciliation_evidence':rr,'timing_evidence':tt}
++            if len(rr)!=1: reasons.append('missing_return' if not rr else 'ambiguous_return')
++            else:
++                original=rr[0]; row.update({'reconciliation_'+k:v for k,v in original.items()})
++                if original.get('status')!='valid': reasons.append(str(original.get('reason') or 'invalid_reconciliation'))
++                number=finite_number(original.get('hkd_return'))
++                if number is None or number < -1: reasons.append('invalid_hkd_return')
++                else: row['hkd_return']=number
++                start=(p-1).end_time.date().isoformat()
++                if original.get('date')!=date or original.get('end_date')!=date or original.get('start_date')!=start: reasons.append('invalid_period_labels')
++                if original.get('currency') not in CURRENCIES: reasons.append('invalid_currency')
++            if len(tt)!=1: reasons.append('missing_timing' if not tt else 'ambiguous_timing')
++            else:
++                t=tt[0]; row.update({'timing_'+k:v for k,v in t.items()})
++                zone=t.get('market_timezone')
++                if zone not in {'Asia/Hong_Kong','America/New_York'}: reasons.append('invalid_market_timezone')
++                else:
++                    if decision.tz_convert(zone).date() < p.end_time.date(): reasons.append('period_not_complete_at_decision')
++                if len(rr)==1 and rr[0].get('currency')!='HKD' and decision.date() < p.end_time.date():
++                    reasons.append('period_not_complete_at_decision')
++                if t.get('date')!=date: reasons.append('invalid_timing_date')
++                if not isinstance(t.get('source_name'),str) or not t['source_name'].strip(): reasons.append('missing_source_name')
++                observations={}; fields=['price_start_at','price_end_at']
++                if len(rr)==1 and rr[0].get('currency')!='HKD': fields+=['fx_start_at','fx_end_at']
++                for field in fields:
++                    instant=_instant(t.get(field)); observations[field]=instant
++                    if instant is None: reasons.append('invalid_'+field); continue
++                    target=p-1 if 'start' in field else p
++                    local=instant.tz_convert('UTC' if field.startswith('fx') else (zone if zone in {'Asia/Hong_Kong','America/New_York'} else 'UTC'))
++                    if local.strftime('%Y-%m')!=str(target): reasons.append('wrong_month_'+field)
++                    elif (target.end_time.date()-local.date()).days>7: reasons.append('stale_'+field)
++                for kind in ['price','fx']:
++                    first=observations.get(kind+'_start_at'); last=observations.get(kind+'_end_at')
++                    if first is not None and last is not None and first>last: reasons.append('inverted_'+kind+'_times')
++                available=_instant(t.get('available_at'))
++                if available is None: reasons.append('invalid_available_at')
++                else:
++                    if any(x is not None and available<x for x in observations.values()): reasons.append('availability_before_observation')
++                    if available>decision: reasons.append('not_available_at_decision')
++            row['reason']=';'.join(dict.fromkeys(reasons)) or 'ok'; row['status']='blocked' if reasons else 'valid'
++            coverage.append(row); asset_rows.append(row)
++        valid=sum(r['status']=='valid' for r in asset_rows)
++        reason=';'.join(dict.fromkeys(code for r in asset_rows for code in r['reason'].split(';') if code!='ok')) or 'ok'
++        if asset_rows and asset_rows[0]['reason'].startswith('missing_return'): reason='window_start_history_insufficient;'+reason
++        reports.append(dict(asset_id=aid,status='eligible' if valid==months else 'excluded',valid_months=valid,missing_months=months-valid,reason=reason))
++        if valid==months: columns[aid]=[r['hkd_return'] for r in asset_rows]
++    matrix=pd.DataFrame(columns,index=pd.Index(dates,name='date'),dtype=float)
++    return AlignmentResult(pd.DataFrame(reports,columns=['asset_id','status','valid_months','missing_months','reason']),pd.DataFrame(coverage) if coverage else pd.DataFrame(columns=['asset_id','date','status','reason','hkd_return','reconciliation_evidence','timing_evidence']),matrix,dates[0],dates[-1],decision.isoformat())
+--- before/src/portfolio/data/alignment_samples.py
++++ after/src/portfolio/data/alignment_samples.py
+@@ -0,0 +1,32 @@
++"""Artificial research scenarios, never real investment product evidence."""
++import pandas as pd
++from .contracts import DataBundle
++from .fx import reconcile_hkd
++
++
++def sample_alignment_inputs():
++    assets=['HKD_COMPLETE','USD_COMPLETE','MISSING_MIDDLE','SHORT_HISTORY','MISSING_END_FX']
++    currencies={a:('USD' if a in {'USD_COMPLETE','MISSING_END_FX'} else 'HKD') for a in assets}
++    periods=pd.period_range('2020-01','2025-01',freq='M')
++    observations=[]; timing=[]
++    for aid in assets:
++        for p in periods:
++            if aid=='MISSING_MIDDLE' and str(p)=='2022-06': continue
++            if aid=='SHORT_HISTORY' and p<=pd.Period('2020-02',freq='M'): continue
++            date=p.end_time.date().isoformat(); start=(p-1).end_time.date().isoformat()
++            observations.append(dict(asset_id=aid,date=date,value=.01,value_kind='total_return',currency=currencies[aid],frequency='monthly',source_file='synthetic.csv',source_sheet='',source_row=len(observations)+2,source_hash='synthetic'))
++            us=currencies[aid]=='USD'; zone='America/New_York' if us else 'Asia/Hong_Kong'
++            def price(d): return pd.Timestamp(d+'T16:00:00').tz_localize(zone).isoformat()
++            finish=price(date)
++            timing.append(dict(asset_id=aid,date=date,market_timezone=zone,price_start_at=price(start),price_end_at=finish,fx_start_at=start+'T21:00:00+00:00' if us else '',fx_end_at=date+'T21:00:00+00:00' if us else '',available_at=max(pd.Timestamp(finish),pd.Timestamp(date+'T21:00:00+00:00')).isoformat() if us else finish,source_name='Synthetic declared final monthly valuations'))
++    # Distinct foreign currency preserves complete USD FX while withholding this asset's last quote.
++    currencies['MISSING_END_FX']='EUR'
++    for row in observations:
++        if row['asset_id']=='MISSING_END_FX': row['currency']='EUR'
++    fx=[]
++    for p in pd.period_range('2019-12','2025-01',freq='M'):
++        for currency in ['USD','EUR']:
++            if currency=='EUR' and str(p)=='2025-01': continue
++            fx.append(dict(date=p.end_time.date().isoformat(),currency=currency,hkd_per_unit=7.8 if currency=='USD' else 8.2,source_name='Synthetic FX'))
++    bundle=DataBundle(assets=pd.DataFrame([dict(asset_id=a,currency=currencies[a]) for a in assets]),observations=pd.DataFrame(observations))
++    return reconcile_hkd(bundle,pd.DataFrame(fx)).reconciliation,pd.DataFrame(timing),assets
+--- before/tests/test_alignment.py
++++ after/tests/test_alignment.py
+@@ -0,0 +1,193 @@
++import pandas as pd
++import pytest
++from portfolio.data.alignment import align_monthly
++from portfolio.data.alignment_samples import sample_alignment_inputs
++
++
++def run(decision='2025-02-01T06:00:00+08:00', **kwargs):
++    r,t,a=sample_alignment_inputs()
++    return align_monthly(r,t,asset_ids=a,end_month='2025-01',decision_at=decision,**kwargs)
++
++
++def test_fixed_window_and_availability():
++    early=run('2025-01-31T17:00:00+08:00'); late=run()
++    assert list(early.matrix)==['HKD_COMPLETE']
++    assert list(late.matrix)==['HKD_COMPLETE','USD_COMPLETE']
++    assert len(late.matrix)==60
++    assert late.window_start=='2020-02-29'
++    assert late.window_end=='2025-01-31'
++    assert late.report.set_index('asset_id').loc['SHORT_HISTORY','valid_months']==59
++
++
++def test_duplicate_missing_and_immutable():
++    r,t,a=sample_alignment_inputs(); before=r.copy(deep=True); tb=t.copy(deep=True)
++    t=pd.concat([t,t.iloc[[1]]],ignore_index=True)
++    result=align_monthly(r,t,asset_ids=a+['ABSENT'],end_month='2025-01',decision_at='2025-02-01T06:00:00+08:00')
++    assert 'HKD_COMPLETE' not in result.matrix
++    assert result.report.set_index('asset_id').loc['ABSENT','missing_months']==60
++    pd.testing.assert_frame_equal(r,before)
++    assert len(tb)+1==len(t)
++
++
++@pytest.mark.parametrize('args',[{'end_month':'2025-1'},{'decision_at':'2025-02-01'},{'months':True},{'months':0},{'end_month':'2025-03'}])
++def test_invalid_parameters(args):
++    r,t,a=sample_alignment_inputs(); params=dict(asset_ids=a,end_month='2025-01',decision_at='2025-02-01T06:00:00+08:00');params.update(args)
++    with pytest.raises(ValueError): align_monthly(r,t,**params)
++
++
++def single(r,t,decision='2025-02-01T06:00:00+08:00'):
++    return align_monthly(r,t,asset_ids=['HKD_COMPLETE'],end_month='2025-01',decision_at=decision,months=1)
++
++
++@pytest.mark.parametrize('field,value,reason',[
++    ('price_end_at','2025-01-31T16:00:00','invalid_price_end_at'),
++    ('price_end_at','2025-01-23T16:00:00+08:00','stale_price_end_at'),
++    ('price_end_at','2025-02-01T00:00:00+08:00','wrong_month_price_end_at'),
++    ('price_start_at','','invalid_price_start_at'),
++    ('available_at','2025-01-31T15:00:00+08:00','availability_before_observation'),
++    ('market_timezone','UTC','invalid_market_timezone'),
++    ('source_name','','missing_source_name'),
++])
++def test_bad_timing(field,value,reason):
++    r,t,_=sample_alignment_inputs(); t.loc[(t.asset_id=='HKD_COMPLETE')&(t.date=='2025-01-31'),field]=value
++    result=single(r,t)
++    assert result.matrix.shape==(1,0)
++    assert reason in result.coverage.iloc[0].reason
++
++
++def test_staleness_boundary_equality_and_provenance():
++    from portfolio.data.importer import read_file
++    import hashlib
++    r,t,_=sample_alignment_inputs(); t=t[(t.asset_id=='HKD_COMPLETE')&(t.date=='2025-01-31')].copy()
++    t['price_end_at']='2025-01-24T16:00:00+08:00'
++    t['available_at']='2025-01-31T16:00:00+08:00'
++    t['source_file']='forged';t['source_hash']='forged';t['source_row']=999;t['source_sheet']='forged'
++    payload=t.to_csv(index=False).encode(); uploaded=read_file(payload,filename='evidence.csv')
++    result=single(r,uploaded,'2025-01-31T16:00:00+08:00')
++    assert list(result.matrix)==['HKD_COMPLETE']
++    row=result.coverage.iloc[0]
++    assert row.timing_source_file=='evidence.csv'
++    assert row.timing_source_hash==hashlib.sha256(payload).hexdigest()
++    assert row.timing_source_row==2
++    assert row.timing_source_sheet==''
++
++
++@pytest.mark.parametrize('number',[float('nan'),float('inf'),-1.01,True])
++def test_invalid_return(number):
++    r,t,_=sample_alignment_inputs(); r['hkd_return']=r.hkd_return.astype(object); r.loc[(r.asset_id=='HKD_COMPLETE')&(r.date=='2025-01-31'),'hkd_return']=number
++    assert 'invalid_hkd_return' in single(r,t).coverage.iloc[0].reason
++
++
++def test_missing_duplicate_and_original_failure():
++    r,t,_=sample_alignment_inputs(); selected=(r.asset_id=='HKD_COMPLETE')&(r.date=='2025-01-31')
++    duplicate=pd.concat([r,r[selected]])
++    assert 'ambiguous_return' in single(duplicate,t).coverage.iloc[0].reason
++    assert 'missing_timing' in single(r,t.iloc[0:0]).coverage.iloc[0].reason
++    r.loc[selected,'status']='blocked';r.loc[selected,'reason']='upstream_original_reason'
++    assert 'upstream_original_reason' in single(r,t).coverage.iloc[0].reason
++
++
++def test_reorder_and_empty_matrix_and_input_immutability():
++    r,t,a=sample_alignment_inputs(); rb=r.copy(deep=True);tb=t.copy(deep=True)
++    params=dict(end_month='2025-01',decision_at='2025-02-01T06:00:00+08:00')
++    first=align_monthly(r,t,asset_ids=a,**params);second=align_monthly(r,t,asset_ids=list(reversed(a)),**params)
++    pd.testing.assert_frame_equal(first.matrix,second.matrix)
++    pd.testing.assert_frame_equal(r,rb);pd.testing.assert_frame_equal(t,tb)
++    empty=align_monthly(r,t,asset_ids=['ABSENT'],**params)
++    assert empty.matrix.shape==(60,0)
++
++
++def test_us_offset_and_fx_required():
++    r,t,a=sample_alignment_inputs()
++    # Explicit DST offset converts correctly without assuming a constant NY offset.
++    result=align_monthly(r,t,asset_ids=['USD_COMPLETE'],end_month='2024-07',decision_at='2024-08-01T06:00:00+08:00',months=1)
++    assert result.matrix.shape==(1,1)
++    mask=(t.asset_id=='USD_COMPLETE')&(t.date=='2024-07-31'); t.loc[mask,'fx_end_at']=''
++    result=align_monthly(r,t,asset_ids=['USD_COMPLETE'],end_month='2024-07',decision_at='2024-08-01T06:00:00+08:00',months=1)
++    assert 'invalid_fx_end_at' in result.coverage.iloc[0].reason
++
++
++def test_empty_requested_assets_has_stable_schemas():
++    r,t,_=sample_alignment_inputs()
++    result=align_monthly(r,t,asset_ids=[],end_month='2025-01',decision_at='2025-02-01T06:00:00+08:00')
++    assert result.matrix.shape==(60,0)
++    assert set(['asset_id','date','status','reason','hkd_return'])<=set(result.coverage.columns)
++
++
++def test_period_must_be_complete_at_decision():
++    r,t,_=sample_alignment_inputs()
++    mask=(t.asset_id=='HKD_COMPLETE')&(t.date=='2025-01-31')
++    t.loc[mask,'price_end_at']='2025-01-24T16:00:00+08:00'
++    t.loc[mask,'available_at']='2025-01-24T16:00:00+08:00'
++    result=single(r,t,'2025-01-24T16:00:00+08:00')
++    assert result.matrix.shape==(1,0)
++    assert 'period_not_complete_at_decision' in result.coverage.iloc[0].reason
++    assert single(r,t,'2025-01-31T16:00:00+08:00').matrix.shape==(1,1)
++
++
++def test_us_period_label_not_reached_in_market_timezone():
++    r,t,_=sample_alignment_inputs()
++    mask=(t.asset_id=='USD_COMPLETE')&(t.date=='2025-01-31')
++    t.loc[mask,'price_end_at']='2025-01-30T16:00:00-05:00'
++    t.loc[mask,'fx_end_at']='2025-01-30T21:00:00+00:00'
++    t.loc[mask,'available_at']='2025-01-30T21:00:00+00:00'
++    result=align_monthly(r,t,asset_ids=['USD_COMPLETE'],end_month='2025-01',decision_at='2025-01-31T09:00:00+08:00',months=1)
++    assert result.matrix.shape==(1,0)
++    assert 'period_not_complete_at_decision' in result.coverage.iloc[0].reason
++
++
++def test_foreign_period_label_not_reached_in_utc():
++    r,t,_=sample_alignment_inputs()
++    mask=(t.asset_id=='USD_COMPLETE')&(t.date=='2025-01-31')
++    t.loc[mask,'market_timezone']='Asia/Hong_Kong'
++    t.loc[mask,'price_end_at']='2025-01-30T16:00:00+08:00'
++    t.loc[mask,'fx_end_at']='2025-01-30T08:00:00+00:00'
++    t.loc[mask,'available_at']='2025-01-30T08:00:00+00:00'
++    # Start price declared NY remains in its correct month after HK conversion.
++    result=align_monthly(r,t,asset_ids=['USD_COMPLETE'],end_month='2025-01',decision_at='2025-01-31T01:00:00+08:00',months=1)
++    assert 'period_not_complete_at_decision' in result.coverage.iloc[0].reason
++    assert result.matrix.shape==(1,0)
++
++
++@pytest.mark.parametrize('transform',[lambda f:f.iloc[1:],lambda f:f.iloc[::-1].reset_index(drop=True),lambda f:f.set_axis([10,11])])
++def test_transformed_file_timing_is_rejected(transform):
++    from portfolio.data.importer import read_file
++    r,t,_=sample_alignment_inputs()
++    t=t[(t.asset_id=='HKD_COMPLETE')&t.date.isin(['2024-12-31','2025-01-31'])]
++    frame=read_file(t.to_csv(index=False).encode(),filename='timing.csv')
++    with pytest.raises(ValueError,match='unchanged read_file'):
++        single(r,transform(frame))
++
++
++def test_physical_provenance_reparsed_even_for_blocked_rows():
++    from portfolio.data.importer import read_file
++    r,t,_=sample_alignment_inputs()
++    t=t[(t.asset_id=='HKD_COMPLETE')&t.date.isin(['2024-12-31','2025-01-31'])].copy()
++    t.loc[t.date=='2025-01-31','price_end_at']=''
++    payload=t.to_csv(index=False).encode()
++    # Blank physical line before records changes provenance, not the row index.
++    header,body=payload.split(b'\n',1)
++    uploaded=read_file(header+b'\n\n'+body,filename='timing.csv')
++    uploaded.attrs['source_rows']=[999,999]
++    result=single(r,uploaded)
++    assert result.coverage.iloc[0].timing_source_row==4
++    assert 'invalid_price_end_at' in result.coverage.iloc[0].reason
++
++
++def test_xlsx_complete_frame_binds_sheet_and_rejects_transformation():
++    from io import BytesIO
++    from portfolio.data.importer import read_file
++    r,t,_=sample_alignment_inputs()
++    t=t[(t.asset_id=='HKD_COMPLETE')&t.date.isin(['2024-12-31','2025-01-31'])].copy()
++    stream=BytesIO()
++    with pd.ExcelWriter(stream,engine='openpyxl') as writer:
++        pd.DataFrame({'unused':['x']}).to_excel(writer,sheet_name='other',index=False)
++        t.to_excel(writer,sheet_name='timing',index=False)
++    uploaded=read_file(stream.getvalue(),filename='timing.xlsx',sheet_name='timing')
++    uploaded.attrs['source_rows']=[999,999]
++    result=single(r,uploaded)
++    assert result.matrix.shape==(1,1)
++    assert result.coverage.iloc[0].timing_source_sheet=='timing'
++    assert result.coverage.iloc[0].timing_source_row==3
++    with pytest.raises(ValueError,match='unchanged read_file'):
++        single(r,uploaded.iloc[1:].reset_index(drop=True))
+--- before/scripts/verify_alignment.py
++++ after/scripts/verify_alignment.py
+@@ -0,0 +1,30 @@
++"""Offline synthetic acceptance with expectations independent of alignment output."""
++import argparse
++import json
++from pathlib import Path
++from portfolio.data.alignment import align_monthly
++from portfolio.data.alignment_samples import sample_alignment_inputs
++
++
++def main():
++    parser=argparse.ArgumentParser();parser.add_argument('--output',default='outputs/acceptance/S03B/synthetic');args=parser.parse_args()
++    output=Path(args.output);output.mkdir(parents=True,exist_ok=True)
++    rec,timing,assets=sample_alignment_inputs()
++    rec.to_csv(output/'input_reconciliation.csv',index=False);timing.to_csv(output/'input_timing.csv',index=False)
++    summary={'synthetic_only':True,'timing':'Source-declared, not independently certified','scenarios':{}}
++    expected={'early':{'HKD_COMPLETE':60,'USD_COMPLETE':59,'MISSING_MIDDLE':59,'SHORT_HISTORY':59,'MISSING_END_FX':59},'late':{'HKD_COMPLETE':60,'USD_COMPLETE':60,'MISSING_MIDDLE':59,'SHORT_HISTORY':59,'MISSING_END_FX':59}}
++    for name,decision in [('early','2025-01-31T17:00:00+08:00'),('late','2025-02-01T06:00:00+08:00')]:
++        result=align_monthly(rec,timing,asset_ids=assets,end_month='2025-01',decision_at=decision)
++        assert result.report.set_index('asset_id').valid_months.to_dict()==expected[name]
++        eligible=['HKD_COMPLETE'] if name=='early' else ['HKD_COMPLETE','USD_COMPLETE']
++        assert list(result.matrix)==eligible
++        assert result.matrix.shape==(60,len(eligible))
++        assert result.matrix.index[0]=='2020-02-29' and result.matrix.index[-1]=='2025-01-31'
++        assert (abs(result.matrix-.01)<1e-12).all().all()
++        assert 'missing_fx_end' in result.report.set_index('asset_id').loc['MISSING_END_FX','reason']
++        result.report.to_csv(output/f'{name}_report.csv',index=False);result.coverage.to_csv(output/f'{name}_coverage.csv',index=False);result.matrix.to_csv(output/f'{name}_matrix.csv')
++        summary['scenarios'][name]={'decision_at':result.decision_at,'eligible':eligible,'valid_months':expected[name],'window_start':result.window_start,'window_end':result.window_end,'assertions':'passed'}
++    (output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
++    print('Synthetic alignment acceptance passed: early 1, late 2 eligible; fixed 60 months.')
++
++if __name__=='__main__': main()

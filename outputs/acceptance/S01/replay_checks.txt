@@ -1,0 +1,39 @@
+COMMAND: /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python scripts/probe_sources.py --replay /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S01/snapshots/20261012T143920Z-6f4d426f/snapshot_manifest.json --output /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S01
+EXIT: 0
+                     dataset      status                                  reason
+                        AAPL     success                         fields_verified
+                     0700.HK     success                         fields_verified
+                         SPY     success                         fields_verified
+                     2800.HK     partial        missing_invalid_prices_or_months
+                         AGG     success                         fields_verified
+                         GLD     success                         fields_verified
+                       HKD=X     partial        missing_invalid_prices_or_months
+Yahoo_USDHKD_monthly_preview     success complete_requested_monthly_spot_preview
+                 HKMA_USDHKD unavailable                request_or_format_failed
+                      US_FF3     success    monthly_percent_converted_to_decimal
+                      US_FF5     success    monthly_percent_converted_to_decimal
+                AP_EX_JP_FF3     success    monthly_percent_converted_to_decimal
+                AP_EX_JP_FF5     success    monthly_percent_converted_to_decimal
+S01 gate: PASS | verified snapshot files: 30
+
+
+COMMAND: /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python scripts/probe_sources.py --replay /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S01/snapshots/20261012T143920Z-6f4d426f/snapshot_manifest.json --output /private/tmp/cityu-s01-replay-r8xenro9
+EXIT: 0
+                     dataset      status                                  reason
+                        AAPL     success                         fields_verified
+                     0700.HK     success                         fields_verified
+                         SPY     success                         fields_verified
+                     2800.HK     partial        missing_invalid_prices_or_months
+                         AGG     success                         fields_verified
+                         GLD     success                         fields_verified
+                       HKD=X     partial        missing_invalid_prices_or_months
+Yahoo_USDHKD_monthly_preview     success complete_requested_monthly_spot_preview
+                 HKMA_USDHKD unavailable                request_or_format_failed
+                      US_FF3     success    monthly_percent_converted_to_decimal
+                      US_FF5     success    monthly_percent_converted_to_decimal
+                AP_EX_JP_FF3     success    monthly_percent_converted_to_decimal
+                AP_EX_JP_FF5     success    monthly_percent_converted_to_decimal
+S01 gate: PASS | verified snapshot files: 30
+
+
+PASS: 30 raw files verified; 17 derived files plus derived_manifest byte-identical across two destinations. No missing daily value was filled.

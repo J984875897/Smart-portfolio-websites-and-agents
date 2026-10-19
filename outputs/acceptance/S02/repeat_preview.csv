@@ -1,0 +1,3 @@
+asset_id,ticker,name,tool_type,asset_class,exchange,currency,share_class,frequency,date,value,source_file,source_sheet,source_row,source_hash,source_name,value_kind,status,is_duplicate,_original_tool_type,_original_asset_class
+p0,0000,Product 0,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,repeated_two.csv,,2,5d49706cb1f25237988e0b7a79c092e5ad9ae059c2b308e7e9115ff4f09ecf6e,SYNTHETIC,total_return,duplicate,True,ETF,equity
+p1,0001,Product 1,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,repeated_two.csv,,3,5d49706cb1f25237988e0b7a79c092e5ad9ae059c2b308e7e9115ff4f09ecf6e,SYNTHETIC,total_return,duplicate,True,ETF,equity

@@ -1,0 +1,1 @@
+All fixtures are synthetic, invented products and observations. ten_products.csv has ten unique products; repeated_two.csv repeats the first two; dirty_data.csv includes malformed dates/numerics, missing classification/value, extreme returns and conflicting observations. No external financial data.

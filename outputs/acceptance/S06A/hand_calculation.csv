@@ -1,0 +1,4 @@
+asset_id,asset_class,class_members,historical_mean_month,class_mean_month,estimated_mean_month,historical_mean_ann,estimated_mean_ann,sample_vol_ann,shrunk_vol_ann,is_constant,expected_estimated_mean_ann
+A,equity,2,0.02,0.03,0.025,0.24,0.30000000000000004,0.03464101615137754,0.0282842712474619,False,0.3
+B,equity,2,0.04,0.03,0.035,0.48,0.42000000000000004,0.03464101615137755,0.028284271247461905,False,0.42
+C,bond,1,0.01,0.01,0.01,0.12,0.12,0.034641016151377546,0.0282842712474619,False,0.12

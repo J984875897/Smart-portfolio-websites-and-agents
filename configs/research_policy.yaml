@@ -1,0 +1,106 @@
+# S00 政策草案：记录决策，不代表下列功能已实现。
+# 当前合成样例使用 demo.py 的固定输入，不读取本文件。
+schema_version: 1
+document_status: draft
+as_of_date: "2026-10-12"
+reference: PROJECT_PLAN.md
+
+confirmed_requirements:
+  assignment_option: 2
+  base_currency: HKD
+  priority_markets: [US, HK]
+  holding_count:
+    min: 20
+    max: 100
+    integer_only: true
+    max_fraction_of_eligible_candidates: 0.30
+    equality_allowed: true
+    denominator: filtered_deduplicated_data_eligible_candidates
+    insufficient_pool_message: "候选产品池过小"
+  stock_modes:
+    allow_individual_stocks: selectable
+    exclude_individual_stocks: selectable
+    equity_etfs_and_funds_remain_eligible: true
+  short_selling: selectable
+  product_type_filter: required
+  selection_metrics: required
+  correlation_and_diversification: required
+  interactive_utility: required
+  data_access:
+    optional_free_download_and_update: true
+    manual_import_with_product_type: true
+    paid_apis_enabled: false
+
+# 以下为原计划的研究建议；不属于老师要求，也不是已确认的主基金政策。
+development_baseline:
+  status: proposed
+  target_holding_count: 30
+  observation_frequency: monthly
+  return_basis: total_return
+  estimation_window_months: 60
+  rebalance_frequency: quarterly
+  default_allow_short: false
+  utility:
+    formula: "w' mu - A / 2 * w' Sigma w"
+    return_currency: HKD
+    annualization: arithmetic_mean_and_covariance
+    risk_aversion_range: [1, 10]
+    example_risk_aversion: [2, 5, 8]
+    interpretation: teaching_scenarios_not_validated_investor_profiles
+  long_only:
+    net_exposure: 1.0
+    minimum_weight: 0.005
+    maximum_weight: 0.10
+  long_short:
+    direction_selection: fixed_before_optimization
+    net_exposure: 1.0
+    maximum_gross_exposure: 1.4
+    minimum_absolute_weight: 0.005
+    maximum_long_weight: 0.10
+    maximum_absolute_short_weight: 0.05
+    missing_borrow_evidence: hypothetical_research_only
+  product_boundaries:
+    excluded_in_first_version: [leveraged_products, inverse_products, complex_derivatives]
+    exclude_stock_mode_also_excludes: [direct_adrs, individual_listed_reits, directly_held_preferred_stock]
+    fund_structure_requires_review: [mixed_funds, convertible_bond_funds, preferred_stock_funds]
+  expected_return_shrinkage:
+    individual_mean_weight: 0.50
+    asset_class_mean_weight: 0.50
+  covariance: shrinkage
+  correlation_clustering:
+    method: complete_linkage
+    distance: "1 - correlation"
+    correlation_threshold: 0.85
+    optional_maximum_cluster_gross_share: 0.25
+  study_periods:
+    status: proposed_subject_to_actual_data_coverage
+    initial_training: ["2015-01", "2019-12"]
+    validation: ["2020-01", "2022-12"]
+    final_test: ["2023-01", "2025-12"]
+
+# 真实主案例之前必须由小组落实；空值表示待定，不能自动当作无约束。
+main_case_decisions:
+  status: pending_group_decision
+  target_investor: null
+  investment_objective: null
+  holding_horizon: null
+  eligible_asset_classes: null
+  allow_individual_stocks: null
+  allow_short: null
+  category_limits: null
+  policy_benchmark: null
+  prerequisite_for: S14_real_main_case
+
+s00_demo:
+  data_type: synthetic
+  prices_hkd: [100, 110, 120]
+  initial_capital_hkd: 1000
+  fractional_units_allowed: true
+  strategy: buy_at_first_observation_and_hold
+  fees: 0
+  slippage: 0
+  observation_dates: unspecified
+  annualized_statistics: unavailable
+  formal_portfolio: false
+  expected_final_value_hkd: 1200
+  expected_cumulative_return: 0.20

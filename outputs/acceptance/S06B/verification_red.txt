@@ -1,0 +1,76 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_________________ test_acceptance_hand_values_and_strict_json __________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-227/test_acceptance_hand_values_an0')
+
+    def test_acceptance_hand_values_and_strict_json(tmp_path):
+        out=tmp_path/'acceptance';r=run('--output',out)
+>       assert r.returncode == 0,r.stdout+r.stderr
+E       AssertionError: /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...ktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n").returncode
+
+tests/test_diversification_verification.py:24: AssertionError
+___________ test_existing_output_alias_cannot_modify_source[symlink] ___________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-227/test_existing_output_alias_can0')
+kind = 'symlink'
+
+    @pytest.mark.parametrize('kind',['symlink','hardlink'])
+    def test_existing_output_alias_cannot_modify_source(tmp_path,kind):
+        real=Path(json.loads((ROOT/'outputs/acceptance/S02/import_summary.json').read_text())['real_bundle_path'])
+        source=tmp_path/'source';shutil.copytree(real,source)
+        out=tmp_path/'out';out.mkdir()
+        target=out/'correlation.csv';src=source/'factors.csv'
+        if kind=='symlink':target.symlink_to(src)
+        else:os.link(src,target)
+        before=hashlib.sha256(src.read_bytes()).hexdigest()
+        r=run('--real-bundle',source,'--output',out)
+>       assert r.returncode != 0 and 'output file alias' in r.stderr
+E       assert (2 != 0 and 'output file alias' in "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n")
+E        +  where 2 = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...ktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n").returncode
+E        +  and   "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...ktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n").stderr
+
+tests/test_diversification_verification.py:63: AssertionError
+__________ test_existing_output_alias_cannot_modify_source[hardlink] ___________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-227/test_existing_output_alias_can1')
+kind = 'hardlink'
+
+    @pytest.mark.parametrize('kind',['symlink','hardlink'])
+    def test_existing_output_alias_cannot_modify_source(tmp_path,kind):
+        real=Path(json.loads((ROOT/'outputs/acceptance/S02/import_summary.json').read_text())['real_bundle_path'])
+        source=tmp_path/'source';shutil.copytree(real,source)
+        out=tmp_path/'out';out.mkdir()
+        target=out/'correlation.csv';src=source/'factors.csv'
+        if kind=='symlink':target.symlink_to(src)
+        else:os.link(src,target)
+        before=hashlib.sha256(src.read_bytes()).hexdigest()
+        r=run('--real-bundle',source,'--output',out)
+>       assert r.returncode != 0 and 'output file alias' in r.stderr
+E       assert (2 != 0 and 'output file alias' in "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n")
+E        +  where 2 = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...ktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n").returncode
+E        +  and   "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...ktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n").stderr
+
+tests/test_diversification_verification.py:63: AssertionError
+_________ test_overlapping_directories_rejected_before_loading_source __________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-227/test_overlapping_directories_r0')
+
+    def test_overlapping_directories_rejected_before_loading_source(tmp_path):
+        source=tmp_path/'source';source.mkdir()
+        r=run('--real-bundle',source,'--output',source/'output')
+>       assert r.returncode != 0 and 'separate directories' in r.stderr
+E       assert (2 != 0 and 'separate directories' in "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n")
+E        +  where 2 = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...ktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n").returncode
+E        +  and   "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...ktop/CityU/5052_Investment/Assignment/Group/scripts/verify_diversification.py': [Errno 2] No such file or directory\n").stderr
+
+tests/test_diversification_verification.py:71: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_diversification_verification.py::test_acceptance_hand_values_and_strict_json
+FAILED tests/test_diversification_verification.py::test_existing_output_alias_cannot_modify_source[symlink]
+FAILED tests/test_diversification_verification.py::test_existing_output_alias_cannot_modify_source[hardlink]
+FAILED tests/test_diversification_verification.py::test_overlapping_directories_rejected_before_loading_source
+4 failed in 0.43s

@@ -1,0 +1,4 @@
+asset_id,market,canonical_tool_type,structure,review_status,source_name,source_reference,source_as_of,binding_status,source_file,source_sheet,source_row,source_hash,sources
+HKEX:2800.HK:HKD,,,,,,,,missing,,,,,[]
+NASDAQ:AAPL:USD,,,,,,,,missing,,,,,[]
+NYSE_ARCA:SPY:USD,,,,,,,,missing,,,,,[]

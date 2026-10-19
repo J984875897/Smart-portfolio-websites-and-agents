@@ -1,0 +1,62 @@
+{
+  "checks": [
+    {
+      "viewport": 1440,
+      "bodyWidth": 1440,
+      "errorVisible": false,
+      "icons": [
+        {
+          "text": "keyboard_double_arrow_left",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        }
+      ]
+    },
+    {
+      "viewport": 720,
+      "bodyWidth": 720,
+      "errorVisible": false,
+      "icons": [
+        {
+          "text": "keyboard_double_arrow_left",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_double_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        }
+      ]
+    }
+  ],
+  "runsBefore": [
+    "20261016T032413288256Z-59063f7bab694be2b37f76b2ec4f1b51",
+    "20261016T032452138649Z-fcda073218944f5fab7663e1add7e088",
+    "20261016T034930370828Z-4f4abeddb15b4b57b5b292285d7fda69",
+    "20261016T132413936814Z-c784827343704f318c02d12381d2abbb"
+  ],
+  "defaultHasNoResult": true,
+  "completeBody": "工作页面\n\n数据导入\n\n港币收益查验\n\n共同窗口查验\n\n港币利率查验\n\n下载与缓存\n\n因子与官方汇率\n\n日线月度查验\n\nDeploy\n日线月度查验\n\n按三步检查每个交易日，再预览月度原币收益。缺失保留为空；不会补价或保存到数据导入。\n\n1 选择来源\n\n数据来源\n\n人工案例\n\n已下载缓存\n\n人工案例\n\n人工合成案例：前月每日 100、首个目标月每日 110；每个后续月递增 10%。默认检查 2024 年 12 月与 2025 年 1 月，修改月份会生成对应交易日。\n\n2 产品与月份\n\n价格产品代码\n\n起始目标月份（YYYY-MM）\n\n结束目标月份（YYYY-MM，包含）\n\n我已核实复权价格包含分配与拆股调整\n\n确认口径后才输出收益；不会重复加入分红。USD 保持美元原币，未换算为港币。\n\n查验日线并计算月收益\n\n3 查验结果\n\n目标月数\n\n1\n\n可预览收益月数\n\n1\n\n原币：USD。这是当前版本价格预览，尚不具备历史可得资格。空白表示被阻止，不能当作零收益。\n\nkeyboard_arrow_right\n\n逐日明细与来源证据",
+  "nativeCsvDownloaded": true,
+  "nativeCsvPath": "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S04C1/browser_exports/run-1792204216058/returns.csv",
+  "confirmationWithdrawsResult": true,
+  "unconfirmedBody": "工作页面\n\n数据导入\n\n港币收益查验\n\n共同窗口查验\n\n港币利率查验\n\n下载与缓存\n\n因子与官方汇率\n\n日线月度查验\n\nDeploy\n日线月度查验\n\n按三步检查每个交易日，再预览月度原币收益。缺失保留为空；不会补价或保存到数据导入。\n\n1 选择来源\n\n数据来源\n\n人工案例\n\n已下载缓存\n\n人工案例\n\n人工合成案例：前月每日 100、首个目标月每日 110；每个后续月递增 10%。默认检查 2024 年 12 月与 2025 年 1 月，修改月份会生成对应交易日。\n\n2 产品与月份\n\n价格产品代码\n\n起始目标月份（YYYY-MM）\n\n结束目标月份（YYYY-MM，包含）\n\n我已核实复权价格包含分配与拆股调整\n\n确认口径后才输出收益；不会重复加入分红。USD 保持美元原币，未换算为港币。\n\n查验日线并计算月收益\n\n3 查验结果\n\n目标月数\n\n1\n\n可预览收益月数\n\n0\n\n原币：USD。这是当前版本价格预览，尚不具备历史可得资格。空白表示被阻止，不能当作零收益。\n\nkeyboard_arrow_right\n\n逐日明细与来源证据",
+  "unconfirmedMetrics": [
+    "目标月数\n\n1",
+    "可预览收益月数\n\n0"
+  ],
+  "unconfirmedCheckbox": false,
+  "runsAfter": [
+    "20261016T032413288256Z-59063f7bab694be2b37f76b2ec4f1b51",
+    "20261016T032452138649Z-fcda073218944f5fab7663e1add7e088",
+    "20261016T034930370828Z-4f4abeddb15b4b57b5b292285d7fda69",
+    "20261016T132413936814Z-c784827343704f318c02d12381d2abbb"
+  ],
+  "noNewDownloads": true
+}

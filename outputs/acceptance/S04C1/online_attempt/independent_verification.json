@@ -1,0 +1,32 @@
+{
+  "run_id": "20261016T132413936814Z-c784827343704f318c02d12381d2abbb",
+  "snapshot_integrity_verified": true,
+  "historical_eligible": false,
+  "scope": "January 2025 original-currency price preview",
+  "products": {
+    "SPY": {
+      "expected_start_date": "2024-12-31",
+      "expected_end_date": "2025-01-31",
+      "raw_start_price": null,
+      "raw_end_price": null,
+      "direct_return": null,
+      "computed_return": null,
+      "preview_valid": false,
+      "matches": true,
+      "reason": "source_unavailable"
+    },
+    "2800.HK": {
+      "expected_start_date": "2024-12-31",
+      "expected_end_date": "2025-01-28",
+      "raw_start_price": null,
+      "raw_end_price": null,
+      "direct_return": null,
+      "computed_return": null,
+      "preview_valid": false,
+      "matches": true,
+      "reason": "source_unavailable"
+    }
+  },
+  "all_comparisons_agree": true,
+  "all_price_previews_valid": false
+}

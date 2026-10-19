@@ -1,0 +1,53 @@
+FF............                                                           [100%]
+=================================== FAILURES ===================================
+_________________________ test_complete_and_isolation __________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-85/test_complete_and_isolation0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11661de00>
+
+    def test_complete_and_isolation(tmp_path, monkeypatch):
+        at = start(tmp_path, monkeypatch)
+        result = compute(at)
+        assert result.available
+        assert result.series.tolist() == pytest.approx([.0031,.0029,.0031])
+        assert len(at.session_state['bundle'].observations) == 0
+        assert len(downloads(at)) == 2
+        assert any('可用月份 3 / 3' in x.value for x in at.caption)
+>       summary = next(x.value for x in at.dataframe if '月度港币代理收益' in x.value.columns)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests/test_risk_free_view.py:35: StopIteration
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:58:12.670 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______________ test_failed_cases[\u7f3a\u4e2d\u95f4\u62a5\u4ef7] _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-85/test_failed_cases__u7f3a_u4e2d0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x120ae4c30>
+case = '缺中间报价'
+
+    @pytest.mark.parametrize('case', CASES[1:])
+    def test_failed_cases(tmp_path, monkeypatch, case):
+        at = start(tmp_path, monkeypatch)
+        compute(at)
+        at.selectbox(key='rf_case').set_value(case).run()
+        assert at.session_state['rf_result'] is None
+        assert not downloads(at)
+        result = compute(at)
+        assert not result.available
+        if case == '缺中间报价':
+>           summary = next(x.value for x in at.dataframe if '年化报价（%）' in x.value.columns)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           StopIteration
+
+tests/test_risk_free_view.py:50: StopIteration
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:58:12.892 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ============================
+FAILED tests/test_risk_free_view.py::test_complete_and_isolation - StopIteration
+FAILED tests/test_risk_free_view.py::test_failed_cases[\u7f3a\u4e2d\u95f4\u62a5\u4ef7]
+2 failed, 12 passed in 1.94s

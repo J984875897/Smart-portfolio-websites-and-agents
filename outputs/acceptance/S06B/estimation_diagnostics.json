@@ -1,0 +1,377 @@
+{
+  "hand": {
+    "two_asset_diagonal": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "specified",
+      "covariance": {
+        "rank": 2,
+        "min_eigenvalue": 0.04,
+        "max_eigenvalue": 0.09,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": 2.25,
+        "singular": false,
+        "matrix_repaired": false
+      },
+      "risk_status": "available",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": 0.18027756377319945,
+      "contribution_sum_error": -2.7755575615628914e-17,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    },
+    "two_asset_identical_direction": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "specified",
+      "covariance": {
+        "rank": 1,
+        "min_eigenvalue": 2.5193522481878552e-18,
+        "max_eigenvalue": 0.13,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "risk_status": "available",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": 0.25,
+      "contribution_sum_error": 0.0,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    },
+    "negative_contribution": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "specified",
+      "covariance": {
+        "rank": 2,
+        "min_eigenvalue": 0.025948751620466726,
+        "max_eigenvalue": 0.10405124837953328,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": 4.009874921977529,
+        "singular": false,
+        "matrix_repaired": false
+      },
+      "risk_status": "available",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": 0.14,
+      "contribution_sum_error": 0.0,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    },
+    "zero_volatility": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "specified",
+      "covariance": {
+        "rank": 0,
+        "min_eigenvalue": 0.0,
+        "max_eigenvalue": 0.0,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "risk_status": "unavailable_zero_portfolio_volatility",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": null,
+      "contribution_sum_error": null,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    },
+    "perfect_offset": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "specified",
+      "covariance": {
+        "rank": 1,
+        "min_eigenvalue": 0.0,
+        "max_eigenvalue": 2.0,
+        "psd_tolerance": 2e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "risk_status": "unavailable_zero_portfolio_volatility",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": null,
+      "contribution_sum_error": null,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    },
+    "twenty_identical": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "specified",
+      "covariance": {
+        "rank": 1,
+        "min_eigenvalue": -2.0096795609550967e-17,
+        "max_eigenvalue": 0.8,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 8,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "risk_status": "available",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": 0.20000000000000007,
+      "contribution_sum_error": 5.551115123125783e-17,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    }
+  },
+  "correlation": {
+    "method": "raw_training_Pearson",
+    "base_currency": "HKD",
+    "frequency": "monthly",
+    "train_start": "2024-01",
+    "train_end": "2024-03",
+    "n_observations": 3,
+    "n_assets": 5,
+    "constant_assets": [
+      "CONST"
+    ],
+    "available_pairs": 6,
+    "pair_count_basis": "distinct_unordered_pairs_excluding_diagonal",
+    "roundoff_clipped_entries": 0,
+    "missing_values_filled": false,
+    "fingerprint": "683bba6063035511709ea6833649e9fee189808f755cf82a942598bdf851705a",
+    "warnings": [
+      "historical_correlation_not_future_protection",
+      "constant_series_not_risk_free"
+    ]
+  },
+  "constant_preview": {
+    "sample": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "sample",
+      "covariance": {
+        "rank": 0,
+        "min_eigenvalue": 0.0,
+        "max_eigenvalue": 0.0,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "risk_status": "unavailable_zero_portfolio_volatility",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": null,
+      "contribution_sum_error": null,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    },
+    "model": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "ledoit_wolf",
+      "covariance": {
+        "rank": 0,
+        "min_eigenvalue": 0.0,
+        "max_eigenvalue": 0.0,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "risk_status": "unavailable_zero_portfolio_volatility",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": null,
+      "contribution_sum_error": null,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    }
+  },
+  "qualified_preview": {
+    "estimate": {
+      "base_currency": "HKD",
+      "frequency": "monthly",
+      "return_unit": "decimal",
+      "return_basis": "caller_declared_total_return",
+      "train_start": "2020-02",
+      "train_end": "2025-01",
+      "first_observation": "2020-02-29",
+      "last_observation": "2025-01-31",
+      "n_observations": 60,
+      "n_assets": 100,
+      "mean_method": "0.5_individual_plus_0.5_equal_weight_class_including_self",
+      "sample_covariance_ddof": 1,
+      "shrinkage_empirical_ddof": 0,
+      "covariance_method": "LedoitWolf",
+      "estimator_version": "1.9.1",
+      "shrinkage_coefficient": 0.9510837175078539,
+      "shrinkage_target": "mean_empirical_variance_times_identity",
+      "shrinkage_target_variance_month": 0.0015964707777810989,
+      "annualization_factor": 12,
+      "sample_covariance": {
+        "rank": 59,
+        "min_eigenvalue": -1.8417820688164983e-18,
+        "max_eigenvalue": 0.00840075048837317,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 19,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "shrunk_covariance": {
+        "rank": 100,
+        "min_eigenvalue": 0.0015183773622246997,
+        "max_eigenvalue": 0.0019224619548594115,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": 1.2661292262963235,
+        "singular": false,
+        "matrix_repaired": false
+      },
+      "constant_assets": [
+        "SYNTH_SCREEN_000"
+      ],
+      "singleton_classes": [],
+      "usable_for_optimization": true,
+      "usability_scope": "numerical_only_not_portfolio_or_data_qualification",
+      "warnings": [
+        "arithmetic_annualization_assumes_monthly_scaling",
+        "historical_estimates_not_forecasts",
+        "source_currency_and_total_return_basis_caller_declared",
+        "constant_series_not_risk_free",
+        "constant_series_model_variance",
+        "sample_covariance_singular"
+      ],
+      "training_fingerprint": "e882e97d180f6f81eafa39926bbf93320a6fad4bb95495fd828bc96c355c014a"
+    },
+    "sample": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "sample",
+      "covariance": {
+        "rank": 59,
+        "min_eigenvalue": -2.658346065151805e-17,
+        "max_eigenvalue": 0.1008090058604782,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 19,
+        "condition_number": null,
+        "singular": true,
+        "matrix_repaired": false
+      },
+      "risk_status": "available",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": 0.01540640070491001,
+      "contribution_sum_error": 0.0,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    },
+    "model": {
+      "base_currency": "HKD",
+      "frequency": "annual",
+      "covariance_method": "ledoit_wolf",
+      "covariance": {
+        "rank": 100,
+        "min_eigenvalue": 0.018220528346696397,
+        "max_eigenvalue": 0.02306954345831294,
+        "psd_tolerance": 1e-12,
+        "positive_semidefinite": true,
+        "negative_eigenvalues_within_tolerance": 0,
+        "condition_number": 1.2661292262963235,
+        "singular": false,
+        "matrix_repaired": false
+      },
+      "risk_status": "available",
+      "weights_normalized": false,
+      "long_only": true,
+      "formal_portfolio": false,
+      "weight_sum_tolerance": 1e-10,
+      "contribution_sum": 0.013914826766792057,
+      "contribution_sum_error": 1.734723475976807e-18,
+      "warnings": [
+        "specified_weights_research_preview",
+        "effective_holdings_measures_weight_concentration_only",
+        "historical_risk_not_future_protection",
+        "input_moments_caller_declared_HKD_annual"
+      ]
+    }
+  }
+}

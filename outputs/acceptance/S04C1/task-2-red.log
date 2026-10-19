@@ -1,0 +1,300 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_____________ test_default_and_complete_and_parameter_invalidation _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106b436f0>
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-143/test_default_and_complete_and_0')
+
+    def test_default_and_complete_and_parameter_invalidation(monkeypatch, tmp_path):
+>       at = start(monkeypatch, tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_daily_monthly_view.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_daily_monthly_view.py:14: in start
+    at.radio(key='workspace').set_value('日线月度查验').run()
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:263: in run
+    return self.root.run(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2910: in run
+    widget_states = self.get_widget_states()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2888: in get_widget_states
+    w = get_widget_state(node)
+        ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2798: in get_widget_state
+    return node._widget_state
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1640: in _widget_state
+    if self.index is not None and len(self.options) > 0:
+       ^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Radio(key='workspace', _value='日线月度查验', label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率'])
+
+    @property
+    def index(self) -> int | None:
+        """The index of the current selection. (int)"""  # noqa: D400
+        if self.value is None:
+            return None
+        formatted_value = _format_value_for_widget(self.format_func, self.value)
+>       return self.options.index(formatted_value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: list.index(x): x not in list
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1611: ValueError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 21:30:52.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ test_incomplete_cases_block[\u7f3a\u6700\u540e\u4ea4\u6613\u65e5] _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cb7efd0>
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-143/test_incomplete_cases_block__u0')
+case = '缺最后交易日'
+
+    @pytest.mark.parametrize('case', ['缺最后交易日', '缺月中交易日', '重复日期'])
+    def test_incomplete_cases_block(monkeypatch, tmp_path, case):
+>       at = start(monkeypatch, tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_daily_monthly_view.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_daily_monthly_view.py:14: in start
+    at.radio(key='workspace').set_value('日线月度查验').run()
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:263: in run
+    return self.root.run(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2910: in run
+    widget_states = self.get_widget_states()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2888: in get_widget_states
+    w = get_widget_state(node)
+        ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2798: in get_widget_state
+    return node._widget_state
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1640: in _widget_state
+    if self.index is not None and len(self.options) > 0:
+       ^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Radio(key='workspace', _value='日线月度查验', label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率'])
+
+    @property
+    def index(self) -> int | None:
+        """The index of the current selection. (int)"""  # noqa: D400
+        if self.value is None:
+            return None
+        formatted_value = _format_value_for_widget(self.format_func, self.value)
+>       return self.options.index(formatted_value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: list.index(x): x not in list
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1611: ValueError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 21:30:53.256 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ test_incomplete_cases_block[\u7f3a\u6708\u4e2d\u4ea4\u6613\u65e5] _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d011c70>
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-143/test_incomplete_cases_block__u1')
+case = '缺月中交易日'
+
+    @pytest.mark.parametrize('case', ['缺最后交易日', '缺月中交易日', '重复日期'])
+    def test_incomplete_cases_block(monkeypatch, tmp_path, case):
+>       at = start(monkeypatch, tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_daily_monthly_view.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_daily_monthly_view.py:14: in start
+    at.radio(key='workspace').set_value('日线月度查验').run()
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:263: in run
+    return self.root.run(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2910: in run
+    widget_states = self.get_widget_states()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2888: in get_widget_states
+    w = get_widget_state(node)
+        ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2798: in get_widget_state
+    return node._widget_state
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1640: in _widget_state
+    if self.index is not None and len(self.options) > 0:
+       ^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Radio(key='workspace', _value='日线月度查验', label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率'])
+
+    @property
+    def index(self) -> int | None:
+        """The index of the current selection. (int)"""  # noqa: D400
+        if self.value is None:
+            return None
+        formatted_value = _format_value_for_widget(self.format_func, self.value)
+>       return self.options.index(formatted_value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: list.index(x): x not in list
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1611: ValueError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 21:30:53.384 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____________ test_incomplete_cases_block[\u91cd\u590d\u65e5\u671f] _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cfb68b0>
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-143/test_incomplete_cases_block__u2')
+case = '重复日期'
+
+    @pytest.mark.parametrize('case', ['缺最后交易日', '缺月中交易日', '重复日期'])
+    def test_incomplete_cases_block(monkeypatch, tmp_path, case):
+>       at = start(monkeypatch, tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_daily_monthly_view.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_daily_monthly_view.py:14: in start
+    at.radio(key='workspace').set_value('日线月度查验').run()
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:263: in run
+    return self.root.run(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2910: in run
+    widget_states = self.get_widget_states()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2888: in get_widget_states
+    w = get_widget_state(node)
+        ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2798: in get_widget_state
+    return node._widget_state
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1640: in _widget_state
+    if self.index is not None and len(self.options) > 0:
+       ^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Radio(key='workspace', _value='日线月度查验', label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率'])
+
+    @property
+    def index(self) -> int | None:
+        """The index of the current selection. (int)"""  # noqa: D400
+        if self.value is None:
+            return None
+        formatted_value = _format_value_for_widget(self.format_func, self.value)
+>       return self.options.index(formatted_value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: list.index(x): x not in list
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1611: ValueError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 21:30:53.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_____________ test_confirmation_month_changes_and_bundle_isolation _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cfb79b0>
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-143/test_confirmation_month_change0')
+
+    def test_confirmation_month_changes_and_bundle_isolation(monkeypatch, tmp_path):
+>       at = start(monkeypatch, tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_daily_monthly_view.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_daily_monthly_view.py:14: in start
+    at.radio(key='workspace').set_value('日线月度查验').run()
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:263: in run
+    return self.root.run(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2910: in run
+    widget_states = self.get_widget_states()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2888: in get_widget_states
+    w = get_widget_state(node)
+        ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2798: in get_widget_state
+    return node._widget_state
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1640: in _widget_state
+    if self.index is not None and len(self.options) > 0:
+       ^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Radio(key='workspace', _value='日线月度查验', label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率'])
+
+    @property
+    def index(self) -> int | None:
+        """The index of the current selection. (int)"""  # noqa: D400
+        if self.value is None:
+            return None
+        formatted_value = _format_value_for_widget(self.format_func, self.value)
+>       return self.options.index(formatted_value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: list.index(x): x not in list
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1611: ValueError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 21:30:53.639 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______________ test_cache_readonly_and_corruption_removes_exports ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d046a50>
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-143/test_cache_readonly_and_corrup0')
+
+    def test_cache_readonly_and_corruption_removes_exports(monkeypatch, tmp_path):
+        rid = cache(tmp_path)
+        before = {p: p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
+>       at = start(monkeypatch, tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_daily_monthly_view.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_daily_monthly_view.py:14: in start
+    at.radio(key='workspace').set_value('日线月度查验').run()
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:263: in run
+    return self.root.run(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2910: in run
+    widget_states = self.get_widget_states()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2888: in get_widget_states
+    w = get_widget_state(node)
+        ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:2798: in get_widget_state
+    return node._widget_state
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1640: in _widget_state
+    if self.index is not None and len(self.options) > 0:
+       ^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Radio(key='workspace', _value='日线月度查验', label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率'])
+
+    @property
+    def index(self) -> int | None:
+        """The index of the current selection. (int)"""  # noqa: D400
+        if self.value is None:
+            return None
+        formatted_value = _format_value_for_widget(self.format_func, self.value)
+>       return self.options.index(formatted_value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: list.index(x): x not in list
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:1611: ValueError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 21:30:53.775 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ============================
+FAILED tests/test_daily_monthly_view.py::test_default_and_complete_and_parameter_invalidation
+FAILED tests/test_daily_monthly_view.py::test_incomplete_cases_block[\u7f3a\u6700\u540e\u4ea4\u6613\u65e5]
+FAILED tests/test_daily_monthly_view.py::test_incomplete_cases_block[\u7f3a\u6708\u4e2d\u4ea4\u6613\u65e5]
+FAILED tests/test_daily_monthly_view.py::test_incomplete_cases_block[\u91cd\u590d\u65e5\u671f]
+FAILED tests/test_daily_monthly_view.py::test_confirmation_month_changes_and_bundle_isolation
+FAILED tests/test_daily_monthly_view.py::test_cache_readonly_and_corruption_removes_exports
+6 failed in 1.49s

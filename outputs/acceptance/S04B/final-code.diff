@@ -1,0 +1,1286 @@
+--- before/app/main.py
++++ after/app/main.py
+@@ -1,26 +1,29 @@
+ from pathlib import Path
+ import sys
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ if str(ROOT) not in sys.path:
+     sys.path.insert(0, str(ROOT))
+ 
+ import streamlit as st
+ from app.views.data_center import render as render_data_center
+ 
+ st.set_page_config(page_title='研究数据工作台', page_icon='📑', layout='wide')
+-workspace = st.sidebar.radio('工作页面', ['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存'], key='workspace')
++workspace = st.sidebar.radio('工作页面', ['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率'], key='workspace')
+ if workspace == '数据导入':
+     render_data_center()
++elif workspace == '因子与官方汇率':
++    from app.views.reference_downloads import render
++    render()
+ elif workspace == '下载与缓存':
+     from app.views.downloads import render
+     render()
+ elif workspace == '港币收益查验':
+     from app.views.hkd_returns import render
+     render()
+ 
+ elif workspace == '共同窗口查验':
+     from app.views.alignment import render
+     render()
+ 
+ else:
+--- before/app/views/reference_downloads.py
++++ after/app/views/reference_downloads.py
+@@ -0,0 +1,168 @@
++"""Explicit reference updates and fully verified offline evidence inspection."""
++from datetime import date
++from io import BytesIO
++import json
++import os
++from pathlib import Path
++import pandas as pd
++import streamlit as st
++from portfolio.data.reference_updates import REFERENCE_CATALOG, run_reference_update, validate_reference_plan
++from portfolio.data.snapshots import list_runs, load_snapshot, read_artifact, update_log
++
++ROOT = Path(__file__).resolve().parents[2]
++ERRORS = (ValueError, OSError, KeyError, TypeError)
++STATUS = {'success':'成功（请求月份完整）','partial':'部分可用（仅诊断）','unavailable':'不可用','cancelled':'已取消'}
++REASONS = {'tls_error':'TLS 安全连接失败','transport_error':'连接失败','timeout':'请求超时','rate_limited':'来源限流','http_error':'来源 HTTP 错误','parse_error':'来源解析失败','page_limit':'达到分页上限','empty_data':'无数据','complete_requested_months':'请求月份完整且数值有效','missing_or_invalid_values_or_months':'月份缺失或数值无效','cancelled':'已取消','not_requested':'未请求'}
++
++
++def reference_root():
++    return Path(os.environ.get('PORTFOLIO_REFERENCE_DOWNLOADS_ROOT',str(ROOT/'data/reference_downloads'))).resolve()
++
++
++def _metadata(dataset):
++    m=REFERENCE_CATALOG[dataset]
++    return {'数据集':dataset,'名称':('美国' if m['region']=='US' else '亚太（日本除外）')+' '+m['model']+' 因子' if m['kind']=='factor' else '香港金管局官方美元兑港币','来源':m['provider'],'地区':{'US':'美国','Asia Pacific ex Japan':'亚太（日本除外）','Hong Kong':'香港'}[m['region']],'模型':m['model'] or '官方汇率','币种':m['currency'],'频率':'月度' if m['frequency']=='monthly' else '日度实际观察','单位':'小数' if m['unit']=='decimal' else '每 1 USD 对应 HKD'}
++
++
++def _bound(root,run_id,manifest):
++    return dict(root=str(root),run_id=run_id,manifest=manifest)
++
++
++def _verified(binding,root):
++    if binding['root']!=str(root):
++        raise ValueError('different root')
++    manifest=load_snapshot(root,binding['run_id'])
++    if manifest.get('schema_version')!=2 or manifest!=binding['manifest']:
++        raise ValueError('changed snapshot')
++    return manifest
++
++
++def _items(manifest):
++    st.caption(f"版本编号：{manifest['run_id']} · UTC：{manifest['created_utc']} · 原请求 {manifest['start']}（含）至 {manifest['end_exclusive']}（不含）")
++    st.dataframe(pd.DataFrame([{'数据集':i['dataset'],'状态':STATUS[i['status']],'原因':REASONS.get(i['reason'],'来源检查未通过'),'行数':i['rows'],'实际首日':i['first_date'],'实际末日':i['last_date']} for i in manifest['items']]),hide_index=True,width='stretch')
++
++
++def _evidence(root,manifest,prefix,usable=False):
++    """Call only after the entire bound snapshot passed verification."""
++    rid=manifest['run_id']
++    st.download_button('导出快照清单', (json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode(),'snapshot_manifest.json',key=prefix+'_manifest')
++    if usable:
++        datasets=[i['dataset'] for i in manifest['items'] if i['status']=='success']
++        dataset=st.selectbox('成功缓存数据集',datasets,key='ref_dataset')
++        item=next(i for i in manifest['items'] if i['dataset']==dataset)
++        st.dataframe(pd.DataFrame([_metadata(dataset)]),hide_index=True,width='stretch')
++        st.caption(f"实际范围：{item['first_date']} 至 {item['last_date']} · {item['rows']} 行")
++        payload=read_artifact(root,rid,item['table_file'])
++        st.dataframe(pd.read_csv(BytesIO(payload)),hide_index=True,width='stretch')
++        st.download_button('导出已验证数据 CSV',payload,item['table_file'],key='ref_table')
++    raw=[name for i in manifest['items'] for name in [*i['raw_files'],i['source_file']] if name]
++    if raw:
++        name=st.selectbox('原始响应 / French 原始 CSV',raw,key=prefix+'_raw_file')
++        st.download_button('导出原始证据',read_artifact(root,rid,name),name,key=prefix+'_raw')
++    partial=[i for i in manifest['items'] if i['status']=='partial' and i['table_file']]
++    if partial:
++        with st.expander('部分可用数据 · 仅诊断'):
++            st.warning('缺失值保留，仅供诊断，不可作为正式输入或送入产品导入。')
++            for item in partial:
++                payload=read_artifact(root,rid,item['table_file'])
++                st.caption(item['dataset'])
++                st.dataframe(pd.read_csv(BytesIO(payload)),hide_index=True,width='stretch')
++                st.download_button('导出诊断 CSV · '+item['dataset'],payload,item['table_file'],key=prefix+'_diag_table_'+item['dataset'])
++
++
++def render():
++    s=st.session_state
++    root=reference_root()
++    for key in ('ref_plan','ref_active','ref_result'):
++        s.setdefault(key,None)
++    st.title('因子与官方汇率')
++    st.info('French 每项下载完整 ZIP 后筛选请求月份；四套模型的 SMB 各自独立。亚太（日本除外）不是香港专属因子；USD RF 不是港币无风险利率。')
++    st.caption('因子单位为小数；HKMA 汇率为 HKD per USD（每 1 USD 对应 HKD）。HKMA 仅检查请求月份存在实际日度观察，不认证逐日交易日历完整性，不自动聚合月度。无自动重试；缓存打开和导出均不联网。')
++    datasets=st.multiselect('数据集',list(REFERENCE_CATALOG),default=list(REFERENCE_CATALOG),key='ref_datasets')
++    cols=st.columns(4)
++    start=cols[0].date_input('起始月初（包含）',value=date(2025,1,1),key='ref_start_date')
++    end=cols[1].date_input('结束月初（不包含）',value=date(2026,1,1),key='ref_end')
++    timeout=cols[2].number_input('单请求超时（秒）',min_value=1,max_value=30,value=15,key='ref_timeout')
++    max_pages=cols[3].number_input('HKMA 最大页数',min_value=1,max_value=100,value=20,key='ref_max_pages')
++    st.caption('HKMA 每页固定 1000 条；短页或空页提前停止。')
++    fingerprint=(str(root),tuple(datasets),start.isoformat(),end.isoformat(),timeout,max_pages)
++    if s.get('ref_fingerprint')!=fingerprint:
++        s['ref_plan']=None
++        s['ref_fingerprint']=fingerprint
++    if st.button('生成下载计划',key='ref_prepare'):
++        try:
++            selected=validate_reference_plan(datasets,start.isoformat(),end.isoformat(),timeout,1000,max_pages)
++            s['ref_plan']=dict(datasets=selected,start=start.isoformat(),end=end.isoformat(),timeout=timeout,page_size=1000,max_pages=max_pages)
++        except ERRORS:
++            st.error('请选择不重复的允许数据集；日期必须为月初且起日早于止日，超时与页数须在允许范围内。')
++    plan=s['ref_plan']
++    if plan:
++        french=sum(d!='HKMA_USDHKD' for d in plan['datasets'])
++        hkma='HKMA_USDHKD' in plan['datasets']
++        st.subheader('计划预览')
++        st.write(f"请求数：最少 {french+int(hkma)}，最多 {french+(max_pages if hkma else 0)}；{plan['start']}（含）至 {plan['end']}（不含）")
++        st.dataframe(pd.DataFrame([_metadata(d) for d in plan['datasets']]),hide_index=True,width='stretch')
++        st.warning(f'仅支持开始前取消；同步下载过程中无法通过页面中断。超时为每个请求 {timeout} 秒；请求上限可能使总等待时间很长。')
++        if st.button('取消下载计划',key='ref_cancel'):
++            s['ref_plan']=None
++            st.rerun()
++        if st.button('开始下载',key='ref_start',type='primary'):
++            try:
++                with st.spinner('正在下载并保存来源证据…'):
++                    rid=run_reference_update(root,**plan)
++                    manifest=load_snapshot(root,rid)
++                    if manifest.get('schema_version')!=2: raise ValueError('wrong schema')
++                s['ref_result']=_bound(root,rid,manifest)
++                s['ref_plan']=None
++                st.success('本次尝试结束。请核对结果并显式打开所需缓存。')
++            except ERRORS:
++                st.error('更新未完成；先前已打开缓存保留。请检查本地目录或稍后手动重试。')
++    st.subheader('本地缓存')
++    try:
++        runs=list_runs(root)
++    except ERRORS:
++        runs=[]
++        st.error('缓存目录无法读取。')
++    if runs:
++        selected=st.selectbox('下载记录（最新在前）',runs,key='ref_run')
++        if st.button('校验并打开缓存',key='ref_open'):
++            try:
++                manifest=load_snapshot(root,selected)
++                if manifest.get('schema_version')!=2: raise ValueError('wrong schema')
++                binding=_bound(root,selected,manifest)
++                if any(i['status']=='success' for i in manifest['items']):
++                    s['ref_active']=binding
++                else:
++                    s['ref_result']=binding
++                    st.warning('此记录没有成功项；保留先前成功缓存，仅提供审计与诊断。')
++            except ERRORS:
++                st.error('缓存校验失败或不是参考数据 schema 2；先前缓存身份保留。')
++        try:
++            for rid in runs:
++                if load_snapshot(root,rid).get('schema_version')!=2: raise ValueError('wrong schema')
++            log=update_log(root)
++            st.download_button('导出更新日志 CSV',log.to_csv(index=False).encode(),'update_log.csv',key='ref_log')
++        except ERRORS:
++            st.warning('缓存完整性检查失败，停止完整日志导出。')
++    else:
++        st.caption('暂无下载记录。生成计划不会写入缓存。')
++    result=s['ref_result']
++    active=s['ref_active']
++    if result:
++        st.subheader('上次尝试结果（原请求范围）')
++        try:
++            manifest=_verified(result,root)
++            _items(manifest)
++            if not active or (active['root'],active['run_id'])!=(result['root'],result['run_id']):
++                with st.expander('本次尝试 · 审计与诊断导出'):
++                    _evidence(root,manifest,'ref_result')
++        except ERRORS:
++            st.error('尝试记录校验失败或缓存目录已改变，停止该记录所有导出。')
++    if active:
++        st.subheader('已打开缓存')
++        try:
++            manifest=_verified(active,root)
++            _items(manifest)
++            _evidence(root,manifest,'ref',usable=True)
++        except ERRORS:
++            st.error('已打开缓存校验失败或缓存目录已改变；保留原身份，停止所有缓存使用与导出。')
+--- before/scripts/probe_sources.py
++++ after/scripts/probe_sources.py
+@@ -39,77 +39,26 @@
+     {"symbol":"0700.HK", "name":"Tencent", "sample_category":"HK stock", "tool_type":"individual_stock", "economic_exposure":"China/HK equity", "market":"HK", "currency":"HKD", "provider_type":"EQUITY", "inception_or_listing":"2004-06-16", "date_kind":"listing", "reference":"https://www.tencent.com/en-us/articles/1600069.html"},
+     {"symbol":"SPY", "name":"SPDR S&P 500 ETF Trust", "sample_category":"US equity ETF", "tool_type":"equity_etf", "economic_exposure":"US equity", "market":"US", "currency":"USD", "provider_type":"ETF", "inception_or_listing":"1993-01-22", "date_kind":"fund inception", "reference":"https://www.ssga.com/us/en/institutional/etfs/state-street-spdr-sp-500-etf-trust-spy"},
+     {"symbol":"2800.HK", "name":"Tracker Fund of Hong Kong", "sample_category":"HK equity ETF", "tool_type":"equity_etf", "economic_exposure":"Hang Seng equity (incl. China)", "market":"HK", "currency":"HKD", "provider_type":"ETF", "inception_or_listing":"1999-11-12", "date_kind":"listing; fund launched 1999-11", "reference":"https://www.hkex.com.hk/News/News-Release/1999-SEHK/991112news?sc_lang=en"},
+     {"symbol":"AGG", "name":"iShares Core US Aggregate Bond ETF", "sample_category":"bond ETF", "tool_type":"bond_etf", "economic_exposure":"US investment grade bonds", "market":"US", "currency":"USD", "provider_type":"ETF", "inception_or_listing":"2003-09-22", "date_kind":"fund inception", "reference":"https://www.ishares.com/us/products/239458/ishares-core-total-us-bond-market-etf"},
+     {"symbol":"GLD", "name":"SPDR Gold Shares", "sample_category":"gold product", "tool_type":"gold_trust", "economic_exposure":"physical gold", "market":"US", "currency":"USD", "provider_type":"ETF", "inception_or_listing":"2004-11-18", "date_kind":"trust inception", "reference":"https://www.ssga.com/us/en/individual/etfs/spdr-gold-shares-gld"},
+ ]
+ 
+ 
+ def sha256(body: bytes) -> str:
+     return hashlib.sha256(body).hexdigest()
+ 
+ 
+-def parse_french(text: str) -> pd.DataFrame:
+-    """Only the monthly block; convert percentage points, preserve sentinels."""
+-    header, records = None, []
+-    for row in csv.reader(io.StringIO(text)):
+-        row = [value.strip() for value in row]
+-        if header is None:
+-            if row and row[0] == "" and {"Mkt-RF", "SMB", "HML", "RF"}.issubset(row):
+-                header = row
+-            continue
+-        if not row or not row[0]:
+-            if records:
+-                break
+-            continue
+-        if not re.fullmatch(r"\d{6}", row[0]):
+-            break  # annual block and footnotes must not enter monthly data
+-        if len(row) != len(header):
+-            raise ValueError("French field count changed")
+-        period = datetime.strptime(row[0], "%Y%m").strftime("%Y-%m")
+-        values = [float(value) for value in row[1:]]
+-        values = [np.nan if value in (-99.99, -999.0) else value / 100 for value in values]
+-        records.append([period, *values])
+-    if not records:
+-        raise ValueError("French monthly block missing")
+-    table = pd.DataFrame(records, columns=["month", *header[1:]])
+-    if table["month"].duplicated().any():
+-        raise ValueError("French duplicate month")
+-    periods = pd.PeriodIndex(table["month"],freq="M")
+-    if len(pd.period_range(periods.min(),periods.max(),freq="M").difference(periods)):
+-        raise ValueError("French missing whole month")
+-    return table.sort_values("month").reset_index(drop=True)
+-
+-
+-def parse_hkma(payload: dict) -> pd.DataFrame:
+-    if payload.get("header", {}).get("success") is not True:
+-        raise ValueError("HKMA API did not report success")
+-    rows = payload.get("result", {}).get("records", [])
+-    if not rows:
+-        raise ValueError("HKMA records missing")
+-    result = []
+-    for row in rows:
+-        try:
+-            day = date.fromisoformat(row["end_of_day"]).isoformat()
+-            fx = float(row["usd"])
+-        except (KeyError, TypeError, ValueError) as error:
+-            raise ValueError("HKMA date/USD missing or invalid") from error
+-        if not math.isfinite(fx) or fx <= 0:
+-            raise ValueError("HKMA USD must be positive HKD per USD")
+-        result.append({"date":day, "hkd_per_usd":fx})
+-    table = pd.DataFrame(result).sort_values("date").reset_index(drop=True)
+-    if table["date"].duplicated().any():
+-        raise ValueError("HKMA duplicate date")
+-    return table
+-
++from portfolio.data.providers.french import parse_french
++from portfolio.data.providers.hkma import parse_hkma
+ 
+ from portfolio.data.providers.yahoo import parse_yahoo_chart, audit_price
+ 
+ 
+ def monthly_spot_preview(table: pd.DataFrame, start: str, end: str) -> tuple[pd.DataFrame, dict]:
+     """Evidence of monthly FX availability; no daily fill or valuation alignment.
+ 
+     Seven calendar days is a probe staleness limit, not the S03 FX convention.
+     The actual observation date is always retained, including holidays/gaps.
+     """
+     source = table.loc[(table["date"] >= start) & (table["date"] < end), ["date","close"]].copy()
+     valid = np.isfinite(source["close"]) & (source["close"] > 0)
+--- before/scripts/verify_reference_downloads.py
++++ after/scripts/verify_reference_downloads.py
+@@ -0,0 +1,147 @@
++"""Independent raw-to-table checks; networking requires an explicit --online."""
++from __future__ import annotations
++
++import argparse
++import csv
++from datetime import date
++import io
++import json
++import math
++from pathlib import Path
++import sys
++import zipfile
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / 'src'))
++
++from portfolio.data.reference_updates import REFERENCE_CATALOG, run_reference_update
++from portfolio.data.snapshots import load_snapshot, read_artifact, update_log
++
++
++def _hkma_observations(body: bytes, manifest: dict, previous: dict) -> dict:
++    """Read one complete observation page without using the production parser."""
++    payload = json.loads(body)
++    if payload['header']['success'] is not True:
++        raise ValueError('HKMA header rejected')
++    records = payload['result']['records']
++    if not isinstance(records, list) or len(records) > manifest['page_size']:
++        raise ValueError('HKMA records invalid')
++    observations = {}
++    last_day = max(previous) if previous else None
++    for record in records:
++        day = record['end_of_day']
++        if date.fromisoformat(day).isoformat() != day:
++            raise ValueError('HKMA date invalid')
++        value = float(record['usd'])
++        if not math.isfinite(value) or value <= 0:
++            raise ValueError('HKMA value invalid')
++        if not manifest['start'] <= day < manifest['end_exclusive']:
++            raise ValueError('HKMA date outside requested interval')
++        if last_day is not None and day <= last_day:
++            raise ValueError('HKMA dates overlap or are unordered')
++        observations[day] = value
++        last_day = day
++    return observations
++
++
++def verify(root: Path, run_id: str) -> dict:
++    manifest = load_snapshot(root, run_id)
++    if manifest['schema_version'] != 2:
++        raise ValueError('reference snapshot required')
++    checks = []
++    for item in manifest['items']:
++        result = {key: item[key] for key in ('dataset', 'status', 'reason', 'rows', 'first_date', 'last_date')}
++        result['raw_files'] = item['raw_files']
++        result['table_checked'] = False
++        if item['table_file']:
++            payload = read_artifact(root, run_id, item['table_file'])
++            rows = list(csv.DictReader(io.StringIO(payload.decode())))
++            assert len(rows) == item['rows'], 'table row count'
++            assert rows, 'table unexpectedly empty'
++            if item['kind'] == 'factor':
++                source = read_artifact(root, run_id, item['source_file'])
++                archive = read_artifact(root, run_id, item['raw_files'][0])
++                with zipfile.ZipFile(io.BytesIO(archive)) as zipped:
++                    members = [name for name in zipped.namelist() if name.lower().endswith('.csv')]
++                    assert len(members) == 1 and zipped.read(members[0]) == source, 'raw CSV differs from ZIP'
++                # Do not call the production parser: identify monthly raw rows directly.
++                raw_rows = [[v.strip() for v in row] for row in csv.reader(io.StringIO(source.decode('utf-8-sig')))]
++                header = next(row for row in raw_rows if row and row[0] == '' and 'Mkt-RF' in row)
++                original = {row[0]: dict(zip(header[1:], row[1:])) for row in raw_rows
++                            if row and len(row[0]) == 6 and row[0].isdigit()}
++                comparisons = 0
++                for row in rows:
++                    assert manifest['start'][:7] <= row['month'] < manifest['end_exclusive'][:7]
++                    raw = original[row['month'].replace('-', '')]
++                    for field, value in row.items():
++                        if field == 'month':
++                            continue
++                        expected = float(raw[field])
++                        if expected in (-99.99, -999):
++                            assert value == '' or math.isnan(float(value)), 'missing sentinel was filled'
++                        else:
++                            assert math.isclose(float(value), expected / 100, rel_tol=0, abs_tol=5.1e-13), 'percent conversion'
++                        comparisons += 1
++                if item['status'] == 'success':
++                    # Generate the expected month sequence without the production coverage code.
++                    year, month = map(int, manifest['start'][:7].split('-'))
++                    expected_months = []
++                    while f'{year:04d}-{month:02d}-01' < manifest['end_exclusive']:
++                        expected_months.append(f'{year:04d}-{month:02d}')
++                        year, month = (year + 1, 1) if month == 12 else (year, month + 1)
++                    assert [row['month'] for row in rows] == expected_months, 'requested monthly coverage'
++                result['numeric_cells_verified'] = comparisons
++                result['first_month_raw_percent'] = original[rows[0]['month'].replace('-', '')]
++                result['first_month_decimal'] = rows[0]
++                first, last = rows[0]['month'] + '-01', rows[-1]['month'] + '-01'
++            else:
++                original = {}
++                for page in item['pages']:
++                    if page['status_code'] != 200:
++                        assert item['status'] != 'success', 'HKMA unsuccessful response'
++                        break
++                    body = read_artifact(root, run_id, page['path'])
++                    try:
++                        observations = _hkma_observations(body, manifest, original)
++                    except (ValueError, TypeError, KeyError, AttributeError, OverflowError):
++                        # Failed/cancelled runs retain the rejected response after valid pages.
++                        assert item['status'] != 'success', 'HKMA invalid raw evidence'
++                        break
++                    original.update(observations)
++                for row in rows:
++                    assert manifest['start'] <= row['date'] < manifest['end_exclusive']
++                    assert row['date'] in original, 'HKMA date lacks valid raw evidence'
++                    assert math.isclose(float(row['hkd_per_usd']), original[row['date']], rel_tol=0, abs_tol=5.1e-13), 'HKMA value differs from raw evidence'
++                result['numeric_cells_verified'] = len(rows)
++                result['unit'] = 'HKD per USD'
++                first, last = rows[0]['date'], rows[-1]['date']
++            assert first == item['first_date'] and last == item['last_date'], 'actual dates mismatch'
++            result['table_checked'] = True
++        checks.append(result)
++    return dict(run_id=run_id, snapshot_integrity_verified=True,
++                start=manifest['start'], end_exclusive=manifest['end_exclusive'],
++                all_requested_sources_success=all(i['status'] == 'success' for i in manifest['items']),
++                checks=checks, scope='Download evidence only; no daily-calendar or historical-availability certification.')
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    mode = parser.add_mutually_exclusive_group(required=True)
++    mode.add_argument('--online', action='store_true')
++    mode.add_argument('--replay', metavar='RUN_ID')
++    parser.add_argument('--root', type=Path, default=ROOT / 'data/reference_downloads')
++    parser.add_argument('--output', type=Path, default=ROOT / 'outputs/acceptance/S04B')
++    args = parser.parse_args()
++    run_id = run_reference_update(args.root, list(REFERENCE_CATALOG), '2025-01-01', '2026-01-01') if args.online else args.replay
++    report = verify(args.root, run_id)
++    args.output.mkdir(parents=True, exist_ok=True)
++    (args.output / ('online_run.json' if args.online else 'offline_replay.json')).write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n')
++    (args.output / 'snapshot_manifest.json').write_text(json.dumps(load_snapshot(args.root, run_id), indent=2, ensure_ascii=False) + '\n')
++    update_log(args.root).to_csv(args.output / 'update_log.csv', index=False)
++    print(json.dumps(report, indent=2, ensure_ascii=False))
++    # Exit 1 preserves a visible incomplete-source result even when cache integrity passes.
++    return 0 if report['all_requested_sources_success'] else 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+--- before/src/portfolio/data/providers/french.py
++++ after/src/portfolio/data/providers/french.py
+@@ -0,0 +1,59 @@
++"""French monthly factors and bounded in-memory archive decoding."""
++import csv
++import io
++import re
++import zipfile
++from datetime import datetime
++import numpy as np
++import pandas as pd
++
++def parse_french(text: str, *, require_contiguous=True) -> pd.DataFrame:
++    """Only the monthly block; convert percentage points, preserve sentinels."""
++    header, records = None, []
++    for row in csv.reader(io.StringIO(text)):
++        row = [value.strip() for value in row]
++        if header is None:
++            if row and row[0] == "" and {"Mkt-RF", "SMB", "HML", "RF"}.issubset(row):
++                header = row
++            continue
++        if not row or not row[0]:
++            if records:
++                break
++            continue
++        if not re.fullmatch(r"\d{6}", row[0]):
++            break  # annual block and footnotes must not enter monthly data
++        if len(row) != len(header):
++            raise ValueError("French field count changed")
++        period = datetime.strptime(row[0], "%Y%m").strftime("%Y-%m")
++        values = [float(value) for value in row[1:]]
++        values = [np.nan if value in (-99.99, -999.0) else value / 100 for value in values]
++        records.append([period, *values])
++    if not records:
++        raise ValueError("French monthly block missing")
++    table = pd.DataFrame(records, columns=["month", *header[1:]])
++    if table["month"].duplicated().any():
++        raise ValueError("French duplicate month")
++    periods = pd.PeriodIndex(table["month"],freq="M")
++    if require_contiguous and len(pd.period_range(periods.min(),periods.max(),freq="M").difference(periods)):
++        raise ValueError("French missing whole month")
++    return table.sort_values("month").reset_index(drop=True)
++
++
++
++FRENCH_BASE = "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/"
++FACTOR_URLS = {
++    "US_FF3": FRENCH_BASE + "F-F_Research_Data_Factors_CSV.zip",
++    "US_FF5": FRENCH_BASE + "F-F_Research_Data_5_Factors_2x3_CSV.zip",
++    "AP_EX_JP_FF3": FRENCH_BASE + "Asia_Pacific_ex_Japan_3_Factors_CSV.zip",
++    "AP_EX_JP_FF5": FRENCH_BASE + "Asia_Pacific_ex_Japan_5_Factors_CSV.zip",
++}
++
++
++def extract_csv(body, expected_name=None):
++    if len(body)>10*1024*1024: raise ValueError('archive too large')
++    with zipfile.ZipFile(io.BytesIO(body)) as archive:
++        members=[m for m in archive.infolist() if m.filename.lower().endswith('.csv')]
++        if len(members)!=1 or members[0].file_size>50*1024*1024:
++            raise ValueError('unexpected archive')
++        if expected_name is not None and members[0].filename.lower()!=expected_name.lower(): raise ValueError('unexpected source identity')
++        return archive.read(members[0])
+--- before/src/portfolio/data/providers/hkma.py
++++ after/src/portfolio/data/providers/hkma.py
+@@ -0,0 +1,39 @@
++"""Official HKMA observation parsing."""
++import math
++from datetime import date
++import pandas as pd
++
++HKMA_URL = "https://api.hkma.gov.hk/public/market-data-and-statistics/monthly-statistical-bulletin/er-ir/er-eeri-daily"
++
++def parse_hkma(payload: dict) -> pd.DataFrame:
++    if payload.get("header", {}).get("success") is not True:
++        raise ValueError("HKMA API did not report success")
++    rows = payload.get("result", {}).get("records", [])
++    if not rows:
++        raise ValueError("HKMA records missing")
++    result = []
++    for row in rows:
++        try:
++            day = date.fromisoformat(row["end_of_day"]).isoformat()
++            fx = float(row["usd"])
++        except (KeyError, TypeError, ValueError) as error:
++            raise ValueError("HKMA date/USD missing or invalid") from error
++        if not math.isfinite(fx) or fx <= 0:
++            raise ValueError("HKMA USD must be positive HKD per USD")
++        result.append({"date":day, "hkd_per_usd":fx})
++    table = pd.DataFrame(result).sort_values("date").reset_index(drop=True)
++    if table["date"].duplicated().any():
++        raise ValueError("HKMA duplicate date")
++    return table
++
++
++def parse_page(payload):
++    if not isinstance(payload,dict) or payload.get('header',{}).get('success') is not True:
++        raise ValueError('invalid HKMA response')
++    records=payload['result']['records']
++    if not isinstance(records,list): raise ValueError('invalid records')
++    if not records: return pd.DataFrame(columns=['date','hkd_per_usd'])
++    table=parse_hkma(payload)
++    if table.date.tolist()!=[r['end_of_day'] for r in records]:
++        raise ValueError('unordered dates')
++    return table
+--- before/src/portfolio/data/reference_updates.py
++++ after/src/portfolio/data/reference_updates.py
+@@ -0,0 +1,142 @@
++"""Explicit, immutable downloads of reference factors and official FX."""
++from datetime import date, datetime, timedelta, timezone
++from importlib.metadata import version
++from pathlib import Path
++import json
++import csv
++import zlib
++import math
++import platform
++import re
++import tempfile
++import uuid
++import zipfile
++import numpy as np
++import pandas as pd
++from .providers.base import RawResponse
++from .providers.french import FACTOR_URLS, extract_csv, parse_french
++from .providers.hkma import HKMA_URL, parse_page
++from .snapshots import MANIFEST, digest
++from .updates import _expected_transport
++
++REFERENCE_CATALOG={d:dict(name=d,kind='factor',provider='French',currency='USD',frequency='monthly',region='US' if d.startswith('US') else 'Asia Pacific ex Japan',model=d.rsplit('_',1)[1],unit='decimal') for d in FACTOR_URLS}
++REFERENCE_CATALOG['HKMA_USDHKD']=dict(name='Official USD/HKD',kind='fx',provider='HKMA',currency='HKD',frequency='daily',region='Hong Kong',model=None,unit='HKD per USD')
++
++
++def validate_reference_plan(datasets,start,end,timeout=15,page_size=1000,max_pages=20):
++    if isinstance(datasets,str): raise ValueError('invalid selection')
++    try: selected=tuple(datasets)
++    except TypeError as error: raise ValueError('invalid selection') from error
++    if not selected or any(not isinstance(d,str) or d not in REFERENCE_CATALOG for d in selected) or len(set(selected))!=len(selected): raise ValueError('invalid selection')
++    for day in (start,end):
++        if not isinstance(day,str) or not re.fullmatch(r'\d{4}-\d{2}-01',day): raise ValueError('month start required')
++        date.fromisoformat(day)
++    if start>=end: raise ValueError('invalid interval')
++    if isinstance(timeout,bool) or not isinstance(timeout,(int,float)) or not math.isfinite(timeout) or not 1<=timeout<=30: raise ValueError('invalid timeout')
++    for value,limit in ((page_size,1000),(max_pages,100)):
++        if isinstance(value,bool) or not isinstance(value,int) or not 1<=value<=limit: raise ValueError('invalid pagination')
++    return selected
++
++
++def fetch_reference(dataset,start,end,timeout,offset=0,page_size=1000):
++    validate_reference_plan([dataset],start,end,timeout,page_size)
++    import yfinance
++    from curl_cffi import requests
++    params=dict(choose='end_of_day',**{'from':start,'to':(date.fromisoformat(end)-timedelta(days=1)).isoformat()},fields='end_of_day,usd',sortby='end_of_day',sortorder='asc',pagesize=page_size,offset=offset) if dataset=='HKMA_USDHKD' else {}
++    response=requests.get(HKMA_URL if dataset=='HKMA_USDHKD' else FACTOR_URLS[dataset],params=params,timeout=timeout,verify=True,allow_redirects=False)
++    return RawResponse(response.content,response.status_code)
++
++
++def _reference_transport_reason(error):
++    """Classify public transport failures without persisting their messages."""
++    import yfinance  # Initialize local curl dependencies before importing curl.
++    from curl_cffi.requests.exceptions import SSLError
++    if isinstance(error, TimeoutError) or getattr(error, 'code', None) == 28:
++        return 'timeout'
++    if 'timeout' in type(error).__name__.lower():
++        return 'timeout'
++    # CURLE SSL connect, engine, certificate, cipher, CA and pinning failures.
++    tls_codes = {35, 53, 54, 58, 59, 60, 64, 66, 77, 80, 82, 83, 90, 91, 98}
++    if isinstance(error, SSLError) or getattr(error, 'code', None) in tls_codes:
++        return 'tls_error'
++    return 'transport_error'
++
++
++def _download(dataset,start,end,timeout,page_size,max_pages,fetch,cancelled,save):
++    hkma=dataset=='HKMA_USDHKD'
++    item=dict(dataset=dataset,symbol=dataset,**REFERENCE_CATALOG[dataset],status='unavailable',reason='not_requested',rows=0,first_date=None,last_date=None,raw_files=[],source_file=None,table_file=None,missing_months=[],pagination_complete=False,pages=[],quality_scope='observation_months_only' if hkma else 'requested_monthly_factors')
++    table=None; offset=0
++    expected=pd.period_range(start,pd.Timestamp(end)-pd.Timedelta(days=1),freq='M').astype(str).tolist()
++    for number in range(max_pages if hkma else 1):
++        if cancelled():
++            item.update(status='cancelled', reason='cancelled')
++            break
++        try:
++            response=fetch(dataset,start,end,timeout,offset=offset,page_size=page_size) if hkma else fetch(dataset,start,end,timeout)
++        except _expected_transport() as error:
++            item.update(
++                status='partial' if table is not None and len(table) else 'unavailable',
++                reason=_reference_transport_reason(error),
++            )
++            break
++        raw=save(response.body,f'{dataset}_raw_{number:03d}'+('.json' if hkma else '.zip'))
++        item['raw_files'].append(raw)
++        item['pages'].append(dict(offset=offset,status_code=response.status_code,path=raw,sha256=digest(response.body),retrieved_utc=datetime.now(timezone.utc).isoformat()))
++        if cancelled():
++            item.update(status='cancelled', reason='cancelled')
++            break
++        if response.status_code!=200:
++            item.update(status='partial' if table is not None and len(table) else 'unavailable',reason='rate_limited' if response.status_code==429 else 'http_error'); break
++        try:
++            if hkma:
++                page=parse_page(json.loads(response.body))
++                if len(page) > page_size:
++                    raise ValueError('oversized page')
++                if len(page) and (page.date.min()<start or page.date.max()>=end or (table is not None and len(table) and page.date.min()<=table.date.max())): raise ValueError('invalid page interval')
++                table=page if table is None else pd.concat([table,page],ignore_index=True) if len(page) else table
++                offset+=len(page)
++                item['pagination_complete']=len(page)<page_size
++            else:
++                source=extract_csv(response.body,FACTOR_URLS[dataset].rsplit('/',1)[1].replace('_CSV.zip','.csv'))
++                item['source_file']=save(source,f'{dataset}_source.csv')
++                candidate=parse_french(source.decode('utf-8-sig'),require_contiguous=False)
++                columns=['month','Mkt-RF','SMB','HML']+(['RMW','CMA'] if dataset.endswith('FF5') else [])+['RF']
++                if candidate.columns.tolist()!=columns: raise ValueError('model schema mismatch')
++                table=candidate.loc[(candidate.month>=start[:7])&(candidate.month<end[:7])].reset_index(drop=True)
++                item['pagination_complete']=True
++        except (ValueError,TypeError,KeyError,IndexError,AttributeError,OverflowError,zipfile.BadZipFile,zipfile.LargeZipFile,RuntimeError,csv.Error,zlib.error,EOFError):
++            item.update(status='unavailable', reason='parse_error')
++            break
++        item.update(status='partial',reason='page_limit')
++        if item['pagination_complete']:
++            if table.empty: item.update(status='unavailable',reason='empty_data')
++            else:
++                observed=table.date.str[:7] if hkma else table.month
++                missing=sorted(set(expected)-set(observed))
++                finite=np.isfinite(table.select_dtypes(include='number')).all().all()
++                item.update(missing_months=missing,status='success' if not missing and finite else 'partial',reason='complete_requested_months' if not missing and finite else 'missing_or_invalid_values_or_months')
++            break
++    if table is not None and len(table):
++        dates=table.date if hkma else table.month+'-01'
++        item.update(rows=len(table),first_date=dates.min(),last_date=dates.max(),table_file=save(table.to_csv(index=False,float_format='%.12f').encode(),f'{dataset}_table.csv'))
++        item['missing_months']=sorted(set(expected)-set(dates.str[:7]))
++    return item
++
++
++def run_reference_update(root,datasets,start,end,*,timeout=15,page_size=1000,max_pages=20,fetch=fetch_reference,cancelled=lambda:False):
++    selected=validate_reference_plan(datasets,start,end,timeout,page_size,max_pages)
++    root=Path(root)
++    if (root/'runs').is_symlink(): raise ValueError('invalid runs directory')
++    root.mkdir(parents=True,exist_ok=True)
++    now=datetime.now(timezone.utc); run_id=now.strftime('%Y%m%dT%H%M%S%fZ')+'-'+uuid.uuid4().hex
++    manifest=dict(schema_version=2,run_id=run_id,provider='Reference sources',created_utc=now.isoformat(),start=start,end_exclusive=end,timeout=timeout,page_size=page_size,max_pages=max_pages,adapter_version='reference-v2',client_versions={'python':platform.python_version(),**{n:version(n) for n in ('pandas','curl_cffi','yfinance')}},files=[],items=[])
++    with tempfile.TemporaryDirectory(prefix='.reference-',dir=root) as temporary:
++        stage=Path(temporary)
++        def save(body,name):
++            (stage/name).write_bytes(body)
++            manifest['files'].append(dict(path=name,sha256=digest(body),bytes=len(body)))
++            return name
++        for dataset in selected: manifest['items'].append(_download(dataset,start,end,timeout,page_size,max_pages,fetch,cancelled,save))
++        (stage/MANIFEST).write_text(json.dumps(manifest,indent=2)+'\n')
++        runs=root/'runs'; runs.mkdir(exist_ok=True); stage.rename(runs/run_id)
++    return run_id
+--- before/src/portfolio/data/snapshots.py
++++ after/src/portfolio/data/snapshots.py
+@@ -38,37 +38,32 @@
+         raise ValueError('invalid artifact path')
+     target=folder/name
+     if target.is_symlink() or not target.resolve().is_relative_to(folder.resolve()):
+         raise ValueError('artifact path escapes snapshot')
+     return target
+ 
+ 
+ def load_snapshot(root: Path, run_id: str) -> dict:
+     folder=_folder(root,run_id)
+     if (folder/MANIFEST).is_symlink(): raise ValueError('invalid manifest path')
+     try:
+         manifest=json.loads((folder/MANIFEST).read_bytes())
++        if manifest.get('schema_version')==2: return _load_reference(folder,manifest,run_id)
+         if manifest['schema_version']!=1 or manifest['run_id']!=run_id or manifest['provider']!='Yahoo chart':
+             raise ValueError('unsupported snapshot')
+         from .updates import validate_plan
+         items=manifest['items']
+         validate_plan([i['symbol'] for i in items],manifest['start'],manifest['end_exclusive'],manifest['timeout'])
+         if not isinstance(manifest['created_utc'],str): raise ValueError('invalid created time')
+-        entries={}
+-        for entry in manifest['files']:
+-            name=entry['path']
+-            if name in entries: raise ValueError('duplicate artifact')
+-            body=_artifact(folder,name).read_bytes()
+-            if digest(body)!=entry['sha256'] or len(body)!=entry['bytes']: raise ValueError('snapshot hash/size mismatch')
+-            entries[name]=entry
++        entries=_verified_entries(folder,manifest['files'])
+         referenced=set()
+         for item in items:
+             if item['status'] not in {'success','partial','unavailable','cancelled'} or not isinstance(item['reason'],str) or not isinstance(item['rows'],int) or item['rows']<0:
+                 raise ValueError('invalid item')
+             for key in ('raw_file','daily_file','import_file'):
+                 name=item[key]
+                 if name is not None:
+                     if name not in entries: raise ValueError('unlisted artifact')
+                     referenced.add(name)
+             if item['raw_file'] is not None:
+                 if item['raw_sha256']!=entries[item['raw_file']]['sha256']: raise ValueError('raw hash mismatch')
+             elif item['raw_sha256'] is not None: raise ValueError('raw hash without raw')
+@@ -86,12 +81,78 @@
+     if filename not in {f['path'] for f in manifest['files']}: raise ValueError('unlisted artifact')
+     return _artifact(_folder(root,run_id),filename).read_bytes()
+ 
+ 
+ def update_log(root: Path) -> pd.DataFrame:
+     columns=['run_id','created_utc','symbol','start','end_exclusive','status','reason','rows','cache_status']
+     rows=[]
+     for run_id in list_runs(root):
+         manifest=load_snapshot(root,run_id)
+         for item in manifest['items']:
+             rows.append({**{k:manifest[k] for k in ('run_id','created_utc','start','end_exclusive')},**{k:item[k] for k in ('symbol','status','reason','rows')},'cache_status':'available' if item['status']=='success' else 'unavailable'})
+     return pd.DataFrame(rows,columns=columns)
++
++
++def _load_reference(folder,manifest,run_id):
++    from datetime import date, datetime
++    from .reference_updates import REFERENCE_CATALOG, validate_reference_plan
++    if manifest['run_id'] != run_id or manifest['provider'] != 'Reference sources':
++        raise ValueError('unsupported snapshot')
++    items=manifest['items']
++    validate_reference_plan([i['dataset'] for i in items],manifest['start'],manifest['end_exclusive'],manifest['timeout'],manifest['page_size'],manifest['max_pages'])
++    _validate_utc_timestamp(manifest['created_utc'])
++    if not isinstance(manifest['adapter_version'],str) or not manifest['adapter_version'] or not isinstance(manifest['client_versions'],dict) or any(not isinstance(k,str) or not isinstance(v,str) for k,v in manifest['client_versions'].items()): raise ValueError('invalid versions')
++    entries=_verified_entries(folder,manifest['files'])
++    referenced=set()
++    reasons={'tls_error','not_requested','cancelled','timeout','transport_error','rate_limited','http_error','parse_error','page_limit','empty_data','complete_requested_months','missing_or_invalid_values_or_months'}
++    for item in items:
++        dataset=item['dataset']
++        if item['symbol']!=dataset or any(item[k]!=v for k,v in REFERENCE_CATALOG[dataset].items()): raise ValueError('invalid identity')
++        if 'import_file' in item or item['status'] not in {'success','partial','unavailable','cancelled'} or item['reason'] not in reasons or isinstance(item['rows'],bool) or not isinstance(item['rows'],int) or item['rows']<0: raise ValueError('invalid reference item')
++        if not isinstance(item['raw_files'],list) or len(set(item['raw_files']))!=len(item['raw_files']): raise ValueError('invalid raw files')
++        for name in [*item['raw_files'],item['source_file'],item['table_file']]:
++            if name is not None:
++                if name not in entries: raise ValueError('unlisted artifact')
++                if name in referenced: raise ValueError('duplicate reference')
++                referenced.add(name)
++        if not isinstance(item['pagination_complete'],bool) or not isinstance(item['missing_months'],list) or len(set(item['missing_months']))!=len(item['missing_months']): raise ValueError('invalid coverage')
++        for month in item['missing_months']:
++            if not isinstance(month,str) or not re.fullmatch(r'\d{4}-\d{2}',month): raise ValueError('invalid month')
++            day=date.fromisoformat(month+'-01').isoformat()
++            if not manifest['start']<=day<manifest['end_exclusive']: raise ValueError('month outside plan')
++        for key in ('first_date','last_date'):
++            day=item[key]
++            if day is not None and (date.fromisoformat(day).isoformat()!=day or not manifest['start']<=day<manifest['end_exclusive']): raise ValueError('invalid observation date')
++        if item['rows'] and (not item['first_date'] or not item['last_date'] or item['first_date']>item['last_date'] or not item['table_file']): raise ValueError('missing table metadata')
++        if not item['rows'] and (item['first_date'] is not None or item['last_date'] is not None or item['table_file'] is not None): raise ValueError('unexpected table metadata')
++        if item['status']=='success' and (not item['raw_files'] or not item['table_file'] or not item['pagination_complete'] or item['missing_months'] or (dataset!='HKMA_USDHKD' and not item['source_file'])): raise ValueError('success missing evidence')
++        if not isinstance(item['pages'],list) or len(item['pages'])!=len(item['raw_files']): raise ValueError('invalid pages')
++        for page,name in zip(item['pages'],item['raw_files']):
++            if page['path']!=name or page['sha256']!=entries[name]['sha256'] or isinstance(page['offset'],bool) or not isinstance(page['offset'],int) or page['offset']<0 or isinstance(page['status_code'],bool) or not isinstance(page['status_code'],int) or not 100<=page['status_code']<=599: raise ValueError('invalid page')
++            _validate_utc_timestamp(page['retrieved_utc'])
++        expected_scope = 'observation_months_only' if dataset == 'HKMA_USDHKD' else 'requested_monthly_factors'
++        if item['quality_scope'] != expected_scope:
++            raise ValueError('invalid quality scope')
++    if referenced!=set(entries): raise ValueError('unreferenced artifact')
++    actual={p.name for p in folder.iterdir() if p.name!=MANIFEST}
++    if actual!=set(entries): raise ValueError('unlisted artifact on disk')
++    return manifest
++
++
++def _verified_entries(folder,files):
++    entries={}
++    for entry in files:
++        name=entry['path']
++        if name in entries or isinstance(entry['bytes'],bool) or not isinstance(entry['bytes'],int) or entry['bytes']<0 or not isinstance(entry['sha256'],str) or not re.fullmatch('[0-9a-f]{64}',entry['sha256']): raise ValueError('invalid artifact')
++        body=_artifact(folder,name).read_bytes()
++        if digest(body)!=entry['sha256'] or len(body)!=entry['bytes']: raise ValueError('snapshot hash/size mismatch')
++        entries[name]=entry
++    return entries
++
++
++def _validate_utc_timestamp(value):
++    from datetime import datetime, timedelta
++    if not isinstance(value, str):
++        raise ValueError('invalid UTC timestamp')
++    timestamp = datetime.fromisoformat(value)
++    if timestamp.tzinfo is None or timestamp.utcoffset() != timedelta(0):
++        raise ValueError('timestamp must have explicit UTC offset')
+--- before/tests/test_reference_downloads_view.py
++++ after/tests/test_reference_downloads_view.py
+@@ -0,0 +1,151 @@
++from datetime import date
++from pathlib import Path
++import io
++import zipfile
++import pytest
++from streamlit.testing.v1 import AppTest
++from portfolio.data.reference_updates import run_reference_update
++from portfolio.data.providers.base import RawResponse
++from portfolio.data.snapshots import load_snapshot, read_artifact
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def start(monkeypatch, root):
++    monkeypatch.setenv('PORTFOLIO_REFERENCE_DOWNLOADS_ROOT', str(root))
++    at = AppTest.from_file(str(ROOT/'app/main.py'), default_timeout=15).run()
++    at.radio(key='workspace').set_value('因子与官方汇率').run()
++    assert not at.exception
++    return at
++
++
++def click(at, key):
++    at.button(key=key).click().run()
++    assert not at.exception
++
++
++def cache(root, partial=False, failed=False):
++    data = io.BytesIO()
++    with zipfile.ZipFile(data, 'w') as z:
++        z.writestr('F-F_Research_Data_Factors.csv', ',Mkt-RF,SMB,HML,RF\n202501,2,3,'+('-99.99' if partial else '4')+',0.4\n202502,1,2,3,0.3')
++    rid = run_reference_update(root, ['US_FF3'], '2025-01-01', '2025-03-01', fetch=lambda *a: RawResponse(b'limited',429) if failed else RawResponse(data.getvalue(),200))
++    return rid, load_snapshot(root,rid)
++
++
++def keys(at):
++    return {b.key for b in at.get('download_button')}
++
++
++def test_prepare_cancel_changes_and_navigation_are_offline(monkeypatch,tmp_path):
++    import app.views.reference_downloads as view
++    monkeypatch.setattr(view,'run_reference_update',lambda *a,**k:pytest.fail('unexpected network'))
++    at=start(monkeypatch,tmp_path)
++    assert at.date_input(key='ref_end').value == date(2026,1,1)
++    click(at,'ref_prepare')
++    assert len(at.session_state['ref_plan']['datasets'])==5
++    assert any('24' in x.value for x in at.markdown)
++    click(at,'ref_cancel')
++    assert at.session_state['ref_plan'] is None
++    click(at,'ref_prepare')
++    at.number_input(key='ref_max_pages').set_value(3).run()
++    assert at.session_state['ref_plan'] is None
++    at.date_input(key='ref_start_date').set_value(date(2025,1,2)).run()
++    click(at,'ref_prepare')
++    assert at.error
++    at.radio(key='workspace').set_value('数据导入').run()
++    assert not at.exception
++
++
++def test_explicit_start_and_open_preserve_active(monkeypatch,tmp_path):
++    import app.views.reference_downloads as view
++    rid,m=cache(tmp_path)
++    calls=[]
++    monkeypatch.setattr(view,'run_reference_update',lambda *a,**k:(calls.append(k) or rid))
++    at=start(monkeypatch,tmp_path)
++    click(at,'ref_open')
++    active=at.session_state['ref_active']
++    click(at,'ref_prepare'); click(at,'ref_start')
++    assert len(calls)==1
++    assert at.session_state['ref_active']==active
++    assert at.session_state['ref_result']['manifest']==m
++    failed,_=cache(tmp_path,failed=True)
++    at.run(); at.selectbox(key='ref_run').set_value(failed).run(); click(at,'ref_open')
++    assert at.session_state['ref_active']==active
++    assert at.session_state['ref_result']['run_id']==failed
++    assert {'ref_manifest','ref_table','ref_raw','ref_log','ref_result_manifest'} <= keys(at)
++    assert not any('导入' in b.label for b in at.button)
++
++
++def test_partial_diagnostics_and_corruption(monkeypatch,tmp_path):
++    rid,m=cache(tmp_path,partial=True)
++    at=start(monkeypatch,tmp_path); click(at,'ref_open')
++    assert at.session_state['ref_active'] is None
++    assert 'ref_result_diag_table_US_FF3' in keys(at)
++    assert any(df.value.isna().any().any() for df in at.dataframe)
++    assert read_artifact(tmp_path,rid,m['items'][0]['table_file'])
++    (tmp_path/'runs'/rid/m['items'][0]['table_file']).write_bytes(b'corrupt')
++    at.run()
++    assert not keys(at)
++    assert at.error
++
++
++def test_root_binding_and_manifest_change(monkeypatch,tmp_path):
++    rid,m=cache(tmp_path/'a')
++    at=start(monkeypatch,tmp_path/'a'); click(at,'ref_open'); click(at,'ref_prepare')
++    monkeypatch.setenv('PORTFOLIO_REFERENCE_DOWNLOADS_ROOT',str(tmp_path/'b'))
++    at.run()
++    assert at.session_state['ref_plan'] is None
++    assert 'ref_table' not in keys(at)
++    monkeypatch.setenv('PORTFOLIO_REFERENCE_DOWNLOADS_ROOT',str(tmp_path/'a'))
++    import json
++    p=tmp_path/'a'/'runs'/rid/'snapshot_manifest.json'
++    changed=dict(m,created_utc='2026-10-16T00:00:00+00:00')
++    p.write_text(json.dumps(changed))
++    at.run()
++    assert 'ref_manifest' not in keys(at)
++    assert at.error
++
++
++def test_exact_exports_mixed_scope_and_failed_start(monkeypatch,tmp_path):
++    import app.views.reference_downloads as view
++    from portfolio.data.providers.base import RawResponse
++    import json
++    good,gm=cache(tmp_path/'seed')
++    body=read_artifact(tmp_path/'seed',good,gm['items'][0]['raw_files'][0])
++    def fetch(dataset,*a,**k):
++        if dataset=='US_FF3': return RawResponse(body,200)
++        return RawResponse(json.dumps({'header':{'success':True},'result':{'records':[{'end_of_day':'2025-01-02','usd':7.8}]}}).encode(),200)
++    rid=run_reference_update(tmp_path,['US_FF3','HKMA_USDHKD'],'2025-01-01','2025-03-01',fetch=fetch)
++    m=load_snapshot(tmp_path,rid)
++    recorded={}
++    original=view.st.download_button
++    def capture(label,data,*args,**kwargs):
++        recorded[kwargs['key']]=data
++        return original(label,data,*args,**kwargs)
++    monkeypatch.setattr(view.st,'download_button',capture)
++    at=start(monkeypatch,tmp_path); click(at,'ref_open')
++    assert recorded['ref_table']==read_artifact(tmp_path,rid,m['items'][0]['table_file'])
++    assert recorded['ref_diag_table_HKMA_USDHKD']==read_artifact(tmp_path,rid,m['items'][1]['table_file'])
++    name=at.selectbox(key='ref_raw_file').value
++    assert recorded['ref_raw']==read_artifact(tmp_path,rid,name)
++    assert any('USD RF' in x.value and '港币' in x.value for x in at.info)
++    assert {'数据集','名称','来源','地区','模型','币种','频率','单位'} <= set(at.dataframe[1].value.columns)
++    active=at.session_state['ref_active']
++    def fail(*a,**k): raise OSError('SECRET exception')
++    monkeypatch.setattr(view,'run_reference_update',fail)
++    click(at,'ref_prepare'); click(at,'ref_start')
++    assert at.session_state['ref_active']==active
++    assert 'SECRET' not in str([x.value for x in at.error])
++    table=tmp_path/'runs'/rid/m['items'][0]['table_file']
++    table.write_bytes(b'corrupt')
++    at.run()
++    assert not keys(at)
++
++
++def test_schema_one_friendly_rejection(monkeypatch,tmp_path):
++    from portfolio.data.updates import run_update
++    run_update(tmp_path,['SPY'],'2025-01-01','2025-02-01',fetch=lambda *a:RawResponse(b'limited',429))
++    at=start(monkeypatch,tmp_path); click(at,'ref_open')
++    assert at.error
++    assert at.session_state['ref_active'] is None
++    assert not keys(at)
+--- before/tests/test_reference_updates.py
++++ after/tests/test_reference_updates.py
+@@ -0,0 +1,210 @@
++import io
++import json
++import zipfile
++import pytest
++from portfolio.data.providers.base import RawResponse
++from portfolio.data.reference_updates import run_reference_update, validate_reference_plan
++from portfolio.data.snapshots import load_snapshot, read_artifact
++
++
++def french(text=',Mkt-RF,SMB,HML,RF\n202501,2,3,4,0.4\n202502,1,2,3,0.3\n\nAnnual Factors\n2025,99,99,99,99'):
++    body=io.BytesIO()
++    with zipfile.ZipFile(body,'w') as z: z.writestr('F-F_Research_Data_Factors.csv',text)
++    return RawResponse(body.getvalue(),200)
++
++
++def page(*days):
++    return RawResponse(json.dumps({'header':{'success':True},'result':{'records':[{'end_of_day':d,'usd':7.8} for d in days]}}).encode(),200)
++
++
++def run(tmp_path,fetch,dataset='US_FF3',**kwargs):
++    rid=run_reference_update(tmp_path,[dataset],'2025-01-01','2025-03-01',fetch=fetch,**kwargs)
++    return rid,load_snapshot(tmp_path,rid)
++
++
++def test_french_evidence_and_revision(tmp_path):
++    rid,m=run(tmp_path,lambda *a:french())
++    i=m['items'][0]
++    assert i['status']=='success' and i['rows']==2
++    assert b'Annual Factors' in read_artifact(tmp_path,rid,i['source_file'])
++    assert b'0.020000' in read_artifact(tmp_path,rid,i['table_file'])
++    _,m2=run(tmp_path,lambda *a:RawResponse(b'bad',429))
++    assert m2['items'][0]['status']=='unavailable'
++    assert load_snapshot(tmp_path,rid)==m
++
++
++@pytest.mark.parametrize('text,status', [(',Mkt-RF,SMB,HML,RF\n202501,1,2,-99.99,4','partial'),(',Mkt-RF,SMB,HML,RMW,CMA,RF\n202501,1,2,3,4,5,6','unavailable')])
++def test_french_quality(tmp_path,text,status):
++    _,m=run(tmp_path,lambda *a:french(text))
++    assert m['items'][0]['status']==status
++
++
++def test_hkma_exact_multiple_and_offsets(tmp_path):
++    calls=[]
++    def fetch(*a,offset=0,page_size=1000):
++        calls.append(offset)
++        return {0:page('2025-01-02'),1:page('2025-02-03'),2:page()}[offset]
++    _,m=run(tmp_path,fetch,'HKMA_USDHKD',page_size=1)
++    assert calls==[0,1,2]
++    i=m['items'][0]
++    assert i['status']=='success' and i['pagination_complete']
++    assert len(i['raw_files'])==3 and i['quality_scope']=='observation_months_only'
++
++
++@pytest.mark.parametrize('second,expected,reason',[(page('2025-01-02'),'unavailable','parse_error'),(page('2025-03-01'),'unavailable','parse_error'),(RawResponse(b'secret',429),'partial','rate_limited'),(RawResponse(b'{',200),'unavailable','parse_error')])
++def test_hkma_failed_page_retained(tmp_path,second,expected,reason):
++    _,m=run(tmp_path,lambda *a,offset=0,**k: page('2025-01-02') if offset==0 else second,'HKMA_USDHKD',page_size=1)
++    i=m['items'][0]
++    assert (i['status'],i['reason'])==(expected,reason)
++    assert len(i['raw_files'])==2
++
++
++def test_timeout_cap_cancel_and_invalid(tmp_path):
++    def fetch(*a,offset=0,**k):
++        if offset: raise TimeoutError('secret')
++        return page('2025-01-02')
++    _,m=run(tmp_path,fetch,'HKMA_USDHKD',page_size=1)
++    assert m['items'][0]['reason']=='timeout'
++    _,m=run(tmp_path,fetch,'HKMA_USDHKD',page_size=1,max_pages=1)
++    assert m['items'][0]['reason']=='page_limit'
++    _,m=run(tmp_path,lambda *a:pytest.fail('fetch'),cancelled=lambda:True)
++    assert m['items'][0]['status']=='cancelled'
++    root=tmp_path/'absent'
++    with pytest.raises(ValueError): run_reference_update(root,['US_FF3'],'2025-01-02','2025-03-01')
++    assert not root.exists()
++
++
++def test_snapshot_corrupt_and_symlink(tmp_path):
++    rid,m=run(tmp_path,lambda *a:french())
++    path=tmp_path/'runs'/rid/m['items'][0]['table_file']
++    path.write_bytes(b'corrupt')
++    with pytest.raises(ValueError): load_snapshot(tmp_path,rid)
++    path.unlink(); path.symlink_to(tmp_path/'secret')
++    with pytest.raises(ValueError): load_snapshot(tmp_path,rid)
++
++
++@pytest.mark.parametrize('kwargs',[{'timeout':True},{'timeout':float('nan')},{'page_size':True},{'page_size':1001},{'max_pages':0},{'max_pages':101}])
++def test_invalid_plan_no_io(tmp_path,kwargs):
++    root=tmp_path/'missing'
++    with pytest.raises(ValueError): run_reference_update(root,['US_FF3'],'2025-01-01','2025-03-01',fetch=lambda *a:pytest.fail('network'),**kwargs)
++    assert not root.exists()
++
++
++def test_post_response_cancel_preserves_raw(tmp_path):
++    state={'cancel':False}
++    def fetch(*a):
++        state['cancel']=True
++        return french()
++    _,m=run(tmp_path,fetch,cancelled=lambda:state['cancel'])
++    i=m['items'][0]
++    assert i['status']=='cancelled' and len(i['raw_files'])==1 and i['table_file'] is None
++
++
++def test_transport_exception_does_not_leak_and_programming_errors_propagate(tmp_path):
++    def timeout(*a): raise TimeoutError('secret token')
++    rid,m=run(tmp_path,timeout)
++    assert m['items'][0]['reason']=='timeout'
++    assert b'secret' not in (tmp_path/'runs'/rid/'snapshot_manifest.json').read_bytes()
++    def broken(*a): raise OSError('disk issue')
++    with pytest.raises(OSError): run(tmp_path,broken)
++
++
++def test_ff5_separate_model_and_missing_month(tmp_path):
++    def fetch(dataset,*a):
++        text=',Mkt-RF,SMB,HML,RMW,CMA,RF\n202501,1,9,3,4,5,6\n202503,1,9,3,4,5,6'
++        body=io.BytesIO()
++        with zipfile.ZipFile(body,'w') as z: z.writestr('F-F_Research_Data_5_Factors_2x3.csv',text)
++        return RawResponse(body.getvalue(),200)
++    rid,m=run(tmp_path,fetch,'US_FF5')
++    i=m['items'][0]
++    assert i['status']=='partial' and i['missing_months']==['2025-02']
++    import pandas as pd
++    table=pd.read_csv(io.BytesIO(read_artifact(tmp_path,rid,i['table_file'])))
++    assert table.SMB.iloc[0]==pytest.approx(.09)
++    assert table.columns.tolist()==['month','Mkt-RF','SMB','HML','RMW','CMA','RF']
++
++
++@pytest.mark.parametrize('body',[b'not zip',b'PK\x03\x04'])
++def test_bad_archive_retained(tmp_path,body):
++    _,m=run(tmp_path,lambda *a:RawResponse(body,200))
++    assert m['items'][0]['reason']=='parse_error' and len(m['items'][0]['raw_files'])==1
++
++
++def test_wrong_region_archive_rejected(tmp_path):
++    _,m=run(tmp_path,lambda *a:french(),'AP_EX_JP_FF3')
++    assert m['items'][0]['reason']=='parse_error'
++
++
++@pytest.mark.parametrize('records',[[{'end_of_day':'2025-01-03','usd':7.8},{'end_of_day':'2025-01-02','usd':7.8}],[{'end_of_day':'2025-01-02','usd':0}],[{'end_of_day':'2025-01-02','usd':None}]])
++def test_invalid_hkma_values_order(tmp_path,records):
++    response=RawResponse(json.dumps({'header':{'success':True},'result':{'records':records}}).encode(),200)
++    _,m=run(tmp_path,lambda *a,**k:response,'HKMA_USDHKD')
++    assert m['items'][0]['status']=='unavailable' and m['items'][0]['reason']=='parse_error'
++
++
++def test_short_hkma_page_ignores_datasize(tmp_path):
++    response=page('2025-01-02','2025-02-02')
++    payload=json.loads(response.body); payload['result']['datasize']=20000
++    _,m=run(tmp_path,lambda *a,**k:RawResponse(json.dumps(payload).encode(),200),'HKMA_USDHKD')
++    assert m['items'][0]['status']=='success' and len(m['items'][0]['pages'])==1
++
++
++@pytest.mark.parametrize('mutation',[lambda m:m['items'][0].update(symbol='OTHER'),lambda m:m['items'][0].update(currency='HKD'),lambda m:m['items'][0].update(status='invented'),lambda m:m['items'][0].update(raw_files=[]),lambda m:m['files'][0].update(path='../secret'),lambda m:m.update(page_size=True)])
++def test_manifest_rejects_invalid_fields(tmp_path,mutation):
++    rid,m=run(tmp_path,lambda *a:french())
++    mutation(m)
++    (tmp_path/'runs'/rid/'snapshot_manifest.json').write_text(json.dumps(m))
++    with pytest.raises(ValueError): load_snapshot(tmp_path,rid)
++
++
++def test_unlisted_disk_file_rejected(tmp_path):
++    rid,m=run(tmp_path,lambda *a:french())
++    (tmp_path/'runs'/rid/'extra').write_bytes(b'bad')
++    with pytest.raises(ValueError): load_snapshot(tmp_path,rid)
++
++
++def test_oversized_hkma_page_rejected(tmp_path):
++    _,m=run(tmp_path,lambda *a,**k:page('2025-01-02','2025-02-03'),'HKMA_USDHKD',page_size=1)
++    assert m['items'][0]['reason']=='parse_error'
++
++
++def test_wrong_model_full_history_never_publishes_outside_plan_table(tmp_path):
++    text=',Mkt-RF,SMB,HML,RMW,CMA,RF\n202001,1,2,3,4,5,6\n202501,1,2,3,4,5,6'
++    _,m=run(tmp_path,lambda *a:french(text))
++    i=m['items'][0]
++    assert i['status']=='unavailable' and i['reason']=='parse_error'
++    assert i['table_file'] is None and i['rows']==0
++
++
++@pytest.mark.parametrize('code,reason',[(35,'tls_error'),(60,'tls_error'),(7,'transport_error'),(28,'timeout')])
++def test_reference_transport_safe_classification(tmp_path,code,reason):
++    import yfinance
++    from curl_cffi.requests.exceptions import RequestException
++    def fetch(*args):
++        raise RequestException('private secret',code=code)
++    rid,m=run(tmp_path,fetch)
++    assert m['items'][0]['reason']==reason
++    assert b'private secret' not in (tmp_path/'runs'/rid/'snapshot_manifest.json').read_bytes()
++
++
++@pytest.mark.parametrize('field',['created_utc','retrieved_utc'])
++@pytest.mark.parametrize('timestamp',['2025-01-01T00:00:00','2025-01-01T00:00:00+08:00'])
++def test_schema2_rejects_non_utc_timestamps(tmp_path,field,timestamp):
++    rid,m=run(tmp_path,lambda *a:french())
++    if field=='created_utc': m[field]=timestamp
++    else: m['items'][0]['pages'][0][field]=timestamp
++    (tmp_path/'runs'/rid/'snapshot_manifest.json').write_text(json.dumps(m))
++    with pytest.raises(ValueError): load_snapshot(tmp_path,rid)
++
++
++def test_ssl_error_class_without_code_and_legacy_adapter_read(tmp_path):
++    import yfinance
++    from curl_cffi.requests.exceptions import SSLError
++    def fetch(*a): raise SSLError('private secret')
++    _,m=run(tmp_path,fetch)
++    assert m['items'][0]['reason']=='tls_error'
++    rid,m=run(tmp_path,lambda *a:french())
++    assert m['adapter_version']=='reference-v2'
++    m['adapter_version']='reference-v1'
++    (tmp_path/'runs'/rid/'snapshot_manifest.json').write_text(json.dumps(m))
++    assert load_snapshot(tmp_path,rid)['adapter_version']=='reference-v1'
+--- before/tests/test_reference_verification.py
++++ after/tests/test_reference_verification.py
+@@ -0,0 +1,110 @@
++"""The acceptance auditor independently checks the claimed monthly coverage."""
++import importlib.util
++import io
++import json
++from pathlib import Path
++import zipfile
++
++import pytest
++from portfolio.data.providers.base import RawResponse
++from portfolio.data.reference_updates import run_reference_update
++
++
++def test_auditor_rejects_success_with_missing_requested_month(tmp_path):
++    spec = importlib.util.spec_from_file_location('reference_verification', Path(__file__).resolve().parents[1] / 'scripts/verify_reference_downloads.py')
++    verifier = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(verifier)
++    body = io.BytesIO()
++    with zipfile.ZipFile(body, 'w') as archive:
++        archive.writestr('F-F_Research_Data_Factors.csv', ',Mkt-RF,SMB,HML,RF\n202501,2,3,4,.4\n202503,1,2,3,.3')
++    run_id = run_reference_update(tmp_path, ['US_FF3'], '2025-01-01', '2025-04-01', fetch=lambda *a: RawResponse(body.getvalue(), 200))
++    assert verifier.verify(tmp_path, run_id)['checks'][0]['status'] == 'partial'
++    manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
++    manifest = json.loads(manifest_path.read_bytes())
++    manifest['items'][0].update(status='success', reason='complete_requested_months', missing_months=[])
++    manifest_path.write_text(json.dumps(manifest))
++    with pytest.raises(AssertionError, match='coverage'):
++        verifier.verify(tmp_path, run_id)
++
++
++def verifier_module():
++    spec = importlib.util.spec_from_file_location('reference_verification', Path(__file__).resolve().parents[1] / 'scripts/verify_reference_downloads.py')
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def hkma_page(records):
++    return json.dumps({'header': {'success': True}, 'result': {'records': records}}).encode()
++
++
++@pytest.mark.parametrize('rejected', [
++    b'{', b'not JSON', b'\xff',
++    hkma_page({}),
++    json.dumps({'header': {'success': False}}).encode(),
++    hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
++    hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
++])
++@pytest.mark.parametrize('cancel_after_response', [False, True])
++def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
++    calls = []
++    def fetch(*args, **kwargs):
++        calls.append(kwargs['offset'])
++        return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
++    run_id = run_reference_update(
++        tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
++        page_size=1, fetch=fetch,
++        cancelled=lambda: cancel_after_response and len(calls) == 2,
++    )
++    verifier = verifier_module()
++    report = verifier.verify(tmp_path, run_id)
++    item = report['checks'][0]
++    assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
++    assert item['rows'] == 1 and len(item['raw_files']) == 2
++    assert item['table_checked'] and item['numeric_cells_verified'] == 1
++    assert not report['all_requested_sources_success']
++
++    # A claimed success must never hide malformed evidence.
++    manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
++    manifest = json.loads(manifest_path.read_bytes())
++    manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
++    manifest_path.write_text(json.dumps(manifest))
++    with pytest.raises(AssertionError, match='HKMA'):
++        verifier.verify(tmp_path, run_id)
++
++
++def test_auditor_rejects_changed_diagnostic_value(tmp_path):
++    import hashlib
++    calls = []
++    def fetch(*args, **kwargs):
++        calls.append(1)
++        return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else b'{', 200)
++    run_id = run_reference_update(tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01', page_size=1, fetch=fetch)
++    manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
++    manifest = json.loads(manifest_path.read_bytes())
++    table_path = manifest_path.parent / manifest['items'][0]['table_file']
++    altered = table_path.read_bytes().replace(b'7.800000000000', b'7.900000000000')
++    table_path.write_bytes(altered)
++    for file in manifest['files']:
++        if file['path'] == table_path.name:
++            file.update(sha256=hashlib.sha256(altered).hexdigest(), bytes=len(altered))
++    manifest_path.write_text(json.dumps(manifest))
++    with pytest.raises(AssertionError, match='HKMA value'):
++        verifier_module().verify(tmp_path, run_id)
++
++
++def test_auditor_propagates_raw_integrity_failure_after_initial_load(tmp_path, monkeypatch):
++    calls = []
++    def fetch(*args, **kwargs):
++        calls.append(1)
++        return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else b'{', 200)
++    run_id = run_reference_update(tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01', page_size=1, fetch=fetch)
++    verifier = verifier_module()
++    read_artifact = verifier.read_artifact
++    def changed_raw(root, rid, path):
++        if path.endswith('_raw_001.json'):
++            raise ValueError('artifact integrity changed after load')
++        return read_artifact(root, rid, path)
++    monkeypatch.setattr(verifier, 'read_artifact', changed_raw)
++    with pytest.raises(ValueError, match='integrity changed after load'):
++        verifier.verify(tmp_path, run_id)

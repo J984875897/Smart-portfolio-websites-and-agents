@@ -1,0 +1,11 @@
+asset_id,ticker,name,tool_type,asset_class,exchange,currency,share_class,frequency
+p0,0000,Product 0,ETF,equity,HKEX,HKD,,monthly
+p1,0001,Product 1,ETF,equity,HKEX,HKD,,monthly
+p2,0002,Product 2,ETF,equity,HKEX,HKD,,monthly
+p3,0003,Product 3,ETF,equity,HKEX,HKD,,monthly
+p4,0004,Product 4,ETF,equity,HKEX,HKD,,monthly
+p5,0005,Product 5,ETF,equity,HKEX,HKD,,monthly
+p6,0006,Product 6,ETF,equity,HKEX,HKD,,monthly
+p7,0007,Product 7,ETF,equity,HKEX,HKD,,monthly
+p8,0008,Product 8,ETF,equity,HKEX,HKD,,monthly
+p9,0009,Product 9,ETF,equity,HKEX,HKD,,monthly

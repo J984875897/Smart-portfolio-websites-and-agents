@@ -1,0 +1,18 @@
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 31%]
+........................................................................ [ 41%]
+........................................................................ [ 52%]
+........................................................................ [ 62%]
+........................................................................ [ 73%]
+........................................................................ [ 83%]
+........................................................................ [ 94%]
+......................................                                   [100%]
+=============================== warnings summary ===============================
+tests/test_daily_hkd_verification.py::test_hand_calculation_and_provenance
+tests/test_daily_hkd_verification.py::test_hand_calculation_and_provenance
+  /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/exchange_calendars/exchange_calendar_xhkg.py:363: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+    easter_monday = EasterMonday.dates(years[0], years[-1] + 1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+686 passed, 2 warnings in 166.24s (0:02:46)

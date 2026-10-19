@@ -1,0 +1,41 @@
+{
+  "mode": "offline_replay",
+  "run_id": "20261016T032413288256Z-59063f7bab694be2b37f76b2ec4f1b51",
+  "root": "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/data/downloads",
+  "created_utc": "2026-10-16T03:24:13.288256+00:00",
+  "items": [
+    {
+      "symbol": "SPY",
+      "status": "unavailable",
+      "reason": "transport_error",
+      "rows": 0,
+      "raw_sha256": null
+    },
+    {
+      "symbol": "2800.HK",
+      "status": "success",
+      "reason": "fields_verified",
+      "rows": 19,
+      "raw_sha256": "882df0af0314ef76b953ae9a42729711344edb12aede9a38c54ab1843010ef5f",
+      "currency": "HKD",
+      "first_date": "2025-01-02",
+      "last_date": "2025-01-28",
+      "missing_close": 0,
+      "raw_to_daily_values_verified": true
+    },
+    {
+      "symbol": "HKD=X",
+      "status": "success",
+      "reason": "fields_verified",
+      "rows": 22,
+      "raw_sha256": "0d6c6bbd23a4cbbf81ecadc05da626295c6d0a4f2c6ef6082ecaf6e137f19f46",
+      "currency": "HKD",
+      "first_date": "2025-01-02",
+      "last_date": "2025-01-31",
+      "missing_close": 0,
+      "raw_to_daily_values_verified": true
+    }
+  ],
+  "all_source_checks_success": false,
+  "scope": "Source fields and immutable files only; no trading-calendar, historical availability or universe certification"
+}

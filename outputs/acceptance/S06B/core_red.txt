@@ -1,0 +1,1528 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                  [100%]
+=================================== FAILURES ===================================
+____________ test_hand_correlation_and_constant_self_is_unavailable ____________
+
+    def test_hand_correlation_and_constant_self_is_unavailable():
+>       r=corr()
+          ^^^^^^
+
+tests/test_correlation.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = None, options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+__________ test_future_values_order_and_dtype_do_not_affect_training ___________
+
+    def test_future_values_order_and_dtype_do_not_affect_training():
+>       x=inputs();before=x.copy(deep=True);r=corr(x)
+                                              ^^^^^^^
+
+tests/test_correlation.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C   NEG  CONST
+2024-01-31  0.01  0.03  0.00 -0.01   0.01
+2024-02-29  0.03  0.05  0.01 -0.03   0.01
+2024-03-31  0.02  0.04  0.02 -0.02   0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+______________________ test_all_constant_and_single_asset ______________________
+
+    def test_all_constant_and_single_asset():
+>       r=corr(inputs()[['CONST']])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =             CONST
+2024-01-31   0.01
+2024-02-29   0.01
+2024-03-31   0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+__________ test_tiny_nonconstant_series_is_not_classified_as_constant __________
+
+    def test_tiny_nonconstant_series_is_not_classified_as_constant():
+        x=inputs()[['A','NEG']]*1e-200
+>       r=corr(x)
+          ^^^^^^^
+
+tests/test_correlation.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                         A            NEG
+2024-01-31  1.000000e-202 -1.000000e-202
+2024-02-29  3.000000e-202 -3.000000e-202
+2024-03-31  2.000000e-202 -2.000000e-202
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+_______ test_bad_training_input_fails_without_pairwise_deletion[missing] _______
+
+case = 'missing'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C   NEG  CONST
+2024-01-31  0.01  0.03  0.00 -0.01   0.01
+2024-03-31  0.02  0.04  0.02 -0.02   0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+___ test_bad_training_input_fails_without_pairwise_deletion[duplicate_month] ___
+
+case = 'duplicate_month'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C   NEG  CONST
+2024-01-31  0.01  0.03  0.00 -0.01   0.01
+2024-01-31  0.03  0.05  0.01 -0.03   0.01
+2024-03-31  0.02  0.04  0.02 -0.02   0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+______ test_bad_training_input_fails_without_pairwise_deletion[bad_date] _______
+
+case = 'bad_date'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C   NEG  CONST
+2024-01-30  0.01  0.03  0.00 -0.01   0.01
+2024-02-29  0.03  0.05  0.01 -0.03   0.01
+2024-03-31  0.02  0.04  0.02 -0.02   0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+____ test_bad_training_input_fails_without_pairwise_deletion[duplicate_id] _____
+
+case = 'duplicate_id'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     A     C   NEG  CONST
+2024-01-31  0.01  0.03  0.00 -0.01   0.01
+2024-02-29  0.03  0.05  0.01 -0.03   0.01
+2024-03-31  0.02  0.04  0.02 -0.02   0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+______ test_bad_training_input_fails_without_pairwise_deletion[nonfinite] ______
+
+case = 'nonfinite'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C   NEG  CONST
+2024-01-31   NaN  0.03  0.00 -0.01   0.01
+2024-02-29  0.03  0.05  0.01 -0.03   0.01
+2024-03-31  0.02  0.04  0.02 -0.02   0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+________ test_bad_training_input_fails_without_pairwise_deletion[bool] _________
+
+case = 'bool'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C   NEG CONST
+2024-01-31  True  0.03   0.0 -0.01  0.01
+2024-02-29  0.03  0.05  0.01 -0.03  0.01
+2024-03-31  0.02  0.04  0.02 -0.02  0.01
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+______ test_bad_training_input_fails_without_pairwise_deletion[one_month] ______
+
+case = 'one_month'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C   NEG  CONST
+2024-01-31  0.01  0.03  0.00 -0.01   0.01
+2024-02-29  0.03  0.05  0.01 -0.03   0.01
+2024-03-31  0.02  0.04  0.02 -0.02   0.01
+options = {'train_end': '2024-01'}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+________ test_bad_training_input_fails_without_pairwise_deletion[empty] ________
+
+case = 'empty'
+
+    @pytest.mark.parametrize('case',['missing','duplicate_month','bad_date','duplicate_id','nonfinite','bool','one_month','empty'])
+    def test_bad_training_input_fails_without_pairwise_deletion(case):
+        x=inputs();options={}
+        if case=='missing': x=x.drop('2024-02-29')
+        elif case=='duplicate_month':x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif case=='bad_date':x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif case=='duplicate_id':x.columns=['A','A','C','NEG','CONST']
+        elif case=='nonfinite':x.iloc[0,0]=np.nan
+        elif case=='bool':x=x.astype(object);x.iloc[0,0]=True
+        elif case=='one_month':options=dict(train_end='2024-01')
+        elif case=='empty':x=x.iloc[:,:0]
+>       with pytest.raises(ValueError):corr(x,**options)
+                                       ^^^^^^^^^^^^^^^^^
+
+tests/test_correlation.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = Empty DataFrame
+Columns: []
+Index: [2024-01-31, 2024-02-29, 2024-03-31]
+options = {}
+
+    def corr(x=None,**options):
+>       from portfolio.evaluation.correlation import pearson_correlation
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_correlation.py:15: ModuleNotFoundError
+_____________ test_two_asset_hand_calculation_and_contribution_sum _____________
+
+    def test_two_asset_hand_calculation_and_contribution_sum():
+>       r=risk();sigma=np.sqrt(.0325)
+          ^^^^^^
+
+tests/test_diversification.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = None, cov = None, w = None, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+__________ test_twenty_equal_weights_and_completely_correlated_dr_one __________
+
+    def test_twenty_equal_weights_and_completely_correlated_dr_one():
+        ids=[f'A{i:02}' for i in range(20)]
+        sigma=np.linspace(.1,.4,20)
+>       r=risk(pd.Series(.05,index=ids),pd.DataFrame(np.outer(sigma,sigma),index=ids,columns=ids),pd.Series(1/20,index=ids))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A00    0.05
+A01    0.05
+A02    0.05
+A03    0.05
+A04    0.05
+A05    0.05
+A06    0.05
+A07    0.05
+A08    0.05
+A09    0.0...    0.05
+A12    0.05
+A13    0.05
+A14    0.05
+A15    0.05
+A16    0.05
+A17    0.05
+A18    0.05
+A19    0.05
+dtype: float64
+cov =           A00       A01       A02  ...       A17       A18       A19
+A00  0.010000  0.011579  0.013158  ...  0.036842 ...141551  0.147618  0.153684
+A19  0.040000  0.046316  0.052632  ...  0.147368  0.153684  0.160000
+
+[20 rows x 20 columns]
+w = A00    0.05
+A01    0.05
+A02    0.05
+A03    0.05
+A04    0.05
+A05    0.05
+A06    0.05
+A07    0.05
+A08    0.05
+A09    0.0...    0.05
+A12    0.05
+A13    0.05
+A14    0.05
+A15    0.05
+A16    0.05
+A17    0.05
+A18    0.05
+A19    0.05
+dtype: float64
+method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_____ test_negative_contribution_is_preserved_and_correlation_reduces_risk _____
+
+    def test_negative_contribution_is_preserved_and_correlation_reduces_risk():
+        _,cov,w=inputs();cov.loc['A','B']=cov.loc['B','A']=-.03;w[:]=[.8,.2]
+>       r=risk(cov=cov,w=w)
+          ^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = None, cov =       A     B
+A  0.04 -0.03
+B -0.03  0.09
+w = A    0.8
+B    0.2
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+______ test_zero_portfolio_risk_is_unavailable_not_infinite[cov_values0] _______
+
+cov_values = [[0, 0], [0, 0]]
+
+    @pytest.mark.parametrize('cov_values', [[[0,0],[0,0]],[[1,-1],[-1,1]]])
+    def test_zero_portfolio_risk_is_unavailable_not_infinite(cov_values):
+        _,cov,_=inputs();cov[:]=cov_values
+>       r=risk(cov=cov)
+          ^^^^^^^^^^^^^
+
+tests/test_diversification.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = None, cov =      A    B
+A  0.0  0.0
+B  0.0  0.0, w = None
+method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+______ test_zero_portfolio_risk_is_unavailable_not_infinite[cov_values1] _______
+
+cov_values = [[1, -1], [-1, 1]]
+
+    @pytest.mark.parametrize('cov_values', [[[0,0],[0,0]],[[1,-1],[-1,1]]])
+    def test_zero_portfolio_risk_is_unavailable_not_infinite(cov_values):
+        _,cov,_=inputs();cov[:]=cov_values
+>       r=risk(cov=cov)
+          ^^^^^^^^^^^^^
+
+tests/test_diversification.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = None, cov =      A    B
+A  1.0 -1.0
+B -1.0  1.0, w = None
+method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+__________ test_zero_weight_and_tiny_positive_variance_are_preserved ___________
+
+    def test_zero_weight_and_tiny_positive_variance_are_preserved():
+        _,cov,w=inputs();w[:]=[1,0]
+>       r=risk(cov=cov*1e-20,w=w)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = None
+cov =               A             B
+A  4.000000e-22  0.000000e+00
+B  0.000000e+00  9.000000e-22
+w = A    1.0
+B    0.0
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_________________ test_id_alignment_reordering_and_no_mutation _________________
+
+    def test_id_alignment_reordering_and_no_mutation():
+        mu,cov,w=inputs();before=cov.copy(deep=True)
+>       r=risk(mu,cov,w);other=risk(mu.iloc[::-1],cov.iloc[::-1,::-1],w.iloc[::-1])
+          ^^^^^^^^^^^^^^
+
+tests/test_diversification.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+___ test_invalid_annual_inputs_fail_instead_of_normalizing[negative_weight] ____
+
+case = 'negative_weight'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    1.1
+B   -0.1
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+______ test_invalid_annual_inputs_fail_instead_of_normalizing[sum_wrong] _______
+
+case = 'sum_wrong'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.4
+B    0.4
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_____ test_invalid_annual_inputs_fail_instead_of_normalizing[bool_weight] ______
+
+case = 'bool_weight'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    True
+B     0.5
+dtype: object, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+______ test_invalid_annual_inputs_fail_instead_of_normalizing[nan_weight] ______
+
+case = 'nan_weight'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    NaN
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+____ test_invalid_annual_inputs_fail_instead_of_normalizing[string_weight] _____
+
+case = 'string_weight'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: object, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_____ test_invalid_annual_inputs_fail_instead_of_normalizing[extra_weight] _____
+
+case = 'extra_weight'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+C    0.0
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+____ test_invalid_annual_inputs_fail_instead_of_normalizing[missing_weight] ____
+
+case = 'missing_weight'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09, w = A    0.5
+dtype: float64
+method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+___ test_invalid_annual_inputs_fail_instead_of_normalizing[duplicate_weight] ___
+
+case = 'duplicate_weight'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+A    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+________ test_invalid_annual_inputs_fail_instead_of_normalizing[mu_nan] ________
+
+case = 'mu_nan'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    NaN
+B    0.1
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_______ test_invalid_annual_inputs_fail_instead_of_normalizing[mu_bool] ________
+
+case = 'mu_bool'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    True
+B     0.1
+dtype: object
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_______ test_invalid_annual_inputs_fail_instead_of_normalizing[mu_extra] _______
+
+case = 'mu_extra'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+C    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_____ test_invalid_annual_inputs_fail_instead_of_normalizing[duplicate_mu] _____
+
+case = 'duplicate_mu'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+A    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_______ test_invalid_annual_inputs_fail_instead_of_normalizing[cov_nan] ________
+
+case = 'cov_nan'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =      A     B
+A  NaN  0.00
+B  0.0  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_______ test_invalid_annual_inputs_fail_instead_of_normalizing[cov_bool] _______
+
+case = 'cov_bool'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  True   0.0
+B   0.0  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+__ test_invalid_annual_inputs_fail_instead_of_normalizing[cov_negative_diag] ___
+
+case = 'cov_negative_diag'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =               A     B
+A -1.000000e-13  0.00
+B  0.000000e+00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+____ test_invalid_annual_inputs_fail_instead_of_normalizing[cov_asymmetric] ____
+
+case = 'cov_asymmetric'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.01
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+_____ test_invalid_annual_inputs_fail_instead_of_normalizing[cov_non_psd] ______
+
+case = 'cov_non_psd'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.10
+B  0.10  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+____ test_invalid_annual_inputs_fail_instead_of_normalizing[cov_duplicate] _____
+
+case = 'cov_duplicate'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     A
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+____ test_invalid_annual_inputs_fail_instead_of_normalizing[cov_misaligned] ____
+
+case = 'cov_misaligned'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+C  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'specified'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+____ test_invalid_annual_inputs_fail_instead_of_normalizing[unknown_method] ____
+
+case = 'unknown_method'
+
+    @pytest.mark.parametrize('case',['negative_weight','sum_wrong','bool_weight','nan_weight','string_weight','extra_weight','missing_weight','duplicate_weight','mu_nan','mu_bool','mu_extra','duplicate_mu','cov_nan','cov_bool','cov_negative_diag','cov_asymmetric','cov_non_psd','cov_duplicate','cov_misaligned','unknown_method'])
+    def test_invalid_annual_inputs_fail_instead_of_normalizing(case):
+        mu,cov,w=inputs();method='specified'
+        if case=='negative_weight':w[:]=[1.1,-.1]
+        elif case=='sum_wrong':w[:]=[.4,.4]
+        elif case=='bool_weight':w=w.astype(object);w.iloc[0]=True
+        elif case=='nan_weight':w.iloc[0]=np.nan
+        elif case=='string_weight':w=w.astype(object);w.iloc[0]='0.5'
+        elif case=='extra_weight':w['C']=0
+        elif case=='missing_weight':w=w.iloc[:1]
+        elif case=='duplicate_weight':w.index=['A','A']
+        elif case=='mu_nan':mu.iloc[0]=np.nan
+        elif case=='mu_bool':mu=mu.astype(object);mu.iloc[0]=True
+        elif case=='mu_extra':mu['C']=.1
+        elif case=='duplicate_mu':mu.index=['A','A']
+        elif case=='cov_nan':cov.iloc[0,0]=np.nan
+        elif case=='cov_bool':cov=cov.astype(object);cov.iloc[0,0]=True
+        elif case=='cov_negative_diag':cov.iloc[0,0]=-.0000000000001
+        elif case=='cov_asymmetric':cov.iloc[0,1]=.01
+        elif case=='cov_non_psd':cov.loc['A','B']=cov.loc['B','A']=.1
+        elif case=='cov_duplicate':cov.columns=['A','A']
+        elif case=='cov_misaligned':cov.index=['A','C']
+        elif case=='unknown_method':method='hidden'
+>       with pytest.raises(ValueError):risk(mu,cov,w,method)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diversification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mu = A    0.06
+B    0.10
+dtype: float64
+cov =       A     B
+A  0.04  0.00
+B  0.00  0.09
+w = A    0.5
+B    0.5
+dtype: float64, method = 'hidden'
+
+    def risk(mu=None,cov=None,w=None,method='specified'):
+>       from portfolio.evaluation.diversification import portfolio_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation'
+
+tests/test_diversification.py:15: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_correlation.py::test_hand_correlation_and_constant_self_is_unavailable
+FAILED tests/test_correlation.py::test_future_values_order_and_dtype_do_not_affect_training
+FAILED tests/test_correlation.py::test_all_constant_and_single_asset - Module...
+FAILED tests/test_correlation.py::test_tiny_nonconstant_series_is_not_classified_as_constant
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[missing]
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[duplicate_month]
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[bad_date]
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[duplicate_id]
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[nonfinite]
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[bool]
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[one_month]
+FAILED tests/test_correlation.py::test_bad_training_input_fails_without_pairwise_deletion[empty]
+FAILED tests/test_diversification.py::test_two_asset_hand_calculation_and_contribution_sum
+FAILED tests/test_diversification.py::test_twenty_equal_weights_and_completely_correlated_dr_one
+FAILED tests/test_diversification.py::test_negative_contribution_is_preserved_and_correlation_reduces_risk
+FAILED tests/test_diversification.py::test_zero_portfolio_risk_is_unavailable_not_infinite[cov_values0]
+FAILED tests/test_diversification.py::test_zero_portfolio_risk_is_unavailable_not_infinite[cov_values1]
+FAILED tests/test_diversification.py::test_zero_weight_and_tiny_positive_variance_are_preserved
+FAILED tests/test_diversification.py::test_id_alignment_reordering_and_no_mutation
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[negative_weight]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[sum_wrong]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[bool_weight]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[nan_weight]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[string_weight]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[extra_weight]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[missing_weight]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[duplicate_weight]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[mu_nan]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[mu_bool]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[mu_extra]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[duplicate_mu]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[cov_nan]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[cov_bool]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[cov_negative_diag]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[cov_asymmetric]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[cov_non_psd]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[cov_duplicate]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[cov_misaligned]
+FAILED tests/test_diversification.py::test_invalid_annual_inputs_fail_instead_of_normalizing[unknown_method]
+39 failed in 0.47s

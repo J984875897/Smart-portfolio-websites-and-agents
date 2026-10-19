@@ -1,0 +1,470 @@
+FFFFFFFFFFFFFF                                                           [100%]
+=================================== FAILURES ===================================
+_________________________ test_complete_and_isolation __________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_complete_and_isolation0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11f71de00>
+
+    def test_complete_and_isolation(tmp_path, monkeypatch):
+>       at = start(tmp_path, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_complete_and_isolation0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11f71de00>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:26.352 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______________ test_failed_cases[\u7f3a\u4e2d\u95f4\u62a5\u4ef7] _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases__u7f3a_u4e2d0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11ffc6fd0>
+case = '缺中间报价'
+
+    @pytest.mark.parametrize('case', CASES[1:])
+    def test_failed_cases(tmp_path, monkeypatch, case):
+>       at = start(tmp_path, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases__u7f3a_u4e2d0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11ffc6fd0>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:26.626 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_________________ test_failed_cases[\u6708\u4e2d\u62a5\u4ef7] __________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases__u6708_u4e2d0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x129600b90>
+case = '月中报价'
+
+    @pytest.mark.parametrize('case', CASES[1:])
+    def test_failed_cases(tmp_path, monkeypatch, case):
+>       at = start(tmp_path, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases__u6708_u4e2d0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x129600b90>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:26.706 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______________ test_failed_cases[\u7248\u672c\u665a\u53ef\u5f97] _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases__u7248_u672c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1293eead0>
+case = '版本晚可得'
+
+    @pytest.mark.parametrize('case', CASES[1:])
+    def test_failed_cases(tmp_path, monkeypatch, case):
+>       at = start(tmp_path, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases__u7248_u672c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1293eead0>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:26.785 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______________________ test_failed_cases[USD\u62a5\u4ef7] ______________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases_USD_u62a5_u40')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1293ef9b0>
+case = 'USD报价'
+
+    @pytest.mark.parametrize('case', CASES[1:])
+    def test_failed_cases(tmp_path, monkeypatch, case):
+>       at = start(tmp_path, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_failed_cases_USD_u62a5_u40')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1293ef9b0>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:26.862 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________________ test_window_or_immature_change[rf_end-2024-04] ________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_window_or_immature_change0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296b2850>
+key = 'rf_end', value = '2024-04'
+
+    @pytest.mark.parametrize('key,value', [('rf_end','2024-04'),('rf_months',4),('rf_decision','2024-03-31T15:59:59+08:00')])
+    def test_window_or_immature_change(tmp_path, monkeypatch, key, value):
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_window_or_immature_change0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296b2850>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:26.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_________________ test_window_or_immature_change[rf_months-4] __________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_window_or_immature_change1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296b2650>
+key = 'rf_months', value = 4
+
+    @pytest.mark.parametrize('key,value', [('rf_end','2024-04'),('rf_months',4),('rf_decision','2024-03-31T15:59:59+08:00')])
+    def test_window_or_immature_change(tmp_path, monkeypatch, key, value):
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_window_or_immature_change1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296b2650>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.018 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____ test_window_or_immature_change[rf_decision-2024-03-31T15:59:59+08:00] _____
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_window_or_immature_change2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10338b980>
+key = 'rf_decision', value = '2024-03-31T15:59:59+08:00'
+
+    @pytest.mark.parametrize('key,value', [('rf_end','2024-04'),('rf_months',4),('rf_decision','2024-03-31T15:59:59+08:00')])
+    def test_window_or_immature_change(tmp_path, monkeypatch, key, value):
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_window_or_immature_change2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10338b980>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.096 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________________ test_invalid_parameters_clear[rf_end-2024/03] _________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_invalid_parameters_clear_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x129609310>
+key = 'rf_end', value = '2024/03'
+
+    @pytest.mark.parametrize('key,value', [('rf_end','2024/03'),('rf_decision','bad+08:00'),('rf_decision','2024-03-31T16:00:00')])
+    def test_invalid_parameters_clear(tmp_path, monkeypatch, key, value):
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_invalid_parameters_clear_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x129609310>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.172 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_____________ test_invalid_parameters_clear[rf_decision-bad+08:00] _____________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_invalid_parameters_clear_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11f7e2890>
+key = 'rf_decision', value = 'bad+08:00'
+
+    @pytest.mark.parametrize('key,value', [('rf_end','2024/03'),('rf_decision','bad+08:00'),('rf_decision','2024-03-31T16:00:00')])
+    def test_invalid_parameters_clear(tmp_path, monkeypatch, key, value):
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_invalid_parameters_clear_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11f7e2890>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.251 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________ test_invalid_parameters_clear[rf_decision-2024-03-31T16:00:00] ________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_invalid_parameters_clear_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296d91d0>
+key = 'rf_decision', value = '2024-03-31T16:00:00'
+
+    @pytest.mark.parametrize('key,value', [('rf_end','2024/03'),('rf_decision','bad+08:00'),('rf_decision','2024-03-31T16:00:00')])
+    def test_invalid_parameters_clear(tmp_path, monkeypatch, key, value):
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_invalid_parameters_clear_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296d91d0>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.327 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________________________________ test_no_upload ________________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_no_upload0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12967e1a0>
+
+    def test_no_upload(tmp_path, monkeypatch):
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_no_upload0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x12967e1a0>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.404 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+___________________ test_uploaded_csv_workbook_and_malformed ___________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_uploaded_csv_workbook_and0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296bd910>
+
+    def test_uploaded_csv_workbook_and_malformed(tmp_path, monkeypatch):
+        import streamlit
+        q = sample_risk_free_quotes()
+        def upload(data, name):
+            f = BytesIO(data); f.name = name; return f
+        selection = {'file': upload(q.to_csv(index=False).encode(), 'quotes.csv')}
+        monkeypatch.setattr(streamlit, 'file_uploader', lambda *a, **k: selection['file'])
+>       at = start(tmp_path, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_uploaded_csv_workbook_and0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296bd910>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____________________________ test_download_decimals ____________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_download_decimals0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296bd790>
+
+    def test_download_decimals(tmp_path, monkeypatch):
+        import streamlit
+        captured = {}; original = streamlit.download_button
+        def capture(label, data, *args, **kwargs):
+            captured[label] = data
+            return original(label, data, *args, **kwargs)
+        monkeypatch.setattr(streamlit, 'download_button', capture)
+>       at = start(tmp_path, monkeypatch); compute(at)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_risk_free_view.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-81/test_download_decimals0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1296bd790>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+        at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=20).run()
+        assert at.radio(key='workspace').value == '数据导入'
+>       assert '港币利率查验' in at.radio(key='workspace').options
+E       AssertionError: assert '港币利率查验' in ['数据导入', '港币收益查验', '共同窗口查验']
+E        +  where ['数据导入', '港币收益查验', '共同窗口查验'] = Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']).options
+E        +    where Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验']) = WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])])(key='workspace')
+E        +      where WidgetList(_list=[Radio(key='workspace', _value=InitialValue(), label='工作页面', options=['数据导入', '港币收益查验', '共同窗口查验'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...据导入', '港币收益查验', '共同窗口查验'])\n            }\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).radio
+
+tests/test_risk_free_view.py:14: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-16 10:56:27.567 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ============================
+FAILED tests/test_risk_free_view.py::test_complete_and_isolation - AssertionE...
+FAILED tests/test_risk_free_view.py::test_failed_cases[\u7f3a\u4e2d\u95f4\u62a5\u4ef7]
+FAILED tests/test_risk_free_view.py::test_failed_cases[\u6708\u4e2d\u62a5\u4ef7]
+FAILED tests/test_risk_free_view.py::test_failed_cases[\u7248\u672c\u665a\u53ef\u5f97]
+FAILED tests/test_risk_free_view.py::test_failed_cases[USD\u62a5\u4ef7] - Ass...
+FAILED tests/test_risk_free_view.py::test_window_or_immature_change[rf_end-2024-04]
+FAILED tests/test_risk_free_view.py::test_window_or_immature_change[rf_months-4]
+FAILED tests/test_risk_free_view.py::test_window_or_immature_change[rf_decision-2024-03-31T15:59:59+08:00]
+FAILED tests/test_risk_free_view.py::test_invalid_parameters_clear[rf_end-2024/03]
+FAILED tests/test_risk_free_view.py::test_invalid_parameters_clear[rf_decision-bad+08:00]
+FAILED tests/test_risk_free_view.py::test_invalid_parameters_clear[rf_decision-2024-03-31T16:00:00]
+FAILED tests/test_risk_free_view.py::test_no_upload - AssertionError: assert ...
+FAILED tests/test_risk_free_view.py::test_uploaded_csv_workbook_and_malformed
+FAILED tests/test_risk_free_view.py::test_download_decimals - AssertionError:...
+14 failed in 1.89s

@@ -1,0 +1,19 @@
+{
+  "stage": "S05-C",
+  "full_tests": 594,
+  "page_tests": 13,
+  "browser_widths": [
+    1440,
+    720,
+    390
+  ],
+  "n100_passed": true,
+  "n99_blocked": true,
+  "old_exports_cleared": true,
+  "actual_browser_csv_rows": 100,
+  "real_daily_input_N": 0,
+  "real_source_unchanged_test": "test_existing_real_bundle_remains_blocked_and_unmodified",
+  "external_data_downloads": false,
+  "historical_universe_certified": false,
+  "portfolio_constructed": false
+}

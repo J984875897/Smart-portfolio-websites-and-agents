@@ -1,0 +1,328 @@
+--- before/src/portfolio/data/trading_calendar.py
++++ after/src/portfolio/data/trading_calendar.py
+@@ -0,0 +1,22 @@
++"""Pinned market calendar proxies; close labels are not publication evidence."""
++from importlib.metadata import version
++import pandas as pd
++import exchange_calendars as xcals
++from .returns import strict_date
++
++CALENDAR_VERSION = version('exchange_calendars')
++TIMEZONES = {'XNYS':'America/New_York', 'XHKG':'Asia/Hong_Kong'}
++
++
++def trading_schedule(market, start, end):
++    if market not in TIMEZONES or strict_date(start) is None or strict_date(end) is None:
++        raise ValueError('market and strict YYYY-MM-DD dates required')
++    if not '2014-01-01' <= start < end <= '2027-01-01':
++        raise ValueError('calendar range must be within 2014–2026')
++    calendar = xcals.get_calendar(market, start='2014-01-01', end='2026-12-31')
++    schedule = calendar.schedule
++    selected = schedule.loc[(schedule.index >= pd.Timestamp(start)) & (schedule.index < pd.Timestamp(end))]
++    return pd.DataFrame({'date':selected.index.strftime('%Y-%m-%d'),
++                         'calendar_close_at':[x.isoformat() for x in selected['close']],
++                         'market_timezone':TIMEZONES[market], 'calendar':market,
++                         'calendar_version':CALENDAR_VERSION})
+--- before/src/portfolio/data/daily_monthly.py
++++ after/src/portfolio/data/daily_monthly.py
+@@ -0,0 +1,99 @@
++"""Conservative daily completeness diagnostics and original currency previews."""
++from dataclasses import dataclass
++import hashlib
++import re
++import pandas as pd
++from .contracts import DataBundle
++from .returns import build_local_returns, strict_date, finite_number
++from .providers.yahoo import CATALOG
++from .trading_calendar import trading_schedule, TIMEZONES, CALENDAR_VERSION
++
++
++@dataclass
++class DailyMonthlyResult:
++    sessions: pd.DataFrame
++    monthly: pd.DataFrame
++    returns: pd.DataFrame
++    metadata: dict
++
++
++def aggregate_daily_prices(prices, *, symbol, start_month, end_month, confirmed=False, as_of=None):
++    if symbol not in CATALOG or symbol == 'HKD=X':
++        raise ValueError('select one of the six price samples')
++    for month in (start_month, end_month):
++        if not isinstance(month, str) or not re.fullmatch(r'\d{4}-\d{2}', month) or not '2015-01' <= month <= '2026-12':
++            raise ValueError('month must be YYYY-MM within 2015–2026')
++        try: pd.Period(month, freq='M')
++        except ValueError as error: raise ValueError('invalid month') from error
++    if start_month > end_month: raise ValueError('start month must precede end month')
++    try:
++        if as_of is not None and (not isinstance(as_of, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})', as_of)):
++            raise ValueError('as_of requires timezone ISO timestamp')
++        now = pd.Timestamp.now(tz='UTC') if as_of is None else pd.Timestamp(as_of)
++        if now.tzinfo is None or pd.isna(now): raise ValueError('as_of requires timezone')
++    except (TypeError, ValueError) as error: raise ValueError('as_of requires timezone ISO timestamp') from error
++    if not isinstance(prices, pd.DataFrame) or not {'date','adj_close'} <= set(prices.columns):
++        raise ValueError('date and adj_close columns required')
++    if not prices.columns.is_unique:
++        raise ValueError('input column names must be unique')
++    identity = CATALOG[symbol]; market = 'XHKG' if identity['currency'] == 'HKD' else 'XNYS'
++    months = pd.period_range(pd.Period(start_month, freq='M')-1, end_month, freq='M')
++    start = months[0].start_time.strftime('%Y-%m-%d'); end = (months[-1]+1).start_time.strftime('%Y-%m-%d')
++    schedule = trading_schedule(market, start, end)
++    source_hash = prices.attrs.get('source_hash') or hashlib.sha256(prices.to_csv(index=False).encode()).hexdigest()
++    metadata = dict(symbol=symbol, calendar=market, calendar_version=CALENDAR_VERSION, market_timezone=TIMEZONES[market],
++                    calendar_mapping='XHKG cash market' if market == 'XHKG' else 'XNYS cash market proxy',
++                    currency=identity['currency'], source_name=prices.attrs.get('source_name','manual'), source_hash=source_hash,
++                    available_at='', historical_eligible=False, as_of=now.isoformat(), confirmed=confirmed is True,
++                    quality_scope='calendar price preview only; not historical eligibility')
++    groups = {}; invalid = []
++    for n, row in enumerate(prices.to_dict('records'), 1):
++        day = row['date']
++        item = dict(date=day, adj_close=row['adj_close'], source_row=row.get('source_row',n))
++        if strict_date(day) is None: invalid.append({**item,'status':'invalid_date'})
++        elif start <= day < end: groups.setdefault(day, []).append(item)
++    sessions = []
++    closes = schedule.set_index('date').calendar_close_at.to_dict()
++    for day in sorted(set(closes) | set(groups)):
++        items = groups.get(day, [])
++        if not items: sessions.append(dict(date=day, adj_close=float('nan'), source_row='', status='missing_price', calendar_close_at=closes[day]))
++        for item in items:
++            number = finite_number(item['adj_close'])
++            status = 'duplicate_date' if len(items)>1 else ('unexpected_session' if day not in closes else ('invalid_price' if number is None or number<=0 else 'ok'))
++            sessions.append({**item,'status':status,'calendar_close_at':closes.get(day,'')})
++    sessions.extend({**row,'calendar_close_at':''} for row in invalid)
++    sessions = pd.DataFrame(sessions, columns=['date','adj_close','source_row','status','calendar_close_at'])
++    monthly = []
++    for month in months:
++        label = str(month); expected = schedule[schedule.date.str.startswith(label)]
++        observed = sessions[sessions.date.map(lambda d:isinstance(d,str) and d.startswith(label))]
++        missing = list(observed.loc[observed.status == 'missing_price','date'])
++        failures = sorted(set(observed.status)-{'ok'})
++        if invalid: failures.append('invalid_date')
++        mature = (month+1).start_time.tz_localize(TIMEZONES[market]) <= now
++        if not mature: failures.append('month_not_mature')
++        last = expected.iloc[-1] if len(expected) else None
++        valid = not failures and last is not None
++        actual = observed[observed.source_row != '']
++        monthly.append(dict(date=month.end_time.strftime('%Y-%m-%d'), month=label,
++            expected_end_date=last.date if last is not None else '', last_observed_date=max(actual.date) if len(actual) else '',
++            end_price=float(groups[last.date][0]['adj_close']) if valid else float('nan'),
++            calendar_close_at=last.calendar_close_at if last is not None else '', expected_sessions=len(expected),
++            valid_sessions=int((observed.status=='ok').sum()), missing_dates=missing, status='valid' if valid else 'blocked', reason=';'.join(failures) or 'ok'))
++    monthly = pd.DataFrame(monthly)
++    observations = pd.DataFrame([dict(date=r.date, asset_id=symbol, value=r.end_price, value_kind='adjusted_price', currency=identity['currency'], frequency='monthly', source_hash=source_hash) for r in monthly.itertuples() if r.status=='valid'])
++    bundle = DataBundle(assets=pd.DataFrame([dict(asset_id=symbol,currency=identity['currency'])]), observations=observations)
++    calculated = build_local_returns(bundle, adjusted_price_assets=[symbol] if confirmed is True else [])
++    rows = []
++    for i in range(1,len(monthly)):
++        current, previous = monthly.iloc[i], monthly.iloc[i-1]
++        found = calculated[calculated.date == current.date]
++        row = found.iloc[0].to_dict() if len(found) else dict(date=current.date,local_return=float('nan'))
++        reason = current.reason if current.status!='valid' else ('previous_month:'+previous.reason if previous.status!='valid' else ('unconfirmed_adjusted_price' if confirmed is not True else 'ok'))
++        if reason == 'ok' and len(found) and row['status'] != 'valid':
++            reason = row['reason']
++        row.update({k:v for k,v in metadata.items() if k in {'calendar','calendar_version','market_timezone','currency','source_name','source_hash','available_at','historical_eligible'}})
++        row.update(status='valid' if reason=='ok' else 'blocked',reason=reason)
++        if reason!='ok': row['local_return']=float('nan')
++        rows.append(row)
++    return DailyMonthlyResult(sessions, monthly, pd.DataFrame(rows), metadata)
+--- before/src/portfolio/data/monthly_cache.py
++++ after/src/portfolio/data/monthly_cache.py
+@@ -0,0 +1,27 @@
++"""Read and reparse immutable Yahoo evidence, without a network or write path."""
++import json
++from .snapshots import load_snapshot, read_artifact, digest
++from .providers.yahoo import CATALOG, parse_yahoo_chart
++from .daily_monthly import aggregate_daily_prices
++from .trading_calendar import TIMEZONES
++
++
++def cached_monthly_prices(root, run_id, symbol, *, start_month, end_month, confirmed=False, as_of=None):
++    manifest = load_snapshot(root, run_id)
++    if manifest['schema_version'] != 1 or symbol not in CATALOG or symbol == 'HKD=X': raise ValueError('not a Yahoo price snapshot')
++    items = [i for i in manifest['items'] if i['symbol']==symbol]
++    if len(items)!=1: raise ValueError('symbol not in snapshot')
++    item = items[0]
++    if item['status'] not in {'success','partial'} or not item['raw_file']: raise ValueError('source unavailable or lacks raw evidence')
++    raw = read_artifact(root, run_id, item['raw_file'])
++    table, meta = parse_yahoo_chart(json.loads(raw))
++    identity = CATALOG[symbol]; market='XHKG' if identity['currency']=='HKD' else 'XNYS'
++    if any(meta.get(k)!=v for k,v in dict(symbol=symbol,currency=identity['currency'],instrumentType=identity['provider_type'],exchangeTimezoneName=TIMEZONES[market]).items()):
++        raise ValueError('source identity mismatch')
++    table = table.loc[(table.date >= manifest['start']) & (table.date < manifest['end_exclusive'])].copy()
++    table.attrs.update(source_name='Yahoo chart',source_hash=digest(raw))
++    result = aggregate_daily_prices(table, symbol=symbol, start_month=start_month, end_month=end_month, confirmed=confirmed, as_of=as_of)
++    result.metadata.update(manifest=manifest,raw_sha256=digest(raw),run_id=run_id,download_started_at=manifest['created_utc'],source_status=item['status'])
++    if item['status']!='success':
++        result.returns['local_return']=float('nan'); result.returns['status']='blocked'; result.returns['reason']='source_not_success'
++    return result
+--- before/tests/test_daily_monthly.py
++++ after/tests/test_daily_monthly.py
+@@ -0,0 +1,116 @@
++import json
++import socket
++from pathlib import Path
++import pandas as pd
++import pytest
++
++
++def sample():
++    from portfolio.data.trading_calendar import trading_schedule
++    days = trading_schedule('XNYS', '2024-12-01', '2025-02-01').date
++    return pd.DataFrame({'date': days, 'adj_close': [100.0 if d < '2025-01' else 110.0 for d in days]})
++
++
++def aggregate(prices, **kwargs):
++    from portfolio.data.daily_monthly import aggregate_daily_prices
++    return aggregate_daily_prices(prices, symbol='SPY', start_month='2025-01', end_month='2025-01', as_of='2025-02-02T00:00:00Z', **kwargs)
++
++
++def test_calendar_official_dates_and_dst():
++    from portfolio.data.trading_calendar import trading_schedule
++    us = trading_schedule('XNYS', '2025-01-01', '2025-02-01')
++    hk = trading_schedule('XHKG', '2025-01-01', '2025-02-01')
++    assert len(us) == 20 and '2025-01-09' not in set(us.date)
++    assert len(hk) == 19
++    assert hk.set_index('date').loc['2025-01-28'].calendar_close_at == '2025-01-28T04:00:00+00:00'
++    march = trading_schedule('XNYS', '2025-03-07', '2025-03-11').set_index('date')
++    assert march.loc['2025-03-07'].calendar_close_at.endswith('21:00:00+00:00')
++    assert march.loc['2025-03-10'].calendar_close_at.endswith('20:00:00+00:00')
++    assert trading_schedule('XNYS', '2024-12-24', '2024-12-25').iloc[0].calendar_close_at.endswith('18:00:00+00:00')
++
++
++def test_ratio_confirmation_nonmutation_and_reordering(monkeypatch):
++    monkeypatch.setattr(socket, 'create_connection', lambda *a, **k: pytest.fail('network'))
++    prices = sample(); original = prices.copy(deep=True)
++    result = aggregate(prices, confirmed=True)
++    assert result.returns.iloc[0].local_return == pytest.approx(.1)
++    assert not result.returns.iloc[0].historical_eligible
++    assert result.returns.iloc[0].available_at == ''
++    assert pd.isna(aggregate(prices).returns.iloc[0].local_return)
++    assert aggregate(prices.sample(frac=1), confirmed=True).returns.iloc[0].local_return == pytest.approx(.1)
++    pd.testing.assert_frame_equal(prices, original)
++
++
++def test_overflowing_endpoint_ratio_remains_blocked():
++    prices = sample()
++    prices['adj_close'] = [1e-308 if d < '2025-01' else 1e308 for d in prices.date]
++    result = aggregate(prices, confirmed=True)
++    assert (result.monthly.status == 'valid').all()
++    assert result.returns.iloc[0].status == 'blocked'
++    assert result.returns.iloc[0].reason == 'invalid_value'
++    assert pd.isna(result.returns.iloc[0].local_return)
++
++
++def test_duplicate_input_columns_are_rejected():
++    prices = sample()
++    prices = pd.concat([prices, prices[['adj_close']] * 2], axis=1)
++    with pytest.raises(ValueError, match='unique'):
++        aggregate(prices, confirmed=True)
++
++
++@pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
++def test_incomplete_months_block(fault):
++    prices = sample()
++    if fault == 'previous': prices = prices[prices.date >= '2025-01']
++    elif fault == 'last': prices = prices[prices.date != '2025-01-31']
++    elif fault == 'middle': prices = prices[prices.date != '2025-01-15']
++    elif fault == 'duplicate': prices = pd.concat([prices, prices.iloc[[-1]]])
++    elif fault == 'weekend': prices = pd.concat([prices, pd.DataFrame([{'date':'2025-01-04', 'adj_close':110}])])
++    elif fault == 'invalid_price': prices.loc[prices.date == '2025-01-15', 'adj_close'] = float('inf')
++    elif fault == 'invalid_date': prices.loc[0, 'date'] = 'bad'
++    else: prices = prices.iloc[:0]
++    result = aggregate(prices, confirmed=True)
++    assert len(result.returns) == 1 and pd.isna(result.returns.iloc[0].local_return)
++    assert result.returns.iloc[0].reason != 'ok'
++
++
++def test_validation_and_maturity():
++    from portfolio.data.daily_monthly import aggregate_daily_prices
++    from portfolio.data.trading_calendar import trading_schedule
++    with pytest.raises(ValueError): trading_schedule('XNYS', '2025-1-01', '2025-02-01')
++    with pytest.raises(ValueError): trading_schedule('OTHER', '2025-01-01', '2025-02-01')
++    with pytest.raises(ValueError): aggregate_daily_prices(sample(), symbol='SPY', start_month='2025-01', end_month='2025-01', as_of='2025-02-01')
++    with pytest.raises(ValueError): aggregate_daily_prices(sample(), symbol='SPY', start_month='2025-01', end_month='2025-01', as_of='February 2, 2025 00:00 UTC')
++    result = aggregate_daily_prices(sample(), symbol='SPY', start_month='2025-01', end_month='2025-01', confirmed=True, as_of='2025-02-01T04:59:59Z')
++    assert pd.isna(result.returns.iloc[0].local_return)
++    result = aggregate_daily_prices(sample(), symbol='SPY', start_month='2025-01', end_month='2025-01', confirmed=True, as_of='2025-02-01T05:00:00Z')
++    assert result.returns.iloc[0].local_return == pytest.approx(.1)
++
++
++@pytest.mark.parametrize('fault', ['none', 'hash', 'identity', 'partial', 'unavailable'])
++def test_readonly_cache(tmp_path, fault):
++    from portfolio.data.monthly_cache import cached_monthly_prices
++    from portfolio.data.updates import run_update
++    from portfolio.data.providers.base import RawResponse
++    from portfolio.data.snapshots import MANIFEST, digest
++    days = sample()
++    payload = {'chart': {'error':None, 'result':[{'meta':{'symbol':'SPY', 'currency':'USD', 'instrumentType':'ETF', 'exchangeTimezoneName':'America/New_York'}, 'timestamp':[int(pd.Timestamp(d, tz='America/New_York').timestamp()) for d in days.date], 'indicators':{'quote':[{**{k:list(days.adj_close) for k in ['open','high','low','close']}, 'volume':[1]*len(days)}], 'adjclose':[{'adjclose':list(days.adj_close)}]}}]}}
++    if fault == 'identity': payload['chart']['result'][0]['meta']['currency'] = 'HKD'
++    run = run_update(tmp_path, ['SPY'], '2024-12-01', '2025-02-01', fetch=lambda *a:RawResponse(json.dumps(payload).encode(), 200))
++    folder = tmp_path/'runs'/run; manifest_path = folder/MANIFEST
++    manifest = json.loads(manifest_path.read_text())
++    if fault == 'hash': (folder/manifest['items'][0]['raw_file']).write_bytes(b'bad')
++    if fault in {'partial','unavailable'}:
++        manifest['items'][0]['status'] = fault
++        manifest['items'][0]['import_file'] = None
++        manifest['files'] = [f for f in manifest['files'] if not f['path'].startswith('import_')]
++        manifest_path.write_text(json.dumps(manifest))
++    before = {p.name:p.read_bytes() for p in folder.iterdir()}
++    if fault in {'hash','identity','unavailable'}:
++        with pytest.raises(ValueError): cached_monthly_prices(tmp_path, run, 'SPY', start_month='2025-01', end_month='2025-01', confirmed=True, as_of='2025-02-02T00:00:00Z')
++    else:
++        result = cached_monthly_prices(tmp_path, run, 'SPY', start_month='2025-01', end_month='2025-01', confirmed=True, as_of='2025-02-02T00:00:00Z')
++        assert result.metadata['manifest'] == manifest
++        if fault == 'partial': assert result.returns.iloc[0].reason == 'source_not_success'
++        else: assert result.returns.iloc[0].local_return == pytest.approx(.1)
++    assert before == {p.name:p.read_bytes() for p in folder.iterdir()}
+--- before/pyproject.toml
++++ after/pyproject.toml
+@@ -4,24 +4,29 @@
+ 
+ [project]
+ name = "cityu-portfolio-research"
+ version = "0.1.0"
+ description = "Reproducible portfolio research for the CityU investment group project"
+ requires-python = ">=3.14,<3.15"
+ dependencies = [
+     "numpy==2.5.4",
+     "pandas==3.0.6",
+     "vectorbt==1.1.2",
+     "yfinance==1.7.0",
+     "openpyxl==3.1.5",
++    "exchange_calendars==4.13.2",
++    "korean_lunar_calendar==0.4.0",
++    "pyluach==2.3.0",
++    "toolz==1.2.0",
++    "tzdata==2026.5",
+ ]
+ 
+ [project.optional-dependencies]
+ dev = ["pytest==9.1.1"]
+ ui = ["streamlit==1.65.0"]
+ 
+ [tool.setuptools.packages.find]
+ where = ["src"]
+ 
+ [tool.pytest.ini_options]
+ testpaths = ["tests"]
+ pythonpath = ["src"]
+--- before/requirements.lock.txt
++++ after/requirements.lock.txt
+@@ -89,12 +89,17 @@
+ tqdm==4.70.1
+ traitlets==5.16.1
+ typing_extensions==4.16.0
+ tzlocal==5.4.4
+ urllib3==2.8.0
+ uvicorn==0.54.0
+ vectorbt==1.1.2
+ wcwidth==0.9.2
+ websockets==17.2
+ wheel==0.48.0
+ widgetsnbextension==4.0.16
+ yfinance==1.7.0
++exchange_calendars==4.13.2
++korean_lunar_calendar==0.4.0
++pyluach==2.3.0
++toolz==1.2.0
++tzdata==2026.5

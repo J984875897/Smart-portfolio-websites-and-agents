@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "run_id": "20261017T100317220148Z-f2c2fec30e3e4f29bbdf2970ccf9e572",
+  "provider": "Yahoo chart",
+  "provider_endpoint_version": "v8",
+  "adapter_version": "yahoo-chart-v1",
+  "client_versions": {
+    "python": "3.14.6",
+    "yfinance": "1.7.0",
+    "curl_cffi": "0.16.3",
+    "pandas": "3.0.6"
+  },
+  "created_utc": "2026-10-17T10:03:17.220148+00:00",
+  "start": "2024-12-01",
+  "end_exclusive": "2025-02-01",
+  "timeout": 15,
+  "items": [
+    {
+      "symbol": "SPY",
+      "status": "success",
+      "reason": "fields_verified",
+      "rows": 41,
+      "raw_file": "raw_SPY.json",
+      "daily_file": "daily_SPY.csv",
+      "import_file": "import_SPY.csv",
+      "raw_sha256": "b4c52df1f98282841a1b22855efdfadcedc02d320c9e69a3041e60c80f6cb368",
+      "valid_rows": 41,
+      "first_date": "2024-12-02",
+      "last_date": "2025-01-31",
+      "observed_months": 2,
+      "missing_months": 0,
+      "dividend_events": 1,
+      "split_events": 0,
+      "capital_gain_events": 0,
+      "quality_scope": "S01 field probe; NOT candidate eligibility",
+      "daily_calendar_audit": "not_performed_S03"
+    },
+    {
+      "symbol": "2800.HK",
+      "status": "success",
+      "reason": "fields_verified",
+      "rows": 39,
+      "raw_file": "raw_2800.HK.json",
+      "daily_file": "daily_2800.HK.csv",
+      "import_file": "import_2800.HK.csv",
+      "raw_sha256": "6c0a484513ee70cc2bc74a3e6000d463f0a7f3299c51ad328b858eedfbaba0cd",
+      "valid_rows": 39,
+      "first_date": "2024-12-02",
+      "last_date": "2025-01-28",
+      "observed_months": 2,
+      "missing_months": 0,
+      "dividend_events": 0,
+      "split_events": 0,
+      "capital_gain_events": 0,
+      "quality_scope": "S01 field probe; NOT candidate eligibility",
+      "daily_calendar_audit": "not_performed_S03"
+    },
+    {
+      "symbol": "HKD=X",
+      "status": "partial",
+      "reason": "missing_invalid_prices_or_months",
+      "rows": 45,
+      "raw_file": "raw_HKD_X.json",
+      "daily_file": "daily_HKD_X.csv",
+      "import_file": null,
+      "raw_sha256": "9a469d3d3323593505b24cc7780d07ceb51c6e877fc2a00db37bc61a63cbce64",
+      "valid_rows": 44,
+      "first_date": "2024-12-02",
+      "last_date": "2025-01-31",
+      "observed_months": 2,
+      "missing_months": 0,
+      "dividend_events": 0,
+      "split_events": 0,
+      "capital_gain_events": 0,
+      "quality_scope": "S01 field probe; NOT candidate eligibility",
+      "daily_calendar_audit": "not_performed_S03"
+    }
+  ],
+  "files": [
+    {
+      "path": "raw_SPY.json",
+      "sha256": "b4c52df1f98282841a1b22855efdfadcedc02d320c9e69a3041e60c80f6cb368",
+      "bytes": 5592
+    },
+    {
+      "path": "daily_SPY.csv",
+      "sha256": "91c26d7d44a1e3ca856c1121a8f85b43c7c5381915ede289f7fcca2ecf6d979c",
+      "bytes": 6696
+    },
+    {
+      "path": "import_SPY.csv",
+      "sha256": "0256774f941b8e7d37b8ed00da5f28519ebe09db008cfa1cf2969c0c05fa5643",
+      "bytes": 3652
+    },
+    {
+      "path": "raw_2800.HK.json",
+      "sha256": "6c0a484513ee70cc2bc74a3e6000d463f0a7f3299c51ad328b858eedfbaba0cd",
+      "bytes": 5540
+    },
+    {
+      "path": "daily_2800.HK.csv",
+      "sha256": "7f16ddfc4169c56ffcb9dd62b90f356ca4d6915f6a83114c4e7d18f15f9e0b81",
+      "bytes": 6195
+    },
+    {
+      "path": "import_2800.HK.csv",
+      "sha256": "473ba5cc6a85a78385a7ebae066aa2f3c52a873e3ec6f6e8f72220e84140836a",
+      "bytes": 3517
+    },
+    {
+      "path": "raw_HKD_X.json",
+      "sha256": "9a469d3d3323593505b24cc7780d07ceb51c6e877fc2a00db37bc61a63cbce64",
+      "bytes": 5725
+    },
+    {
+      "path": "daily_HKD_X.csv",
+      "sha256": "9f8b37f246196eebe6d2b808b053e16de6743a71762fd3a62656126368923162",
+      "bytes": 7074
+    }
+  ],
+  "completed_utc": "2026-10-17T10:03:20.593579+00:00"
+}

@@ -1,0 +1,78 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______ test_readonly_cache_rejects_raw_boolean_adjusted_endpoint[True] ________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-151/test_readonly_cache_rejects_ra0')
+boolean_price = True
+
+    @pytest.mark.parametrize('boolean_price', [True, False])
+    def test_readonly_cache_rejects_raw_boolean_adjusted_endpoint(tmp_path, boolean_price):
+        from portfolio.data.monthly_cache import cached_monthly_prices
+        from portfolio.data.updates import run_update
+        from portfolio.data.providers.base import RawResponse
+        from portfolio.data.snapshots import MANIFEST
+        days = sample()
+        adjusted = list(days.adj_close)
+        adjusted[-1] = boolean_price
+        payload = {'chart': {'error': None, 'result': [{
+            'meta': {'symbol': 'SPY', 'currency': 'USD', 'instrumentType': 'ETF',
+                     'exchangeTimezoneName': 'America/New_York'},
+            'timestamp': [int(pd.Timestamp(d, tz='America/New_York').timestamp()) for d in days.date],
+            'indicators': {
+                'quote': [{**{k: list(days.adj_close) for k in ['open', 'high', 'low', 'close']},
+                           'volume': [1] * len(days)}],
+                'adjclose': [{'adjclose': adjusted}],
+            },
+        }]}}
+        raw = json.dumps(payload).encode()
+        run = run_update(tmp_path, ['SPY'], '2024-12-01', '2025-02-01',
+                         fetch=lambda *a: RawResponse(raw, 200))
+        folder = tmp_path / 'runs' / run
+        manifest = json.loads((folder / MANIFEST).read_text())
+        assert (folder / manifest['items'][0]['raw_file']).read_bytes() == raw
+        before = {p.name: p.read_bytes() for p in folder.iterdir()}
+>       with pytest.raises(ValueError, match='boolean adjusted price'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_monthly.py:116: Failed
+_______ test_readonly_cache_rejects_raw_boolean_adjusted_endpoint[False] _______
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-151/test_readonly_cache_rejects_ra1')
+boolean_price = False
+
+    @pytest.mark.parametrize('boolean_price', [True, False])
+    def test_readonly_cache_rejects_raw_boolean_adjusted_endpoint(tmp_path, boolean_price):
+        from portfolio.data.monthly_cache import cached_monthly_prices
+        from portfolio.data.updates import run_update
+        from portfolio.data.providers.base import RawResponse
+        from portfolio.data.snapshots import MANIFEST
+        days = sample()
+        adjusted = list(days.adj_close)
+        adjusted[-1] = boolean_price
+        payload = {'chart': {'error': None, 'result': [{
+            'meta': {'symbol': 'SPY', 'currency': 'USD', 'instrumentType': 'ETF',
+                     'exchangeTimezoneName': 'America/New_York'},
+            'timestamp': [int(pd.Timestamp(d, tz='America/New_York').timestamp()) for d in days.date],
+            'indicators': {
+                'quote': [{**{k: list(days.adj_close) for k in ['open', 'high', 'low', 'close']},
+                           'volume': [1] * len(days)}],
+                'adjclose': [{'adjclose': adjusted}],
+            },
+        }]}}
+        raw = json.dumps(payload).encode()
+        run = run_update(tmp_path, ['SPY'], '2024-12-01', '2025-02-01',
+                         fetch=lambda *a: RawResponse(raw, 200))
+        folder = tmp_path / 'runs' / run
+        manifest = json.loads((folder / MANIFEST).read_text())
+        assert (folder / manifest['items'][0]['raw_file']).read_bytes() == raw
+        before = {p.name: p.read_bytes() for p in folder.iterdir()}
+>       with pytest.raises(ValueError, match='boolean adjusted price'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_monthly.py:116: Failed
+=========================== short test summary info ============================
+FAILED tests/test_daily_monthly.py::test_readonly_cache_rejects_raw_boolean_adjusted_endpoint[True]
+FAILED tests/test_daily_monthly.py::test_readonly_cache_rejects_raw_boolean_adjusted_endpoint[False]
+2 failed, 18 deselected in 0.87s

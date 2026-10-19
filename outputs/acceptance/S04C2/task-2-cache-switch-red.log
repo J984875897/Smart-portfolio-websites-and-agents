@@ -1,0 +1,71 @@
+..........F.......................                                       [100%]
+=================================== FAILURES ===================================
+_ test_fx_cache_readonly_and_corruption[Yahoo HKD=X \u975e\u5b98\u65b9\u65e5\u7ebf] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1162de6d0>
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-163/test_fx_cache_readonly_and_cor1')
+provider = 'Yahoo HKD=X 非官方日线'
+
+    @pytest.mark.parametrize('provider', ['HKMA 官方日线', 'Yahoo HKD=X 非官方日线'])
+    def test_fx_cache_readonly_and_corruption(monkeypatch, tmp_path, provider):
+        import json
+        from test_fx_cache import yahoo, page
+        from portfolio.data.providers.base import RawResponse
+        from portfolio.data.updates import run_update
+        from portfolio.data.reference_updates import run_reference_update
+        if provider.startswith('HKMA'):
+            root = tmp_path/'reference'
+            rid = run_reference_update(root, ['HKMA_USDHKD'], '2024-12-01', '2025-02-01',
+                fetch=lambda *a, **k: RawResponse(page([('2024-12-31',7.8),('2025-01-31',7.9)]),200))
+        else:
+            root = tmp_path
+            rid = run_update(root, ['HKD=X'], '2024-12-01', '2025-02-01', fetch=lambda *a: RawResponse(yahoo(),200))
+        before = {p:p.read_bytes() for p in root.rglob('*') if p.is_file()}
+        at = start(monkeypatch, tmp_path)
+        at.radio(key='dh_fx_mode').set_value('已下载缓存').run()
+        at.selectbox(key='dh_fx_provider').set_value(provider).run()
+>       result = compute(at)
+                 ^^^^^^^^^^^
+
+tests/test_daily_hkd_view.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_daily_hkd_view.py:24: in compute
+    at.button(key='dh_compute').click().run()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:525: in click
+    return self.set_value(True)
+           ^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:521: in set_value
+    return super().set_value(v)
+           ^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:321: in set_value
+    self._assert_can_interact()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Button(key='dh_compute', disabled=True, label='查验并计算港币收益')
+
+    def _assert_can_interact(self) -> None:
+        """Reject interactions that a browser user cannot perform."""
+        if getattr(self.proto, "disabled", False):
+            key_part = f" (key={self.key!r})" if self.key else ""
+>           raise AppTestError(
+                f"Cannot update a disabled {self.type} widget{key_part}. "
+                "A browser user cannot interact with a disabled widget."
+            )
+E           streamlit.testing.v1.errors.AppTestError: Cannot update a disabled button widget (key='dh_compute'). A browser user cannot interact with a disabled widget.
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:314: AppTestError
+----------------------------- Captured stderr call -----------------------------
+2026-10-17 10:48:08.749 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=============================== warnings summary ===============================
+tests/test_daily_hkd_view.py::test_unconfirmed_price_and_hkd
+tests/test_daily_hkd_view.py::test_unconfirmed_price_and_hkd
+  /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/exchange_calendars/exchange_calendar_xhkg.py:363: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+    easter_monday = EasterMonday.dates(years[0], years[-1] + 1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_daily_hkd_view.py::test_fx_cache_readonly_and_corruption[Yahoo HKD=X \u975e\u5b98\u65b9\u65e5\u7ebf]
+1 failed, 33 passed, 2 warnings in 11.09s

@@ -1,0 +1,29 @@
+Command: ['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '-m', 'pytest', 'tests/test_smoke.py::test_command_line_export_is_reproducible', '-q']
+Exit code: 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________ test_command_line_export_is_reproducible ___________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-4/test_command_line_export_is_re0')
+
+    def test_command_line_export_is_reproducible(tmp_path):
+        project_root = Path(__file__).resolve().parents[1]
+        # Exercise the installed entry point without pytest's source-path setting.
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        paths = [tmp_path / "first" / "sample.csv", tmp_path / "second" / "sample.csv"]
+        for output in paths:
+            completed = subprocess.run(
+                [sys.executable, "-m", "portfolio.demo", "--output", str(output)],
+                cwd=project_root, env=env, capture_output=True, text=True, timeout=90,
+            )
+>           assert completed.returncode == 0, completed.stderr
+E           AssertionError: /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: Error while finding module specification for 'portfolio.demo' (ModuleNotFoundError: No module named 'portfolio')
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '-m', 'port...n: Error while finding module specification for 'portfolio.demo' (ModuleNotFoundError: No module named 'portfolio')\n").returncode
+
+tests/test_smoke.py:59: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_smoke.py::test_command_line_export_is_reproducible - Assert...
+1 failed in 0.29s

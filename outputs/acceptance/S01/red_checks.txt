@@ -1,0 +1,479 @@
+EEEEEEEEEEEEEEEEEEFFF                                                    [100%]
+==================================== ERRORS ====================================
+_________ ERROR at setup of test_french_units_missing_and_annual_block _________
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104942ff0>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_french_rejects_wrong_format_month_or_duplicates[<html>rate limited</html>] _
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x10498fad0>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_french_rejects_wrong_format_month_or_duplicates[,Mkt-RF,SMB,HML,RF\n202513,1,2,3,4] _
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x10498fb90>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_french_rejects_wrong_format_month_or_duplicates[,Mkt-RF,SMB,HML,RF\n202501,1,2,3,4\n202501,1,2,3,4] _
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x10498fcb0>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+________________ ERROR at setup of test_hkma_direction_and_sort ________________
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x10498fb30>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_hkma_rejects_error_missing_or_nonpositive_fx[payload0] _
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x10498fc50>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_hkma_rejects_error_missing_or_nonpositive_fx[payload1] _
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a18050>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_hkma_rejects_error_missing_or_nonpositive_fx[payload2] _
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a183b0>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_________ ERROR at setup of test_yahoo_fields_actions_and_local_dates __________
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a18710>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_______ ERROR at setup of test_null_price_remains_missing_and_is_partial _______
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a18b30>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_wrong_currency_or_instrument_is_not_success[HKD-ETF] __
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a18f50>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_ ERROR at setup of test_wrong_currency_or_instrument_is_not_success[USD-EQUITY] _
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a19370>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_____ ERROR at setup of test_missing_adjustment_not_substituted_with_close _____
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a19610>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_____ ERROR at setup of test_yahoo_error_and_inconsistent_lengths_rejected _____
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a19af0>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+___ ERROR at setup of test_corporate_action_does_not_resplit_adjusted_prices ___
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a19f70>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_________ ERROR at setup of test_snapshot_integrity_detects_corruption _________
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a1a690>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+_________ ERROR at setup of test_manifest_cannot_read_outside_snapshot _________
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a1a990>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+___ ERROR at setup of test_gate_requires_real_price_fx_and_four_factor_sets ____
+
+    @pytest.fixture
+    def probe():
+        spec = importlib.util.spec_from_file_location("source_probe", ROOT / "scripts/probe_sources.py")
+        module = importlib.util.module_from_spec(spec)
+>       spec.loader.exec_module(module)
+
+tests/test_source_probe.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x104a1ae10>
+path = '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py'
+
+<frozen importlib._bootstrap_external>:950: FileNotFoundError
+=================================== FAILURES ===================================
+_________ test_cli_rejects_invalid_scope_without_download[arguments0] __________
+
+arguments = ['--sample-size', '0']
+
+    @pytest.mark.parametrize("arguments", [["--sample-size","0"], ["--sample-size","7"], ["--start","2026-01-01","--end","2025-01-01"]])
+    def test_cli_rejects_invalid_scope_without_download(arguments):
+        result = subprocess.run([sys.executable,str(ROOT / "scripts/probe_sources.py"),*arguments],capture_output=True,text=True)
+        assert result.returncode == 2
+>       assert "usage:" in result.stderr
+E       assert 'usage:' in "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n"
+E        +  where "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...liang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n").stderr
+
+tests/test_source_probe.py:137: AssertionError
+_________ test_cli_rejects_invalid_scope_without_download[arguments1] __________
+
+arguments = ['--sample-size', '7']
+
+    @pytest.mark.parametrize("arguments", [["--sample-size","0"], ["--sample-size","7"], ["--start","2026-01-01","--end","2025-01-01"]])
+    def test_cli_rejects_invalid_scope_without_download(arguments):
+        result = subprocess.run([sys.executable,str(ROOT / "scripts/probe_sources.py"),*arguments],capture_output=True,text=True)
+        assert result.returncode == 2
+>       assert "usage:" in result.stderr
+E       assert 'usage:' in "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n"
+E        +  where "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...liang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n").stderr
+
+tests/test_source_probe.py:137: AssertionError
+_________ test_cli_rejects_invalid_scope_without_download[arguments2] __________
+
+arguments = ['--start', '2026-01-01', '--end', '2025-01-01']
+
+    @pytest.mark.parametrize("arguments", [["--sample-size","0"], ["--sample-size","7"], ["--start","2026-01-01","--end","2025-01-01"]])
+    def test_cli_rejects_invalid_scope_without_download(arguments):
+        result = subprocess.run([sys.executable,str(ROOT / "scripts/probe_sources.py"),*arguments],capture_output=True,text=True)
+        assert result.returncode == 2
+>       assert "usage:" in result.stderr
+E       assert 'usage:' in "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n"
+E        +  where "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...liang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/probe_sources.py': [Errno 2] No such file or directory\n").stderr
+
+tests/test_source_probe.py:137: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_source_probe.py::test_cli_rejects_invalid_scope_without_download[arguments0]
+FAILED tests/test_source_probe.py::test_cli_rejects_invalid_scope_without_download[arguments1]
+FAILED tests/test_source_probe.py::test_cli_rejects_invalid_scope_without_download[arguments2]
+ERROR tests/test_source_probe.py::test_french_units_missing_and_annual_block
+ERROR tests/test_source_probe.py::test_french_rejects_wrong_format_month_or_duplicates[<html>rate limited</html>]
+ERROR tests/test_source_probe.py::test_french_rejects_wrong_format_month_or_duplicates[,Mkt-RF,SMB,HML,RF\n202513,1,2,3,4]
+ERROR tests/test_source_probe.py::test_french_rejects_wrong_format_month_or_duplicates[,Mkt-RF,SMB,HML,RF\n202501,1,2,3,4\n202501,1,2,3,4]
+ERROR tests/test_source_probe.py::test_hkma_direction_and_sort - FileNotFound...
+ERROR tests/test_source_probe.py::test_hkma_rejects_error_missing_or_nonpositive_fx[payload0]
+ERROR tests/test_source_probe.py::test_hkma_rejects_error_missing_or_nonpositive_fx[payload1]
+ERROR tests/test_source_probe.py::test_hkma_rejects_error_missing_or_nonpositive_fx[payload2]
+ERROR tests/test_source_probe.py::test_yahoo_fields_actions_and_local_dates
+ERROR tests/test_source_probe.py::test_null_price_remains_missing_and_is_partial
+ERROR tests/test_source_probe.py::test_wrong_currency_or_instrument_is_not_success[HKD-ETF]
+ERROR tests/test_source_probe.py::test_wrong_currency_or_instrument_is_not_success[USD-EQUITY]
+ERROR tests/test_source_probe.py::test_missing_adjustment_not_substituted_with_close
+ERROR tests/test_source_probe.py::test_yahoo_error_and_inconsistent_lengths_rejected
+ERROR tests/test_source_probe.py::test_corporate_action_does_not_resplit_adjusted_prices
+ERROR tests/test_source_probe.py::test_snapshot_integrity_detects_corruption
+ERROR tests/test_source_probe.py::test_manifest_cannot_read_outside_snapshot
+ERROR tests/test_source_probe.py::test_gate_requires_real_price_fx_and_four_factor_sets
+3 failed, 18 errors in 0.14s

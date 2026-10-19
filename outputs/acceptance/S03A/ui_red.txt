@@ -1,0 +1,129 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_______________ test_demo_isolated_confirmation_and_calculation ________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-48/test_demo_isolated_confirmatio0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x118f1a8b0>
+
+    def test_demo_isolated_confirmation_and_calculation(tmp_path, monkeypatch):
+>       at = sample(start(tmp_path, monkeypatch))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_hkd_returns_view.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_hkd_returns_view.py:13: in start
+    assert at.radio(key='workspace').value == '数据导入'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = WidgetList(), key = 'workspace'
+
+    def __call__(self, key: str) -> El_co:
+        """Return the first element in this collection with the given user key.
+    
+        The same key can appear on different element types, so this returns the
+        first match in this collection. Use ``get_by_key`` when an ambiguous
+        key should raise.
+        """
+        for e in self._list:
+            if getattr(e, "key", None) == key:
+                return e
+>       raise KeyError(key)
+E       KeyError: 'workspace'
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:379: KeyError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 14:13:12.082 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_____________________ test_fx_and_demo_changes_invalidate ______________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-48/test_fx_and_demo_changes_inval0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1198da8b0>
+
+    def test_fx_and_demo_changes_invalidate(tmp_path, monkeypatch):
+>       at = sample(start(tmp_path, monkeypatch))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_hkd_returns_view.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_hkd_returns_view.py:13: in start
+    assert at.radio(key='workspace').value == '数据导入'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = WidgetList(), key = 'workspace'
+
+    def __call__(self, key: str) -> El_co:
+        """Return the first element in this collection with the given user key.
+    
+        The same key can appear on different element types, so this returns the
+        first match in this collection. Use ``get_by_key`` when an ambiguous
+        key should raise.
+        """
+        for e in self._list:
+            if getattr(e, "key", None) == key:
+                return e
+>       raise KeyError(key)
+E       KeyError: 'workspace'
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:379: KeyError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 14:13:12.379 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________ test_current_content_change_invalidates_without_version_change ________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-48/test_current_content_change_in0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x119bf8ef0>
+
+    def test_current_content_change_invalidates_without_version_change(tmp_path, monkeypatch):
+>       from app.views.hkd_returns import sample_bundle
+E       ModuleNotFoundError: No module named 'app.views.hkd_returns'
+
+tests/test_hkd_returns_view.py:61: ModuleNotFoundError
+______________ test_malformed_upload_clears_result_and_is_scoped _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-48/test_malformed_upload_clears_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x119baacf0>
+
+    def test_malformed_upload_clears_result_and_is_scoped(tmp_path, monkeypatch):
+        import streamlit
+        selected = {'file': None}
+        monkeypatch.setattr(streamlit, 'file_uploader', lambda *a, **k: selected['file'])
+>       at = sample(start(tmp_path, monkeypatch))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_hkd_returns_view.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_hkd_returns_view.py:13: in start
+    assert at.radio(key='workspace').value == '数据导入'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = WidgetList(), key = 'workspace'
+
+    def __call__(self, key: str) -> El_co:
+        """Return the first element in this collection with the given user key.
+    
+        The same key can appear on different element types, so this returns the
+        first match in this collection. Use ``get_by_key`` when an ambiguous
+        key should raise.
+        """
+        for e in self._list:
+            if getattr(e, "key", None) == key:
+                return e
+>       raise KeyError(key)
+E       KeyError: 'workspace'
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:379: KeyError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 14:13:12.474 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ============================
+FAILED tests/test_hkd_returns_view.py::test_demo_isolated_confirmation_and_calculation
+FAILED tests/test_hkd_returns_view.py::test_fx_and_demo_changes_invalidate - ...
+FAILED tests/test_hkd_returns_view.py::test_current_content_change_invalidates_without_version_change
+FAILED tests/test_hkd_returns_view.py::test_malformed_upload_clears_result_and_is_scoped
+4 failed in 1.09s

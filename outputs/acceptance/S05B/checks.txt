@@ -1,0 +1,26 @@
+{
+  "stage": "S05-B",
+  "status": "expected_checks_passed",
+  "no_network": true,
+  "synthetic_n100_status": "passed",
+  "synthetic_n99_status": "pool_too_small",
+  "synthetic_funnel": {
+    "input_rows": 100,
+    "identity_qualified": 100,
+    "in_scope": 100,
+    "data_qualified": 100
+  },
+  "synthetic_is_artificial": true,
+  "real_n": 0,
+  "real_funnel": {
+    "input_rows": 3,
+    "identity_qualified": 3,
+    "in_scope": 0,
+    "data_qualified": 0
+  },
+  "real_bundle_path": "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32",
+  "real_status": "pool_too_small",
+  "source_files_unchanged": true,
+  "historical_universe_certified": false,
+  "portfolio_constructed": false
+}

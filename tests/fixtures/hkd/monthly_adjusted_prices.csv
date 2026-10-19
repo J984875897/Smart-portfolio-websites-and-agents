@@ -1,0 +1,3 @@
+asset_id,ticker,name,date,value,tool_type,asset_class,exchange,currency,share_class,frequency
+SYNTH_ADJ,TESTADJ,人工已调整价格示例,2024-12-31,100,ETF,equity,SYNTH,USD,,monthly
+SYNTH_ADJ,TESTADJ,人工已调整价格示例,2025-01-31,101,ETF,equity,SYNTH,USD,,monthly

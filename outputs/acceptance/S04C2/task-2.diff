@@ -1,0 +1,495 @@
+--- before/app/views/daily_hkd.py
++++ after/app/views/daily_hkd.py
+@@ -0,0 +1,195 @@
++"""Three-step, read-only daily price and FX evidence preview."""
++import hashlib
++import json
++import os
++from io import BytesIO
++from pathlib import Path
++from zipfile import BadZipFile
++
++import pandas as pd
++import streamlit as st
++from portfolio.data.daily_hkd import connect_daily_hkd
++from portfolio.data.daily_hkd_samples import sample_daily_prices, sample_daily_fx
++from portfolio.data.daily_monthly import aggregate_daily_prices
++from portfolio.data.fx_cache import cached_daily_fx
++from portfolio.data.importer import read_file
++from portfolio.data.monthly_cache import cached_monthly_prices
++from portfolio.data.snapshots import list_runs, load_snapshot
++from app.views.daily_monthly import SYMBOLS, reason_text as price_reason
++
++ERRORS = (ValueError, OSError, KeyError, TypeError, UnicodeError, BadZipFile, ImportError)
++FX_REASONS = {'missing_month': '该月缺少汇率', 'stale_quote': '汇率超过最大年龄',
++              'duplicate_date': '最新汇率日期重复', 'invalid_quote': '汇率数值无效',
++              'invalid_currency': '币种必须为 USD', 'invalid_date': '汇率日期无效',
++              'missing_source_name': '缺少汇率来源名称', 'unconfirmed_fx_unit': '尚未确认每美元兑港币口径',
++              'source_not_success': '来源仅部分可用，禁止美元换算', 'ok': '通过查验'}
++
++
++def reason_text(reason):
++    pieces = []
++    for part in reason.split(';'):
++        if part.startswith(('fx_start:', 'fx_end:')):
++            prefix, code = part.split(':', 1)
++            pieces.append(('期初汇率：' if prefix == 'fx_start' else '期末汇率：') + FX_REASONS.get(code, code))
++        else:
++            pieces.append(FX_REASONS.get(part, price_reason(part)))
++    return '；'.join(pieces)
++
++
++def input_token(values):
++    return hashlib.sha256(repr(values).encode()).hexdigest()
++
++
++def read_fx_upload(data, filename, sheet):
++    return read_file(data, filename=filename, sheet_name=sheet)
++
++
++def _runs(root, kind):
++    options = {}
++    for rid in list_runs(root):
++        manifest = load_snapshot(root, rid)
++        items = manifest['items']
++        if kind == 'price' and manifest['schema_version'] == 1 and any(i.get('symbol') in SYMBOLS for i in items):
++            options[rid] = manifest
++        elif kind == 'fx' and any(i.get('symbol') in {'HKD=X', 'HKMA_USDHKD'} for i in items):
++            options[rid] = manifest
++    return options
++
++
++def _plain(frame):
++    view = frame.copy()
++    view.attrs = {}
++    return view
++
++
++def render():
++    s = st.session_state
++    s.setdefault('dh_result', None)
++    st.title('日线港币查验')
++    st.write('先检查价格，再选择美元汇率，最后点击计算。只读预览，不保存到数据导入。')
++    base = Path(__file__).resolve().parents[2]
++    price_root = Path(os.environ.get('PORTFOLIO_DOWNLOADS_ROOT', str(base/'data/downloads'))).resolve()
++    reference_root = Path(os.environ.get('PORTFOLIO_REFERENCE_DOWNLOADS_ROOT', str(base/'data/reference_downloads'))).resolve()
++    errors = []
++    price_run = price_manifest = fx_run = fx_manifest = None
++    fx_root = None
++    verified_prices = fx_frame = None
++    upload_identity = None
++    st.subheader('1 价格来源与目标月份')
++    price_mode = st.radio('价格来源', ['人工案例', '已下载缓存'], key='dh_price_mode', horizontal=True)
++    price_case = ''
++    symbols = SYMBOLS
++    if price_mode == '人工案例':
++        price_case = st.selectbox('价格人工案例', ['完整报价', '缺最后交易日'], key='dh_price_case')
++        st.info('SYNTH 合成价格：前月每日 100，首个目标月每日 110，之后每月递增 10%。使用对应市场真实交易日。')
++    else:
++        try:
++            runs = _runs(price_root, 'price')
++            if s.get('dh_price_run') not in runs: s.pop('dh_price_run', None)
++            price_run = st.selectbox('价格缓存版本', list(runs), key='dh_price_run')
++            price_manifest = runs.get(price_run)
++            symbols = [i['symbol'] for i in price_manifest['items'] if i['symbol'] in SYMBOLS and i['status'] in {'success', 'partial'} and i.get('raw_file')] if price_manifest else []
++            if not symbols: errors.append('没有可诊断的价格缓存，请先到「下载与缓存」显式下载。')
++        except ERRORS:
++            symbols = []
++            errors.append('价格缓存损坏或目录无法读取，已撤下结果与下载。')
++        st.caption('当前版本真实价格缓存；partial 只供诊断，不能升级为通过。')
++    if s.get('dh_symbol') not in symbols: s.pop('dh_symbol', None)
++    symbol = st.selectbox('价格产品代码', symbols, key='dh_symbol')
++    start = st.text_input('起始目标月份（YYYY-MM）', value='2025-01', key='dh_start_month')
++    end = st.text_input('结束目标月份（YYYY-MM，包含）', value='2025-01', key='dh_end_month')
++    price_confirm = st.checkbox('我已核实复权价格包含分配与拆股调整', key='dh_price_confirm')
++    st.subheader('2 美元汇率与估值政策')
++    fx_mode = fx_case = provider = ''
++    fx_confirm = False
++    max_age = 7
++    if symbol and symbol.endswith('.HK'):
++        st.info('本产品原币为 HKD，换算汇率固定为 1，无需美元汇率确认。')
++    else:
++        fx_mode = st.radio('美元汇率来源', ['人工案例', '已下载缓存', 'CSV / XLSX 文件'], key='dh_fx_mode', horizontal=True)
++        if fx_mode == '人工案例':
++            fx_case = st.selectbox('汇率人工案例', ['完整汇率', '缺期末月', '过旧', '重复末日'], key='dh_fx_case')
++            st.info('SYNTH 合成汇率：前月末 7.8，首个目标月末 7.9，之后每月增加 0.1 港币。')
++        elif fx_mode == '已下载缓存':
++            provider = st.selectbox('汇率缓存来源', ['HKMA 官方日线', 'Yahoo HKD=X 非官方日线'], key='dh_fx_provider')
++            fx_root = reference_root if provider.startswith('HKMA') else price_root
++            try:
++                runs = {rid:m for rid,m in _runs(fx_root, 'fx').items() if m['schema_version'] == (2 if provider.startswith('HKMA') else 1)}
++                if s.get('dh_fx_run') not in runs: s.pop('dh_fx_run', None)
++                fx_run = st.selectbox('汇率缓存版本', list(runs), key='dh_fx_run')
++                fx_manifest = runs.get(fx_run)
++                if fx_manifest is None: errors.append('所选来源没有可读取的汇率缓存，请先显式下载。')
++                else: fx_frame = cached_daily_fx(fx_root, fx_run)
++            except ERRORS:
++                errors.append('汇率缓存或原始响应损坏，已撤下结果与下载。')
++        else:
++            uploaded = st.file_uploader('上传美元汇率 CSV 或 XLSX', type=['csv', 'xlsx'], key='dh_fx_upload')
++            if uploaded is None:
++                errors.append('请上传汇率文件，包含 date,currency,hkd_per_unit,source_name。')
++            else:
++                raw = uploaded.getvalue()
++                sheet = 0
++                try:
++                    if uploaded.name.lower().endswith('.xlsx'):
++                        workbook = pd.ExcelFile(BytesIO(raw), engine='openpyxl')
++                        sheet = st.selectbox('汇率工作表', workbook.sheet_names, key='dh_fx_sheet')
++                    upload_identity = (uploaded.name, raw, sheet)
++                    fx_frame = read_fx_upload(raw, uploaded.name, sheet)
++                except ERRORS:
++                    upload_identity = (uploaded.name, raw, s.get('dh_fx_sheet', 0))
++                    errors.append('汇率文件无法读取，请检查格式、唯一列名与工作表。')
++        fx_confirm = st.checkbox('我已核实汇率单位为每美元兑港币（HKD per USD），不求倒数', key='dh_fx_confirm')
++        max_age = st.number_input('汇率最大年龄（自然日，含等于）', min_value=0, max_value=7, value=7, step=1, key='dh_max_age')
++        with st.expander('汇率文件格式与模板'):
++            st.write('必需列 date,currency,hkd_per_unit,source_name；日期 YYYY-MM-DD，币种 USD。示例为人工合成，不是官方数据。')
++            st.download_button('下载两行合成汇率模板', 'date,currency,hkd_per_unit,source_name\n2024-12-31,USD,7.8,SYNTH example\n2025-01-31,USD,7.9,SYNTH example\n', file_name='synthetic_daily_fx.csv', key='dh_template', mime='text/csv')
++    st.caption('最大 7 日为研究假设，非官方期限；价格与汇率可能异步估值。只检查同月端点，不补齐日历，不使用未来报价。')
++    st.caption('输入组合：价格 ' + ('SYNTH 人工合成' if price_mode == '人工案例' else '当前版本真实缓存') + '；汇率 ' + ('HKD 固定 1' if symbol and symbol.endswith('.HK') else ('SYNTH 人工合成' if fx_mode == '人工案例' else ('本地文件（请核实真实/合成来源）' if fx_mode == 'CSV / XLSX 文件' else '当前版本真实缓存'))) + '。混合合成与真实输入仅为演示，不代表实际投资收益。')
++    token = input_token((str(price_root), str(reference_root), price_mode, price_case, price_run, price_manifest,
++                         symbol, start, end, price_confirm, fx_mode, fx_case, provider, str(fx_root), fx_run, fx_manifest,
++                         upload_identity, fx_confirm, max_age))
++    if s.get('dh_token') != token: s['dh_result'] = None
++    s['dh_token'] = token
++    if price_manifest and symbol:
++        try:
++            verified_prices = cached_monthly_prices(price_root, price_run, symbol, start_month=start, end_month=end, confirmed=price_confirm)
++        except ERRORS:
++            errors.append('价格缓存或月份无法验证，已撤下结果与下载。')
++    if errors:
++        s['dh_result'] = None
++        for message in errors: st.error(message)
++    if st.button('查验并计算港币收益', key='dh_compute', type='primary', disabled=bool(errors) or not symbol):
++        s['dh_result'] = None
++        try:
++            prices = verified_prices if price_mode == '已下载缓存' else aggregate_daily_prices(sample_daily_prices(symbol, start, end, price_case), symbol=symbol, start_month=start, end_month=end, confirmed=price_confirm)
++            if fx_mode == '人工案例': fx_frame = sample_daily_fx(start, end, fx_case)
++            s['dh_result'] = connect_daily_hkd(prices, fx_frame, fx_confirmed=fx_confirm, max_age_days=int(max_age))
++        except ERRORS:
++            st.error('无法查验：请检查月份范围（2015-01 至 2026-12）、文件必需列、来源与单位。')
++    st.subheader('3 港币收益与证据')
++    result = s['dh_result']
++    if result is None:
++        st.info('完成前两步后，点击「查验并计算港币收益」。')
++        return
++    rows = result.reconciliation
++    st.metric('目标月数', len(rows))
++    st.metric('可预览港币月数', int(rows.hkd_return.notna().sum()))
++    st.caption('当前版本估值预览，不具备历史可得资格（available_at 为空）。空白是阻止，不是零收益；不会送入共同窗口或计算候选数。')
++    st.dataframe(pd.DataFrame({'目标月末': rows.date, '原币收益（%）': rows.local_return * 100,
++        '汇率收益（%）': rows.fx_return * 100, '交叉项（%）': rows.cross_term * 100,
++        '港币收益（%）': rows.hkd_return * 100, '查验说明': rows.reason.map(reason_text)}), hide_index=True)
++    st.dataframe(pd.DataFrame({'目标月末': rows.date, '价格期初实际日': rows.price_start_observed_date,
++        '价格期末实际日': rows.price_end_observed_date, '汇率期初实际日': rows.fx_start_observed_date,
++        '汇率期末实际日': rows.fx_end_observed_date, '期初汇率年龄（日）': rows.fx_start_age_days,
++        '期末汇率年龄（日）': rows.fx_end_age_days}), hide_index=True)
++    with st.expander('原始诊断、端点与来源证据下载'):
++        st.caption('CSV 收益保留小数（0.1 表示 10%）；观察日和下载时间不代表历史发布时间。')
++        tables = [('sessions', result.prices.sessions, '价格逐日查验'), ('monthly', result.prices.monthly, '价格月末锚点'),
++                  ('returns', result.prices.returns, '原币收益'), ('fx_observations', result.fx_observations, '汇率逐行诊断'),
++                  ('fx_endpoints', result.fx_endpoints, '汇率月末端点'), ('reconciliation', rows, '港币收益对照')]
++        for name, frame, label in tables:
++            st.write(label)
++            st.dataframe(_plain(frame), hide_index=True)
++            st.download_button('下载' + label + ' CSV', frame.to_csv(index=False).encode('utf-8-sig'), file_name='daily_hkd_' + name + '.csv', key='dh_download_' + name, mime='text/csv')
++        st.json(result.metadata)
++        st.download_button('下载来源证据 JSON', json.dumps(result.metadata, ensure_ascii=False, indent=2, default=str), file_name='daily_hkd_metadata.json', key='dh_download_metadata', mime='application/json')
+--- before/src/portfolio/data/daily_hkd_samples.py
++++ after/src/portfolio/data/daily_hkd_samples.py
+@@ -0,0 +1,39 @@
++"""Clearly synthetic offline examples for the daily HKD preview."""
++import pandas as pd
++from .daily_monthly import aggregate_daily_prices
++from .trading_calendar import trading_schedule
++
++
++def _months(start_month, end_month):
++    aggregate_daily_prices(pd.DataFrame(columns=['date', 'adj_close']), symbol='SPY',
++                           start_month=start_month, end_month=end_month)
++    return pd.period_range(pd.Period(start_month, freq='M') - 1, end_month, freq='M')
++
++
++def sample_daily_prices(symbol, start_month, end_month, case='完整报价'):
++    months = _months(start_month, end_month)
++    schedule = trading_schedule('XHKG' if symbol.endswith('.HK') else 'XNYS',
++                                months[0].start_time.strftime('%Y-%m-%d'),
++                                (months[-1] + 1).start_time.strftime('%Y-%m-%d'))
++    frame = schedule[['date']].copy()
++    frame['adj_close'] = frame.date.map(lambda d: 100 * 1.1 ** (pd.Period(d[:7], freq='M').ordinal - months[0].ordinal))
++    if case == '缺最后交易日':
++        target = frame.index[frame.date.str.startswith(end_month)]
++        if len(target): frame = frame.drop(target[-1])
++    elif case != '完整报价':
++        raise ValueError('unknown synthetic price case')
++    frame.attrs['source_name'] = 'SYNTH 人工合成价格 / ' + case
++    return frame
++
++
++def sample_daily_fx(start_month, end_month, case='完整汇率'):
++    months = _months(start_month, end_month)
++    frame = pd.DataFrame([dict(date=m.end_time.strftime('%Y-%m-%d'), currency='USD',
++                               hkd_per_unit=round(7.8 + .1 * n, 10), source_name='SYNTH 人工合成汇率')
++                          for n, m in enumerate(months)])
++    if case == '缺期末月': frame = frame.iloc[:-1].copy()
++    elif case == '过旧': frame.loc[frame.index[-1], 'date'] = (months[-1].end_time.normalize() - pd.Timedelta(days=8)).strftime('%Y-%m-%d')
++    elif case == '重复末日': frame = pd.concat([frame, frame.iloc[[-1]]], ignore_index=True)
++    elif case != '完整汇率': raise ValueError('unknown synthetic FX case')
++    frame.attrs.update(source_name='SYNTH 人工合成汇率 / ' + case, source_status='success', synthetic=True)
++    return frame
+--- before/app/main.py
++++ after/app/main.py
+@@ -1,34 +1,38 @@
+ from pathlib import Path
+ import sys
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ if str(ROOT) not in sys.path:
+     sys.path.insert(0, str(ROOT))
+ 
+ import streamlit as st
+ from app.views.data_center import render as render_data_center
+ 
+ st.set_page_config(page_title='研究数据工作台', page_icon='📑', layout='wide')
+-workspace = st.sidebar.radio('工作页面', ['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率', '日线月度查验'], key='workspace')
++workspace = st.sidebar.radio('工作页面', ['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存', '因子与官方汇率', '日线月度查验', '日线港币查验'], key='workspace')
+ if workspace == '数据导入':
+     render_data_center()
+ elif workspace == '因子与官方汇率':
+     from app.views.reference_downloads import render
+     render()
+ elif workspace == '下载与缓存':
+     from app.views.downloads import render
+     render()
+ elif workspace == '港币收益查验':
+     from app.views.hkd_returns import render
++    render()
++
++elif workspace == '日线港币查验':
++    from app.views.daily_hkd import render
+     render()
+ 
+ elif workspace == '日线月度查验':
+     from app.views.daily_monthly import render
+     render()
+ 
+ elif workspace == '共同窗口查验':
+     from app.views.alignment import render
+     render()
+ 
+ else:
+     from app.views.risk_free import render
+--- before/tests/test_daily_hkd_view.py
++++ after/tests/test_daily_hkd_view.py
+@@ -0,0 +1,210 @@
++from pathlib import Path
++import pytest
++from streamlit.testing.v1 import AppTest
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def start(monkeypatch, tmp_path):
++    monkeypatch.setenv('PORTFOLIO_DOWNLOADS_ROOT', str(tmp_path))
++    monkeypatch.setenv('PORTFOLIO_REFERENCE_DOWNLOADS_ROOT', str(tmp_path/'reference'))
++    import portfolio.data.providers.yahoo as yahoo
++    monkeypatch.setattr(yahoo, 'fetch_yahoo', lambda *a, **k: pytest.fail('unexpected network'))
++    at = AppTest.from_file(str(ROOT/'app/main.py'), default_timeout=20).run()
++    at.radio(key='workspace').set_value('日线港币查验').run()
++    assert not at.exception
++    return at
++
++
++def compute(at, confirmed=True):
++    if confirmed:
++        at.checkbox(key='dh_price_confirm').check().run()
++        if any(x.key == 'dh_fx_confirm' for x in at.checkbox):
++            at.checkbox(key='dh_fx_confirm').check().run()
++    at.button(key='dh_compute').click().run()
++    assert not at.exception
++    return at.session_state['dh_result']
++
++
++def exports(at):
++    return [x for x in at.get('download_button') if x.key != 'dh_template']
++
++
++def test_default_complete_invalidation_and_bundle(monkeypatch, tmp_path):
++    at = start(monkeypatch, tmp_path)
++    before = at.session_state['bundle'].observations.copy(deep=True)
++    assert at.session_state['dh_result'] is None
++    assert not exports(at)
++    result = compute(at)
++    assert result.reconciliation.iloc[0].hkd_return == pytest.approx(.114102564102564)
++    assert result.metadata['historical_eligible'] is False
++    assert len(exports(at)) == 7
++    assert at.session_state['bundle'].observations.equals(before)
++    at.number_input(key='dh_max_age').set_value(6).run()
++    assert at.session_state['dh_result'] is None
++    assert not exports(at)
++    compute(at)
++    at.checkbox(key='dh_fx_confirm').uncheck().run()
++    assert at.session_state['dh_result'] is None
++    assert not exports(at)
++
++
++@pytest.mark.parametrize('case,reason', [('缺期末月','missing_month'), ('过旧','stale_quote'), ('重复末日','duplicate_date')])
++def test_fx_failures(monkeypatch, tmp_path, case, reason):
++    at = start(monkeypatch, tmp_path)
++    at.selectbox(key='dh_fx_case').set_value(case).run()
++    row = compute(at).reconciliation.iloc[0]
++    assert row.status == 'blocked'
++    assert reason in row.reason
++    assert row.hkd_return != row.hkd_return
++
++
++def test_unconfirmed_price_and_hkd(monkeypatch, tmp_path):
++    at = start(monkeypatch, tmp_path)
++    assert compute(at, False).reconciliation.hkd_return.isna().all()
++    at.selectbox(key='dh_symbol').set_value('2800.HK').run()
++    assert not any(x.key == 'dh_fx_confirm' for x in at.checkbox)
++    assert compute(at).reconciliation.iloc[0].hkd_return == pytest.approx(.1)
++
++
++def test_empty_cache_and_root_invalidation(monkeypatch, tmp_path):
++    at = start(monkeypatch, tmp_path)
++    compute(at)
++    monkeypatch.setenv('PORTFOLIO_REFERENCE_DOWNLOADS_ROOT', str(tmp_path/'changed'))
++    at.run()
++    assert at.session_state['dh_result'] is None
++    assert not exports(at)
++    at.radio(key='dh_fx_mode').set_value('已下载缓存').run()
++    assert at.error and at.button(key='dh_compute').disabled
++    at.radio(key='dh_price_mode').set_value('已下载缓存').run()
++    assert at.button(key='dh_compute').disabled
++
++
++def test_cache_corruption_withdraws(monkeypatch, tmp_path):
++    from test_daily_monthly_view import cache
++    import json
++    rid = cache(tmp_path)
++    before = {p:p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
++    at = start(monkeypatch, tmp_path)
++    at.radio(key='dh_price_mode').set_value('已下载缓存').run()
++    compute(at)
++    assert {p:p.read_bytes() for p in before} == before
++    manifest_path = tmp_path/'runs'/rid/'snapshot_manifest.json'
++    manifest = json.loads(manifest_path.read_bytes())
++    manifest['created_utc'] = 'changed'
++    manifest_path.write_text(json.dumps(manifest))
++    at.run()
++    assert at.session_state['dh_result'] is None
++    compute(at)
++    (manifest_path.parent/manifest['items'][0]['raw_file']).write_bytes(b'corrupt')
++    at.run()
++    assert at.session_state['dh_result'] is None
++    assert not exports(at)
++    assert at.button(key='dh_compute').disabled
++
++
++def test_samples_and_upload_identity():
++    from portfolio.data.daily_hkd_samples import sample_daily_prices, sample_daily_fx
++    from app.views.daily_hkd import read_fx_upload, input_token
++    frame = sample_daily_prices('SPY','2025-01','2025-01')
++    assert frame.attrs['source_name'].startswith('SYNTH')
++    fx = sample_daily_fx('2025-01','2025-01')
++    assert fx.hkd_per_unit.tolist() == [7.8,7.9]
++    raw = b'date,currency,hkd_per_unit,source_name\n2024-12-31,USD,7.8,manual\n2025-01-31,USD,7.9,manual\n'
++    imported = read_fx_upload(raw,'fx.csv',0)
++    assert imported.attrs['raw_bytes'] == raw
++    assert imported.attrs['source_rows'] == [2,3]
++    tokens = [input_token((raw,'fx.csv',0)), input_token((raw+b'\n','fx.csv',0)), input_token((raw,'other.csv',0)), input_token((raw,'fx.csv',1))]
++    assert len(set(tokens)) == 4
++
++
++def test_upload_bytes_name_sheet_and_errors_withdraw(monkeypatch, tmp_path):
++    """Native uploader transport is substituted; parser and page lifecycle are real."""
++    from io import BytesIO
++    import pandas as pd
++    import app.views.daily_hkd as view
++    payload = {'file': None}
++    monkeypatch.setattr(view.st, 'file_uploader', lambda *a, **k: payload['file'])
++    def uploaded(raw, name):
++        value = BytesIO(raw)
++        value.name = name
++        return value
++    raw = b'date,currency,hkd_per_unit,source_name\n2024-12-31,USD,7.8,manual\n2025-01-31,USD,7.9,manual\n'
++    payload['file'] = uploaded(raw, 'fx.csv')
++    at = start(monkeypatch, tmp_path)
++    at.radio(key='dh_fx_mode').set_value('CSV / XLSX 文件').run()
++    result = compute(at)
++    assert result.reconciliation.iloc[0].hkd_return == pytest.approx(.114102564102564)
++    assert result.fx_observations.source_row.tolist() == [2,3]
++    payload['file'] = uploaded(raw+b'\n', 'fx.csv')
++    at.run()
++    assert at.session_state['dh_result'] is None and not exports(at)
++    compute(at)
++    payload['file'] = uploaded(raw, 'renamed.csv')
++    at.run()
++    assert at.session_state['dh_result'] is None and not exports(at)
++    workbook = BytesIO()
++    frame = pd.read_csv(BytesIO(raw))
++    with pd.ExcelWriter(workbook, engine='openpyxl') as writer:
++        frame.to_excel(writer, sheet_name='first', index=False)
++        frame.to_excel(writer, sheet_name='second', index=False)
++    payload['file'] = uploaded(workbook.getvalue(), 'fx.xlsx')
++    at.run()
++    compute(at)
++    at.selectbox(key='dh_fx_sheet').set_value('second').run()
++    assert at.session_state['dh_result'] is None and not exports(at)
++    result = compute(at)
++    assert set(result.fx_observations.source_sheet) == {'second'}
++    payload['file'] = uploaded(b'date,date\n1,2', 'bad.csv')
++    at.run()
++    assert at.session_state['dh_result'] is None and not exports(at)
++    assert at.error and at.button(key='dh_compute').disabled
++
++
++@pytest.mark.parametrize('provider', ['HKMA 官方日线', 'Yahoo HKD=X 非官方日线'])
++def test_fx_cache_readonly_and_corruption(monkeypatch, tmp_path, provider):
++    import json
++    from test_fx_cache import yahoo, page
++    from portfolio.data.providers.base import RawResponse
++    from portfolio.data.updates import run_update
++    from portfolio.data.reference_updates import run_reference_update
++    if provider.startswith('HKMA'):
++        root = tmp_path/'reference'
++        rid = run_reference_update(root, ['HKMA_USDHKD'], '2024-12-01', '2025-02-01',
++            fetch=lambda *a, **k: RawResponse(page([('2024-12-31',7.8),('2025-01-31',7.9)]),200))
++    else:
++        root = tmp_path
++        rid = run_update(root, ['HKD=X'], '2024-12-01', '2025-02-01', fetch=lambda *a: RawResponse(yahoo(),200))
++    before = {p:p.read_bytes() for p in root.rglob('*') if p.is_file()}
++    at = start(monkeypatch, tmp_path)
++    at.radio(key='dh_fx_mode').set_value('已下载缓存').run()
++    at.selectbox(key='dh_fx_provider').set_value(provider).run()
++    result = compute(at)
++    assert result.reconciliation.iloc[0].hkd_return == pytest.approx(.114102564102564)
++    assert {p:p.read_bytes() for p in before} == before
++    path = root/'runs'/rid/'snapshot_manifest.json'
++    manifest = json.loads(path.read_bytes())
++    item = manifest['items'][0]
++    raw_path = item['raw_file'] if provider.startswith('Yahoo') else item['raw_files'][0]
++    (path.parent/raw_path).write_bytes(b'corrupt')
++    at.run()
++    assert at.session_state['dh_result'] is None and not exports(at)
++    assert at.error and at.button(key='dh_compute').disabled
++
++
++def test_price_failure_confirmation_and_month_root_changes(monkeypatch, tmp_path):
++    at = start(monkeypatch, tmp_path)
++    at.selectbox(key='dh_price_case').set_value('缺最后交易日').run()
++    row = compute(at).reconciliation.iloc[0]
++    assert row.status == 'blocked' and 'missing_price' in row.reason
++    at.selectbox(key='dh_price_case').set_value('完整报价').run()
++    compute(at)
++    at.checkbox(key='dh_price_confirm').uncheck().run()
++    assert at.session_state['dh_result'] is None and not exports(at)
++    compute(at)
++    at.text_input(key='dh_end_month').set_value('2025-02').run()
++    assert at.session_state['dh_result'] is None and not exports(at)
++    compute(at)
++    monkeypatch.setenv('PORTFOLIO_DOWNLOADS_ROOT', str(tmp_path/'other'))
++    at.run()
++    assert at.session_state['dh_result'] is None and not exports(at)

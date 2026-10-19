@@ -1,0 +1,398 @@
+--- baseline/app/main.py
++++ app/main.py
+@@ -2,23 +2,26 @@
+ import sys
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ if str(ROOT) not in sys.path:
+     sys.path.insert(0, str(ROOT))
+ 
+ import streamlit as st
+ from app.views.data_center import render as render_data_center
+ 
+ st.set_page_config(page_title='研究数据工作台', page_icon='📑', layout='wide')
+-workspace = st.sidebar.radio('工作页面', ['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验'], key='workspace')
++workspace = st.sidebar.radio('工作页面', ['数据导入', '港币收益查验', '共同窗口查验', '港币利率查验', '下载与缓存'], key='workspace')
+ if workspace == '数据导入':
+     render_data_center()
++elif workspace == '下载与缓存':
++    from app.views.downloads import render
++    render()
+ elif workspace == '港币收益查验':
+     from app.views.hkd_returns import render
+     render()
+ 
+ elif workspace == '共同窗口查验':
+     from app.views.alignment import render
+     render()
+ 
+ else:
+     from app.views.risk_free import render
+--- baseline/app/views/data_center.py
++++ app/views/data_center.py
+@@ -88,21 +88,21 @@
+                     loaded = DataBundle.load(imports_root() / version)
+                     s['bundle'] = loaded
+                     s['bundle_version'] = version
+                     s['preview'] = None
+                     st.success('版本已打开，表与原文件校验通过。')
+                 except (ValueError, OSError, KeyError, TypeError, BadZipFile, ParseError) as exc:
+                     st.error(f'无法打开版本：{exc}。请保留该目录并检查文件是否完整。')
+         else:
+             st.caption('尚无保存版本。完成质量检查后可以保存第一个版本。')
+     st.subheader('01 文件与原始记录')
+-    upload = st.file_uploader('选择本地 CSV 或 XLSX', type=['csv','xlsx'], key='upload')
++    upload = st.file_uploader('选择本地 CSV 或 XLSX', type=['csv','xlsx'], key=('upload' if not s.get('upload_generation') else f"upload_{s['upload_generation']}"))
+     if upload is None:
+         # Clearing the uploader permits a deliberate reselection of identical bytes.
+         # Keep the active sample and its preview until a new file is selected.
+         s.pop('upload_token', None)
+     else:
+         payload = upload.getvalue()
+         token = (upload.name, hashlib.sha256(payload).hexdigest())
+         if token != s.get('upload_token'):
+             set_source(payload, upload.name)
+             s['upload_token'] = token
+@@ -138,21 +138,23 @@
+         st.caption('仅同名字段预选；未映射字段不会猜测。逐行值优先，默认值只填空白。类型与经济类别须明确指定。')
+         mapping = {}
+         with st.expander('逐字段映射（必需与可选）', expanded=True):
+             mapcols = st.columns(3)
+             options = [''] + list(raw.columns)
+             for i, (field, title) in enumerate(FIELDS.items()):
+                 chosen = mapcols[i % 3].selectbox(title, options, index=options.index(field) if field in options else 0,
+                                                 format_func=lambda x: x or '不映射', key='map_' + field)
+                 if chosen:
+                     mapping[field] = chosen
+-        supplier = st.text_input('来源供应商／来源名称', value='SYNTH' if synthetic else '本地文件', key='supplier')
++        if 'supplier' not in s:
++            s['supplier'] = 'SYNTH' if synthetic else '本地文件'
++        supplier = st.text_input('来源供应商／来源名称', key='supplier')
+         c = st.columns(3)
+         kind = c[0].selectbox('价格／收益口径', ['price','adjusted_price','total_return','price_return'], format_func=label, key='kind')
+         unit = c[1].selectbox('收益单位', ['decimal','percent'], format_func=label, key='unit')
+         date_format = c[2].text_input('日期格式', value='%Y-%m-%d', key='date_format')
+         defaults = {}
+         with st.expander('缺失字段默认值（单产品文件也适用）'):
+             dc = st.columns(3)
+             for i, field in enumerate(['asset_id','ticker','name','exchange','share_class']):
+                 value = dc[i % 3].text_input('默认' + FIELDS[field], key='default_' + field)
+                 if value.strip(): defaults[field] = value.strip()
+--- baseline/app/views/downloads.py
++++ app/views/downloads.py
+@@ -0,0 +1,171 @@
++"""Explicit public-chart updates and verified, offline snapshot inspection."""
++from datetime import date
++from io import BytesIO
++import json
++import os
++from pathlib import Path
++
++import pandas as pd
++import streamlit as st
++from portfolio.data.providers.yahoo import CATALOG
++from portfolio.data.updates import run_update, validate_plan
++from portfolio.data.snapshots import list_runs, load_snapshot, read_artifact, update_log
++from app.views.data_center import set_source
++
++ROOT = Path(__file__).resolve().parents[2]
++STATUS = {'success':'成功（字段通过）', 'partial':'部分可用', 'unavailable':'不可用', 'cancelled':'已取消'}
++REASONS = {'fields_verified':'来源字段检查通过', 'missing_invalid_prices_or_months':'价格缺失、无效或缺少月份',
++           'timeout':'请求超时', 'transport_error':'连接失败', 'not_requested':'未请求', 'cancelled':'已取消',
++           'rate_limited':'来源限流', 'http_error':'来源 HTTP 错误', 'parse_error':'来源解析失败',
++           'currency_or_instrument_mismatch':'币种或产品身份不匹配', 'empty_prices':'无价格记录'}
++
++
++def downloads_root():
++    return Path(os.environ.get('PORTFOLIO_DOWNLOADS_ROOT', str(ROOT / 'data/downloads')))
++
++
++def _items(manifest):
++    rows = []
++    for item in manifest['items']:
++        rows.append({'代码':item['symbol'], '状态':STATUS[item['status']],
++                     '原因':REASONS.get(item['reason'], '来源检查未通过'), '行数':item['rows'],
++                     '首日':item.get('first_date', ''), '末日':item.get('last_date', ''),
++                     '创建时间 UTC':manifest['created_utc']})
++    st.caption(f"run_id：{manifest['run_id']} · 原请求 {manifest['start']}（含）至 {manifest['end_exclusive']}（不含）")
++    st.dataframe(pd.DataFrame(rows), hide_index=True, width='stretch')
++
++
++def _handoff(root, run_id, symbol):
++    # A button callback executes before main.py instantiates the workspace radio.
++    manifest = load_snapshot(root, run_id)
++    item = next(i for i in manifest['items'] if i['symbol'] == symbol)
++    if item['status'] != 'success' or symbol == 'HKD=X' or not item['import_file']:
++        return
++    payload = read_artifact(root, run_id, item['import_file'])
++    s = st.session_state
++    s.pop('upload', None)
++    s.pop('upload_token', None)
++    s['upload_generation'] = s.get('upload_generation', 0) + 1
++    set_source(payload, f"{run_id}_{item['import_file']}")
++    for field in ('asset_id', 'ticker', 'name', 'exchange', 'share_class', 'tool_type', 'asset_class', 'currency', 'frequency'):
++        s['default_' + field] = ''
++    s['date_format'] = '%Y-%m-%d'
++    s['kind'] = 'adjusted_price'
++    s['unit'] = 'decimal'
++    s['supplier'] = f"Yahoo chart / {run_id} / raw sha256 {item['raw_sha256']}"
++    s['workspace'] = '数据导入'
++
++
++def _safe_handoff(root, run_id, symbol):
++    try:
++        _handoff(root, run_id, symbol)
++    except (ValueError, OSError, KeyError, TypeError):
++        st.session_state['dl_handoff_error'] = True
++
++
++def render():
++    s = st.session_state
++    s.setdefault('dl_plan', None)
++    s.setdefault('dl_active', None)
++    s.setdefault('dl_result', None)
++    st.title('下载与缓存')
++    st.info('仅七个识别样本；每项一次公开 Yahoo chart 请求，无自动重试、无需密钥或登录。使用缓存与导出均不联网。')
++    st.caption('success 仅表示来源字段检查通过，不代表完整交易日历、历史可得时间或 S05 候选合格。此处不计算月度港币收益或 Sharpe。')
++    symbols = st.multiselect('识别样本', list(CATALOG), default=['SPY', '2800.HK'], key='dl_symbols')
++    cols = st.columns(3)
++    start = cols[0].date_input('起日（包含）', value=date(2025,1,1), format='YYYY-MM-DD', key='dl_start_date')
++    end = cols[1].date_input('止日（不包含）', value=date(2025,2,1), format='YYYY-MM-DD', key='dl_end')
++    timeout = cols[2].number_input('单请求超时（秒）', min_value=1, max_value=30, value=15, key='dl_timeout')
++    fingerprint = (tuple(symbols), start.isoformat(), end.isoformat(), timeout)
++    if s.get('dl_fingerprint') != fingerprint:
++        s['dl_plan'] = None
++        s['dl_fingerprint'] = fingerprint
++    if st.button('生成下载计划', key='dl_prepare'):
++        try:
++            validate_plan(*fingerprint)
++            s['dl_plan'] = dict(symbols=fingerprint[0], start=fingerprint[1], end=fingerprint[2], timeout=timeout)
++        except (ValueError, TypeError):
++            st.error('请选择样本，并填写有效 YYYY-MM-DD 日期，起日须早于止日；超时须为 1–30 秒。')
++    plan = s['dl_plan']
++    if plan:
++        st.subheader('计划预览')
++        st.write(f"请求数：{len(plan['symbols'])} · {plan['start']}（含）至 {plan['end']}（不含）")
++        st.dataframe(pd.DataFrame([{'symbol':symbol, **CATALOG[symbol]} for symbol in plan['symbols']]), hide_index=True, width='stretch')
++        st.warning(f'仅可在开始前取消计划。下载同步进行中不能通过页面中断；单请求超时上限 {timeout} 秒。')
++        if st.button('取消计划', key='dl_cancel'):
++            s['dl_plan'] = None
++            st.rerun()
++        if st.button('开始下载', key='dl_start', type='primary'):
++            try:
++                with st.spinner('正在逐项下载并保存原始响应…'):
++                    run = run_update(downloads_root(), **plan)
++                    manifest = load_snapshot(downloads_root(), run)
++                s['dl_result'] = manifest
++                s['dl_plan'] = None
++                st.success('更新已完成；已打开缓存保持独立，请明确打开所需 run。')
++            except (ValueError, OSError, KeyError, TypeError):
++                st.error('更新未完成；已打开缓存仍保留。请检查本地目录或稍后手动重试。')
++    if s['dl_result']:
++        st.subheader('上次更新结果（原请求范围）')
++        _items(s['dl_result'])
++    st.subheader('本地缓存')
++    try:
++        runs = list_runs(downloads_root())
++    except (ValueError, OSError):
++        runs = []
++        st.error('缓存目录无法读取。')
++    if runs:
++        selected = st.selectbox('已完成 run', runs, key='dl_run')
++        if st.button('校验并打开缓存', key='dl_open'):
++            try:
++                manifest = load_snapshot(downloads_root(), selected)
++                if any(item['status'] == 'success' for item in manifest['items']):
++                    s['dl_active'] = dict(root=str(downloads_root()), run_id=selected, manifest=manifest)
++                else:
++                    s['dl_result'] = manifest
++                    st.warning('此 run 无成功项，保留先前已打开缓存。')
++                    _items(manifest)
++            except (ValueError, OSError, KeyError, TypeError):
++                st.error('缓存校验失败；先前打开的缓存及其日期仍保留。')
++        try:
++            log = update_log(downloads_root())
++            st.download_button('导出 update_log.csv', log.to_csv(index=False).encode(), 'update_log.csv', key='dl_log')
++        except (ValueError, OSError, KeyError, TypeError):
++            st.warning('部分缓存损坏，无法导出完整更新日志。')
++    else:
++        st.caption('暂无已完成 run。生成计划不会创建缓存。')
++    active = s['dl_active']
++    if not active:
++        return
++    st.subheader('已打开且通过校验的缓存')
++    manifest = active['manifest']
++    _items(manifest)
++    if s.pop('dl_handoff_error', False):
++        st.error('交接前缓存校验失败；当前导入内容保持原样。')
++    try:
++        # Revalidate before every export/use, including after disk changes.
++        verified = load_snapshot(Path(active['root']), active['run_id'])
++        if verified != manifest:
++            raise ValueError('snapshot changed')
++        st.json(manifest, expanded=False)
++        st.download_button('导出 snapshot_manifest.json', (json.dumps(manifest, ensure_ascii=False, indent=2)+'\n').encode(), 'snapshot_manifest.json', key='dl_manifest')
++        success = [i['symbol'] for i in manifest['items'] if i['status'] == 'success']
++        if not success:
++            st.caption('此 run 没有通过字段检查的可用项。')
++            return
++        symbol = st.selectbox('使用成功缓存项', success, key='dl_symbol')
++        item = next(i for i in manifest['items'] if i['symbol'] == symbol)
++        daily = read_artifact(Path(active['root']), active['run_id'], item['daily_file'])
++        st.caption('原币日线 · ' + CATALOG[symbol]['currency'])
++        st.dataframe(pd.read_csv(BytesIO(daily)), hide_index=True, width='stretch')
++        st.download_button('导出原币日线 CSV', daily, item['daily_file'], key='dl_daily')
++        if symbol == 'HKD=X':
++            st.info('HKD=X 方向：每 1 USD 对应的 HKD 数量（HKD / USD）。仅提供日线导出，不送入产品导入。')
++        elif item['import_file']:
++            payload = read_artifact(Path(active['root']), active['run_id'], item['import_file'])
++            st.download_button('导出 S02 导入 CSV', payload, item['import_file'], key='dl_import_csv')
++            st.button('送入数据导入核对', key='dl_to_import', on_click=_safe_handoff,
++                      args=(Path(active['root']), active['run_id'], symbol))
++            st.caption('使用 adj_close → value、日频、原币、复权价格口径；仅交接文件，不保存 bundle。')
++    except (ValueError, OSError, KeyError, TypeError):
++        st.error('已打开缓存的磁盘文件校验失败；保留原身份与日期，停止使用与导出。')
+--- baseline/tests/test_downloads_view.py
++++ tests/test_downloads_view.py
+@@ -0,0 +1,141 @@
++from pathlib import Path
++import copy
++import json
++from datetime import date
++from streamlit.testing.v1 import AppTest
++
++ROOT = Path(__file__).resolve().parents[1]
++
++def start(monkeypatch, tmp_path):
++    monkeypatch.setenv('PORTFOLIO_DOWNLOADS_ROOT', str(tmp_path))
++    at = AppTest.from_file(str(ROOT / 'app/main.py'), default_timeout=15).run()
++    at.radio(key='workspace').set_value('下载与缓存').run()
++    assert not at.exception
++    return at
++
++def click(at, key):
++    at.button(key=key).click().run()
++    assert not at.exception
++
++def test_no_auto_download(monkeypatch, tmp_path):
++    import app.views.downloads as view
++    monkeypatch.setattr(view, 'run_update', lambda *a, **k: (_ for _ in ()).throw(AssertionError('unexpected download')))
++    at = start(monkeypatch, tmp_path)
++    click(at, 'dl_prepare')
++    assert at.session_state['dl_plan']['symbols'] == ('SPY', '2800.HK')
++    click(at, 'dl_cancel')
++    assert at.session_state['dl_plan'] is None
++    click(at, 'dl_prepare')
++    at.date_input(key='dl_end').set_value(date(2025, 3, 1)).run()
++    assert at.session_state['dl_plan'] is None
++
++
++def cached(tmp_path):
++    from portfolio.data.updates import run_update
++    from portfolio.data.providers.base import RawResponse
++    from portfolio.data.providers.yahoo import CATALOG
++    from portfolio.data.snapshots import list_runs, load_snapshot
++    chart = json.loads((ROOT / 'tests/fixtures/source_responses/yahoo_chart.json').read_bytes())
++    def fetch(symbol, *args):
++        if symbol == 'SPY':
++            return RawResponse(b'limited', 429)
++        payload = copy.deepcopy(chart)
++        identity = CATALOG[symbol]
++        payload['chart']['result'][0]['meta'].update(symbol=symbol, currency=identity['currency'], instrumentType=identity['provider_type'])
++        if symbol == 'AAPL':
++            payload['chart']['result'][0]['indicators']['quote'][0]['close'][0] = None
++        return RawResponse(json.dumps(payload).encode(), 200)
++    run_update(tmp_path, ['SPY', '2800.HK', 'HKD=X', 'AAPL'], '2025-01-01', '2025-02-01', fetch=fetch)
++    return [(run, load_snapshot(tmp_path, run)) for run in list_runs(tmp_path)]
++
++
++def test_explicit_update_and_failed_update_preserves_active(monkeypatch, tmp_path):
++    import app.views.downloads as view
++    runs = cached(tmp_path)
++    calls = []
++    def update(*a, **k):
++        calls.append((a,k))
++        return runs[0][0]
++    monkeypatch.setattr(view, 'run_update', update)
++    at = start(monkeypatch, tmp_path)
++    click(at, 'dl_open')
++    active = at.session_state['dl_active']
++    click(at, 'dl_prepare')
++    assert not calls
++    click(at, 'dl_start')
++    assert len(calls) == 1
++    assert at.session_state['dl_result']['run_id'] == runs[0][0]
++    assert at.session_state['dl_active'] == active
++    def fail(*a, **k):
++        raise OSError('SECRET must not display')
++    monkeypatch.setattr(view, 'run_update', fail)
++    click(at, 'dl_prepare')
++    click(at, 'dl_start')
++    assert at.session_state['dl_active'] == active
++    assert 'SECRET' not in str([e.value for e in at.error])
++
++
++def test_offline_open_corrupt_handoff_and_fx(monkeypatch, tmp_path):
++    import app.views.downloads as view
++    runs = cached(tmp_path)
++    mixed = next(run for run, m in runs if any(i['symbol'] == 'HKD=X' for i in m['items']))
++    monkeypatch.setattr(view, 'run_update', lambda *a, **k: (_ for _ in ()).throw(AssertionError('network')))
++    at = start(monkeypatch, tmp_path)
++    at.selectbox(key='dl_run').set_value(mixed).run()
++    click(at, 'dl_open')
++    assert any('不可用' in str(df.value) for df in at.dataframe)
++    assert any('部分可用' in str(df.value) for df in at.dataframe)
++    assert {'dl_log', 'dl_manifest', 'dl_daily', 'dl_import_csv'} <= {e.key for e in at.get('download_button')}
++    at.selectbox(key='dl_symbol').set_value('HKD=X').run()
++    assert not any(b.key == 'dl_to_import' for b in at.button)
++    at.selectbox(key='dl_symbol').set_value('2800.HK').run()
++    manifest = at.session_state['dl_active']['manifest']
++    item = next(i for i in manifest['items'] if i['symbol'] == '2800.HK')
++    from portfolio.data.snapshots import read_artifact
++    expected = read_artifact(tmp_path, mixed, item['import_file'])
++    original = at.session_state['bundle']
++    at.session_state['upload_token'] = ('old.csv', 'old')
++    at.session_state['upload'] = b'old'
++    at.session_state['default_asset_id'] = 'stale'
++    at.session_state['default_share_class'] = 'stale'
++    at.session_state['date_format'] = '%d/%m/%Y'
++    click(at, 'dl_to_import')
++    assert at.radio(key='workspace').value == '数据导入'
++    assert at.session_state['default_asset_id'] == ''
++    assert at.session_state['default_share_class'] == ''
++    assert at.session_state['date_format'] == '%Y-%m-%d'
++    assert at.session_state['kind'] == 'adjusted_price'
++    assert at.session_state['unit'] == 'decimal'
++    assert mixed in at.session_state['source'][1]
++    assert 'Yahoo chart' in at.session_state['supplier']
++    assert at.session_state['supplier'] == f"Yahoo chart / {mixed} / raw sha256 {item['raw_sha256']}"
++    assert at.session_state['source'][0] == expected
++    assert len(at.session_state['bundle'].assets) == len(original.assets)
++    assert 'adj_close' not in at.session_state['source'][0].decode().splitlines()[0]
++    assert 'value' in at.session_state['source'][0].decode().splitlines()[0]
++    at.run()
++    assert mixed in at.session_state['source'][1]
++    at.radio(key='workspace').set_value('下载与缓存').run()
++    active = at.session_state['dl_active']
++    manifest = active['manifest']
++    artifact = tmp_path / 'runs' / mixed / manifest['files'][0]['path']
++    artifact.write_bytes(b'corrupt')
++    at.selectbox(key='dl_run').set_value(mixed).run()
++    click(at, 'dl_open')
++    assert at.session_state['dl_active'] == active
++    assert at.error
++
++
++def test_failed_run_does_not_replace_usable_cache(monkeypatch, tmp_path):
++    from portfolio.data.updates import run_update
++    from portfolio.data.providers.base import RawResponse
++    cached(tmp_path)
++    at = start(monkeypatch, tmp_path)
++    click(at, 'dl_open')
++    active = at.session_state['dl_active']
++    failed = run_update(tmp_path, ['SPY'], '2025-01-01', '2025-02-01', fetch=lambda *a: RawResponse(b'limited', 429))
++    at.run()
++    at.selectbox(key='dl_run').set_value(failed).run()
++    click(at, 'dl_open')
++    assert at.session_state['dl_active'] == active
++    assert at.session_state['dl_result']['run_id'] == failed

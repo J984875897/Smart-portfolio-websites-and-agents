@@ -1,0 +1,6 @@
+asset_id,cluster_id,correlation_status,cluster_size
+A,C001,available,2
+B,C001,available,2
+C,C002,available,1
+CONST,U001,unavailable,1
+NEG,C003,available,1

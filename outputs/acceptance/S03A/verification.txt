@@ -1,0 +1,3 @@
+S03A synthetic checks passed: 5 valid HKD rows; source observations unchanged.
+USD 1% / FX 7.8 -> 7.9: 2.294871794872%
+Missing FX is blocked, HKD native remains 1%; S03B/C remain unverified.

@@ -1,0 +1,18 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_offline_hkd_evidence_command _______________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-47/test_offline_hkd_evidence_comm0')
+
+    def test_offline_hkd_evidence_command(tmp_path):
+        script = ROOT / 'scripts/verify_hkd.py'
+>       assert script.exists(), 'The S03A offline evidence command is not implemented'
+E       AssertionError: The S03A offline evidence command is not implemented
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_hkd.py').exists
+
+tests/test_hkd_acceptance.py:15: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_hkd_acceptance.py::test_offline_hkd_evidence_command - Asse...
+1 failed in 0.31s

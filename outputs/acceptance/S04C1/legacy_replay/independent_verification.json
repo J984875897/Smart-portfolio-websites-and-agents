@@ -1,0 +1,35 @@
+{
+  "run_id": "20261012T143920Z-6f4d426f",
+  "source_mode": "S01 verified offline replay",
+  "snapshot_integrity_verified": true,
+  "historical_eligible": false,
+  "scope": "January 2025 original-currency diagnostic preview",
+  "products": {
+    "SPY": {
+      "expected_start_date": "2024-12-31",
+      "expected_end_date": "2025-01-31",
+      "raw_start_price": 574.7880859375,
+      "raw_end_price": 590.2247314453125,
+      "direct_return": 0.026856237777849623,
+      "computed_return": 0.026856237777849623,
+      "preview_valid": true,
+      "matches": true,
+      "raw_sha256": "24a8d18d7bd5328ab0b8e01a9c0dee77e02f90a372b3e5dce1308f56dc997977",
+      "reason": "ok"
+    },
+    "2800.HK": {
+      "expected_start_date": "2024-12-31",
+      "expected_end_date": "2025-01-28",
+      "raw_start_price": 19.488393783569336,
+      "raw_end_price": 19.70022201538086,
+      "direct_return": 0.010869455644421322,
+      "computed_return": 0.010869455644421322,
+      "preview_valid": true,
+      "matches": true,
+      "raw_sha256": "80405200baa244b6c2b8db9f7a7c406c317a17cbec6f85a12ea87e8627fb3584",
+      "reason": "ok"
+    }
+  },
+  "all_comparisons_agree": true,
+  "all_price_previews_valid": true
+}

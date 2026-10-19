@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_covariance_spectral_overflow_is_rejected_not_exported_as_infinity ____
+
+    def test_covariance_spectral_overflow_is_rejected_not_exported_as_infinity():
+        _,cov,w=inputs();cov[:]=1e308;w[:]=[1,0]
+>       with pytest.raises(ValueError,match='covariance'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_diversification.py:113: Failed
+=============================== warnings summary ===============================
+tests/test_diversification.py::test_covariance_spectral_overflow_is_rejected_not_exported_as_infinity
+  /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/numpy/_core/numeric.py:2312: RuntimeWarning: One of rtol or atol is not valid, atol: inf, rtol: 0
+    res = all(isclose(a, b, rtol=rtol, atol=atol, equal_nan=equal_nan))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_diversification.py::test_covariance_spectral_overflow_is_rejected_not_exported_as_infinity
+1 failed, 1 warning in 0.29s

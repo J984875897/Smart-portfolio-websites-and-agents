@@ -1,0 +1,16 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_weight_shape_error_explains_columns_instead_of_encoding _________
+
+    def test_weight_shape_error_explains_columns_instead_of_encoding():
+        from app.views.risk_exports import parse_weights
+>       with pytest.raises(ValueError,match='两列'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: '两列'
+E         Actual message: '无法读取权重 CSV，请使用 UTF-8 编码。'
+
+tests/test_risk_workspace_helpers.py:69: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_risk_workspace_helpers.py::test_weight_shape_error_explains_columns_instead_of_encoding
+1 failed in 0.32s

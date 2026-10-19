@@ -1,0 +1,673 @@
+.............FFF.F.F.....FF.F.FFFFFFFFF..                                [100%]
+=================================== FAILURES ===================================
+__________ test_yahoo_unknown_timestamp_rejected_before_filter[None] ___________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_yahoo_unknown_timestamp_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b126c40>
+stamp = None
+
+    @pytest.mark.parametrize('stamp', [None, True, float('nan'), float('inf'), 'NaT', 'bad'])
+    def test_yahoo_unknown_timestamp_rejected_before_filter(tmp_path, monkeypatch, stamp):
+        from portfolio.data import fx_cache
+        payload = json.loads(yahoo())
+        record = payload['chart']['result'][0]
+        record['timestamp'].append(stamp)
+        for values in record['indicators']['quote'][0].values(): values.append(8.0)
+        record['indicators']['adjclose'][0]['adjclose'].append(8.0)
+        raw = json.dumps(payload).encode()
+        # A verified upstream snapshot may report success despite an unlocatable row.
+        manifest = dict(schema_version=1, start='2024-12-01', end_exclusive='2025-02-01', created_utc='', items=[dict(symbol='HKD=X', status='success', raw_file='fx.json')])
+        monkeypatch.setattr(fx_cache, 'load_snapshot', lambda *a: manifest)
+        monkeypatch.setattr(fx_cache, 'read_artifact', lambda *a: raw)
+>       with pytest.raises(ValueError): cached(tmp_path, 'run')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_fx_cache.py:77: Failed
+__________ test_yahoo_unknown_timestamp_rejected_before_filter[True] ___________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_yahoo_unknown_timestamp_r1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b126d70>
+stamp = True
+
+    @pytest.mark.parametrize('stamp', [None, True, float('nan'), float('inf'), 'NaT', 'bad'])
+    def test_yahoo_unknown_timestamp_rejected_before_filter(tmp_path, monkeypatch, stamp):
+        from portfolio.data import fx_cache
+        payload = json.loads(yahoo())
+        record = payload['chart']['result'][0]
+        record['timestamp'].append(stamp)
+        for values in record['indicators']['quote'][0].values(): values.append(8.0)
+        record['indicators']['adjclose'][0]['adjclose'].append(8.0)
+        raw = json.dumps(payload).encode()
+        # A verified upstream snapshot may report success despite an unlocatable row.
+        manifest = dict(schema_version=1, start='2024-12-01', end_exclusive='2025-02-01', created_utc='', items=[dict(symbol='HKD=X', status='success', raw_file='fx.json')])
+        monkeypatch.setattr(fx_cache, 'load_snapshot', lambda *a: manifest)
+        monkeypatch.setattr(fx_cache, 'read_artifact', lambda *a: raw)
+>       with pytest.raises(ValueError): cached(tmp_path, 'run')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fx_cache.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_fx_cache.py:14: in cached
+    return cached_daily_fx(root,run)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/portfolio/data/fx_cache.py:25: in cached_daily_fx
+    parsed,meta=parse_yahoo_chart(payload)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/portfolio/data/providers/yahoo.py:19: in parse_yahoo_chart
+    dates = pd.to_datetime(stamps, unit="s", utc=True).tz_convert(meta["exchangeTimezoneName"])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/tools/datetimes.py:1072: in to_datetime
+    result = convert_listlike(argc, format)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/tools/datetimes.py:412: in _convert_listlike_datetimes
+    return _to_datetime_with_unit(arg, unit, name, utc, errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/tools/datetimes.py:543: in _to_datetime_with_unit
+    arr, tz_parsed = tslib.array_to_datetime(
+pandas/_libs/tslib.pyx:259: in pandas._libs.tslib.array_to_datetime
+    ???
+pandas/_libs/tslib.pyx:473: in pandas._libs.tslib.array_to_datetime
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   TypeError: <class 'bool'> is not convertible to datetime
+
+pandas/_libs/tslib.pyx:465: TypeError
+___________ test_yahoo_unknown_timestamp_rejected_before_filter[nan] ___________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_yahoo_unknown_timestamp_r2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b143890>
+stamp = nan
+
+    @pytest.mark.parametrize('stamp', [None, True, float('nan'), float('inf'), 'NaT', 'bad'])
+    def test_yahoo_unknown_timestamp_rejected_before_filter(tmp_path, monkeypatch, stamp):
+        from portfolio.data import fx_cache
+        payload = json.loads(yahoo())
+        record = payload['chart']['result'][0]
+        record['timestamp'].append(stamp)
+        for values in record['indicators']['quote'][0].values(): values.append(8.0)
+        record['indicators']['adjclose'][0]['adjclose'].append(8.0)
+        raw = json.dumps(payload).encode()
+        # A verified upstream snapshot may report success despite an unlocatable row.
+        manifest = dict(schema_version=1, start='2024-12-01', end_exclusive='2025-02-01', created_utc='', items=[dict(symbol='HKD=X', status='success', raw_file='fx.json')])
+        monkeypatch.setattr(fx_cache, 'load_snapshot', lambda *a: manifest)
+        monkeypatch.setattr(fx_cache, 'read_artifact', lambda *a: raw)
+>       with pytest.raises(ValueError): cached(tmp_path, 'run')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_fx_cache.py:77: Failed
+___________ test_yahoo_unknown_timestamp_rejected_before_filter[NaT] ___________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_yahoo_unknown_timestamp_r4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b12f8a0>
+stamp = 'NaT'
+
+    @pytest.mark.parametrize('stamp', [None, True, float('nan'), float('inf'), 'NaT', 'bad'])
+    def test_yahoo_unknown_timestamp_rejected_before_filter(tmp_path, monkeypatch, stamp):
+        from portfolio.data import fx_cache
+        payload = json.loads(yahoo())
+        record = payload['chart']['result'][0]
+        record['timestamp'].append(stamp)
+        for values in record['indicators']['quote'][0].values(): values.append(8.0)
+        record['indicators']['adjclose'][0]['adjclose'].append(8.0)
+        raw = json.dumps(payload).encode()
+        # A verified upstream snapshot may report success despite an unlocatable row.
+        manifest = dict(schema_version=1, start='2024-12-01', end_exclusive='2025-02-01', created_utc='', items=[dict(symbol='HKD=X', status='success', raw_file='fx.json')])
+        monkeypatch.setattr(fx_cache, 'load_snapshot', lambda *a: manifest)
+        monkeypatch.setattr(fx_cache, 'read_artifact', lambda *a: raw)
+>       with pytest.raises(ValueError): cached(tmp_path, 'run')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_fx_cache.py:77: Failed
+________________ test_yahoo_original_row_ordinals_survive_sort _________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_yahoo_original_row_ordina0')
+
+    def test_yahoo_original_row_ordinals_survive_sort(tmp_path):
+        payload = json.loads(yahoo())
+        record = payload['chart']['result'][0]
+        record['timestamp'].reverse()
+        for values in record['indicators']['quote'][0].values(): values.reverse()
+        record['indicators']['adjclose'][0]['adjclose'].reverse()
+        raw = json.dumps(payload).encode()
+        run = run_update(tmp_path, ['HKD=X'], '2024-12-01', '2025-02-01', fetch=lambda *a: RawResponse(raw, 200))
+        folder = tmp_path / 'runs' / run
+        before = {p.name: p.read_bytes() for p in folder.iterdir()}
+        frame = cached(tmp_path, run)
+        assert frame.date.tolist() == ['2024-12-31', '2025-01-31']
+        assert frame.hkd_per_unit.tolist() == [7.8, 7.9]
+>       assert frame.source_row.tolist() == [2, 1]
+E       assert [1, 2] == [2, 1]
+E         
+E         At index 0 diff: 1 != 2
+E         Use -v to get more diff
+
+tests/test_fx_cache.py:93: AssertionError
+______________ test_evidence_tampering_detected[empty_endpoints] _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b234230>
+tamper = 'empty_endpoints'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+______________ test_evidence_tampering_detected[short_endpoints] _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b1ede50>
+tamper = 'short_endpoints'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+_______________ test_evidence_tampering_detected[extra_endpoint] _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b21d390>
+tamper = 'extra_endpoint'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+____________ test_evidence_tampering_detected[empty_reconciliation] ____________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d00fdd0>
+tamper = 'empty_reconciliation'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+        with pytest.raises(ValueError):
+>           audit.verify_legacy_hkd(fixture_manifest(tmp_path))
+
+tests/test_daily_hkd_verification.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_daily_hkd.py:91: in verify_legacy_hkd
+    actual = computed.reconciliation.iloc[0]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/indexing.py:1207: in __getitem__
+    return self._getitem_axis(maybe_callable, axis=axis)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/indexing.py:1773: in _getitem_axis
+    self._validate_integer(key, axis)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pandas.core.indexing._iLocIndexer object at 0x10d0cfe30>, key = 0
+axis = 0
+
+    def _validate_integer(self, key: int | np.integer, axis: AxisInt) -> None:
+        """
+        Check that 'key' is a valid position in the desired axis.
+    
+        Parameters
+        ----------
+        key : int
+            Requested position.
+        axis : int
+            Desired axis.
+    
+        Raises
+        ------
+        IndexError
+            If 'key' is not a valid position in axis 'axis'.
+        """
+        len_axis = len(self.obj._get_axis(axis))
+        if key >= len_axis or key < -len_axis:
+>           raise IndexError("single positional indexer is out-of-bounds")
+E           IndexError: single positional indexer is out-of-bounds
+
+.venv/lib/python3.14/site-packages/pandas/core/indexing.py:1706: IndexError
+____________ test_evidence_tampering_detected[extra_reconciliation] ____________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d218590>
+tamper = 'extra_reconciliation'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+_________ test_evidence_tampering_detected[wrong_reconciliation_label] _________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d3f8e10>
+tamper = 'wrong_reconciliation_label'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+___________ test_evidence_tampering_detected[fx_start_observed_date] ___________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d3f81b0>
+tamper = 'fx_start_observed_date'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+____________ test_evidence_tampering_detected[fx_end_observed_date] ____________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d24fed0>
+tamper = 'fx_end_observed_date'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+_____________ test_evidence_tampering_detected[fx_start_age_days] ______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect10')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x103d79c70>
+tamper = 'fx_start_age_days'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+______________ test_evidence_tampering_detected[fx_end_age_days] _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect11')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x103d822a0>
+tamper = 'fx_end_age_days'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+__________________ test_evidence_tampering_detected[fx_start] __________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect12')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b4c91d0>
+tamper = 'fx_start'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+___________________ test_evidence_tampering_detected[fx_end] ___________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-169/test_evidence_tampering_detect13')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b216050>
+tamper = 'fx_end'
+
+    @pytest.mark.parametrize('tamper', [
+        'empty_endpoints', 'short_endpoints', 'duplicate_endpoint', 'extra_endpoint', 'wrong_label',
+        'empty_reconciliation', 'extra_reconciliation', 'wrong_reconciliation_label',
+        'fx_start_observed_date', 'fx_end_observed_date', 'fx_start_age_days', 'fx_end_age_days',
+        'fx_start', 'fx_end', 'endpoint_age_missing', 'endpoint_quote',
+    ])
+    def test_evidence_tampering_detected(tmp_path, monkeypatch, tamper):
+        import pandas as pd
+        from scripts import verify_daily_hkd as audit
+        original = audit.connect_daily_hkd
+        def wrong(*args, **kwargs):
+            result = original(*args, **kwargs)
+            if tamper == 'empty_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:0]
+            elif tamper == 'short_endpoints': result.fx_endpoints = result.fx_endpoints.iloc[:1]
+            elif tamper == 'duplicate_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints.iloc[:1]] * 2, ignore_index=True)
+            elif tamper == 'extra_endpoint': result.fx_endpoints = pd.concat([result.fx_endpoints, result.fx_endpoints.iloc[:1]], ignore_index=True)
+            elif tamper == 'wrong_label': result.fx_endpoints.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'empty_reconciliation': result.reconciliation = result.reconciliation.iloc[:0]
+            elif tamper == 'extra_reconciliation': result.reconciliation = pd.concat([result.reconciliation] * 2, ignore_index=True)
+            elif tamper == 'wrong_reconciliation_label': result.reconciliation.loc[0, 'date'] = '1900-01-31'
+            elif tamper == 'endpoint_age_missing': result.fx_endpoints.loc[0, 'age_days'] = None
+            elif tamper == 'endpoint_quote': result.fx_endpoints.loc[0, 'hkd_per_unit'] = 9.0
+            else: result.reconciliation.loc[0, tamper] = '1900-01-01' if tamper.endswith('observed_date') else 99.0
+            return result
+        monkeypatch.setattr(audit, 'connect_daily_hkd', wrong)
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_hkd_verification.py:107: Failed
+=============================== warnings summary ===============================
+tests/test_daily_hkd_verification.py::test_hand_calculation_and_provenance
+tests/test_daily_hkd_verification.py::test_hand_calculation_and_provenance
+  /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/exchange_calendars/exchange_calendar_xhkg.py:363: DeprecationWarning: The 'generic' unit for NumPy timedelta is deprecated, and will raise an error in the future. This includes implicit conversion of bare integers (e.g. `+ 1`). Please use a specific unit instead.
+    easter_monday = EasterMonday.dates(years[0], years[-1] + 1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_fx_cache.py::test_yahoo_unknown_timestamp_rejected_before_filter[None]
+FAILED tests/test_fx_cache.py::test_yahoo_unknown_timestamp_rejected_before_filter[True]
+FAILED tests/test_fx_cache.py::test_yahoo_unknown_timestamp_rejected_before_filter[nan]
+FAILED tests/test_fx_cache.py::test_yahoo_unknown_timestamp_rejected_before_filter[NaT]
+FAILED tests/test_fx_cache.py::test_yahoo_original_row_ordinals_survive_sort
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[empty_endpoints]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[short_endpoints]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[extra_endpoint]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[empty_reconciliation]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[extra_reconciliation]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[wrong_reconciliation_label]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[fx_start_observed_date]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[fx_end_observed_date]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[fx_start_age_days]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[fx_end_age_days]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[fx_start]
+FAILED tests/test_daily_hkd_verification.py::test_evidence_tampering_detected[fx_end]
+17 failed, 24 passed, 2 warnings in 1.48s
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_cache_rejects_unlocatable_raw_price_before_filter ____________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-171/test_cache_rejects_unlocatable0')
+
+    def test_cache_rejects_unlocatable_raw_price_before_filter(tmp_path):
+        from portfolio.data.monthly_cache import cached_monthly_prices
+        from portfolio.data.updates import run_update
+        from portfolio.data.providers.base import RawResponse
+        from portfolio.data.snapshots import MANIFEST
+        days = sample()
+        values = list(days.adj_close) + [120.0]
+        payload = {'chart': {'error': None, 'result': [{
+            'meta': {'symbol': 'SPY', 'currency': 'USD', 'instrumentType': 'ETF', 'exchangeTimezoneName': 'America/New_York'},
+            'timestamp': [int(pd.Timestamp(d, tz='America/New_York').timestamp()) for d in days.date] + [None],
+            'indicators': {'quote': [{**{k: values for k in ['open', 'high', 'low', 'close']}, 'volume': [1000] * len(values)}], 'adjclose': [{'adjclose': values}]},
+        }]}}
+        raw = json.dumps(payload).encode()
+        run = run_update(tmp_path, ['SPY'], '2024-12-01', '2025-02-01', fetch=lambda *a: RawResponse(raw, 200))
+        folder = tmp_path / 'runs' / run
+        assert json.loads((folder / MANIFEST).read_text())['items'][0]['status'] == 'success'
+        before = {p.name: p.read_bytes() for p in folder.iterdir()}
+>       with pytest.raises(ValueError, match='timestamp'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_daily_monthly.py:169: Failed
+=========================== short test summary info ============================
+FAILED tests/test_daily_monthly.py::test_cache_rejects_unlocatable_raw_price_before_filter
+1 failed in 0.57s

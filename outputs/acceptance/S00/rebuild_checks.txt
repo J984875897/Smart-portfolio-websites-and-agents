@@ -1,0 +1,313 @@
+Fresh virtual environment: /private/tmp/cityu-portfolio-s00-uh4hl_y9/venv
+
+Command: ['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '-m', 'venv', '/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv']
+
+Exit code: 0
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pip', '--disable-pip-version-check', '--cache-dir', '/private/tmp/portfolio-pip-cache', 'install', '-r', '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt']
+Collecting ImageIO==2.38.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 4))
+  Downloading imageio-2.38.1-py3-none-any.whl.metadata (9.7 kB)
+Collecting Pygments==2.21.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 5))
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting anywidget==0.11.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 6))
+  Downloading anywidget-0.11.0-py3-none-any.whl.metadata (8.9 kB)
+Collecting asttokens==3.0.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 7))
+  Downloading asttokens-3.0.2-py3-none-any.whl.metadata (5.7 kB)
+Collecting beautifulsoup4==4.15.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 8))
+  Downloading beautifulsoup4-4.15.0-py3-none-any.whl.metadata (3.8 kB)
+Collecting certifi==2026.7.22 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 9))
+  Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting cffi==2.1.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 10))
+  Downloading cffi-2.1.1-cp314-cp314-macosx_11_0_arm64.whl.metadata (2.5 kB)
+Collecting charset-normalizer==3.5.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 11))
+  Downloading charset_normalizer-3.5.2-cp314-cp314-macosx_10_15_universal2.whl.metadata (46 kB)
+Collecting cloudpickle==3.1.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 12))
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting comm==0.2.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 13))
+  Downloading comm-0.2.3-py3-none-any.whl.metadata (3.7 kB)
+Collecting contourpy==1.4.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 14))
+  Downloading contourpy-1.4.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (3.8 kB)
+Collecting curl_cffi==0.16.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 15))
+  Downloading curl_cffi-0.16.3-cp310-abi3-macosx_11_0_arm64.whl.metadata (17 kB)
+Collecting cycler==0.12.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 16))
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting dateparser==1.4.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 17))
+  Downloading dateparser-1.4.3-py3-none-any.whl.metadata (25 kB)
+Collecting dill==0.4.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 18))
+  Downloading dill-0.4.1-py3-none-any.whl.metadata (10 kB)
+Collecting executing==2.3.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 19))
+  Downloading executing-2.3.0-py3-none-any.whl.metadata (9.1 kB)
+Collecting fonttools==4.66.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 20))
+  Downloading fonttools-4.66.1-cp314-cp314-macosx_10_15_universal2.whl.metadata (130 kB)
+Collecting idna==3.20 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 21))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting iniconfig==2.3.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 22))
+  Using cached iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting ipython==9.17.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 23))
+  Downloading ipython-9.17.1-py3-none-any.whl.metadata (4.6 kB)
+Collecting ipython_pygments_lexers==1.1.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 24))
+  Downloading ipython_pygments_lexers-1.1.1-py3-none-any.whl.metadata (1.1 kB)
+Collecting ipywidgets==8.1.9 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 25))
+  Downloading ipywidgets-8.1.9-py3-none-any.whl.metadata (2.4 kB)
+Collecting jedi==0.20.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 26))
+  Downloading jedi-0.20.0-py2.py3-none-any.whl.metadata (23 kB)
+Collecting joblib==1.6.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 27))
+  Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting jupyterlab_widgets==3.0.17 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 28))
+  Downloading jupyterlab_widgets-3.0.17-py3-none-any.whl.metadata (20 kB)
+Collecting kiwisolver==1.5.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 29))
+  Downloading kiwisolver-1.5.1-cp314-cp314-macosx_11_0_arm64.whl.metadata (5.2 kB)
+Collecting llvmlite==0.50.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 30))
+  Downloading llvmlite-0.50.0-cp314-cp314-macosx_12_0_arm64.whl.metadata (5.1 kB)
+Collecting lxml==6.1.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 31))
+  Downloading lxml-6.1.3-cp314-cp314-macosx_10_15_universal2.whl.metadata (3.3 kB)
+Collecting matplotlib==3.11.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 32))
+  Downloading matplotlib-3.11.2-cp314-cp314-macosx_11_0_arm64.whl.metadata (80 kB)
+Collecting matplotlib-inline==0.2.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 33))
+  Downloading matplotlib_inline-0.2.2-py3-none-any.whl.metadata (2.4 kB)
+Collecting multitasking==0.0.13 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 34))
+  Downloading multitasking-0.0.13-py3-none-any.whl.metadata (16 kB)
+Collecting mypy_extensions==1.1.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 35))
+  Downloading mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+Collecting narwhals==2.27.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 36))
+  Downloading narwhals-2.27.1-py3-none-any.whl.metadata (15 kB)
+Collecting numba==0.68.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 37))
+  Downloading numba-0.68.0-cp314-cp314-macosx_12_0_arm64.whl.metadata (2.8 kB)
+Collecting numpy==2.5.4 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 38))
+  Downloading numpy-2.5.4-cp314-cp314-macosx_14_0_arm64.whl.metadata (6.6 kB)
+Collecting packaging==26.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 39))
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pandas==3.0.6 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 40))
+  Downloading pandas-3.0.6-cp314-cp314-macosx_11_0_arm64.whl.metadata (79 kB)
+Collecting parso==0.8.7 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 41))
+  Downloading parso-0.8.7-py2.py3-none-any.whl.metadata (8.2 kB)
+Collecting peewee==4.5.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 42))
+  Downloading peewee-4.5.3-py3-none-any.whl.metadata (10 kB)
+Collecting pexpect==4.9.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 43))
+  Downloading pexpect-4.9.0-py2.py3-none-any.whl.metadata (2.5 kB)
+Collecting pillow==12.3.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 44))
+  Downloading pillow-12.3.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (9.1 kB)
+Requirement already satisfied: pip==26.1.2 in /private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/lib/python3.14/site-packages (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 45)) (26.1.2)
+Collecting platformdirs==4.13.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 46))
+  Downloading platformdirs-4.13.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting plotly==7.1.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 47))
+  Downloading plotly-7.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting pluggy==1.6.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 48))
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting prompt_toolkit==3.0.53 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 49))
+  Downloading prompt_toolkit-3.0.53-py3-none-any.whl.metadata (6.4 kB)
+Collecting protobuf==7.36.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 50))
+  Downloading protobuf-7.36.2-cp310-abi3-macosx_10_9_universal2.whl.metadata (595 bytes)
+Collecting psutil==7.2.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 51))
+  Downloading psutil-7.2.2-cp36-abi3-macosx_11_0_arm64.whl.metadata (22 kB)
+Collecting psygnal==0.16.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 52))
+  Downloading psygnal-0.16.1-cp314-cp314-macosx_11_0_arm64.whl.metadata (6.5 kB)
+Collecting ptyprocess==0.7.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 53))
+  Downloading ptyprocess-0.7.0-py2.py3-none-any.whl.metadata (1.3 kB)
+Collecting pure_eval==0.2.4 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 54))
+  Downloading pure_eval-0.2.4-py3-none-any.whl.metadata (6.4 kB)
+Collecting pycparser==3.11 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 55))
+  Downloading pycparser-3.11-py3-none-any.whl.metadata (8.2 kB)
+Collecting pyparsing==3.3.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 56))
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting pytest==9.1.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 57))
+  Using cached pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+Collecting python-dateutil==2.9.0.post0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 58))
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting pytz==2026.5 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 59))
+  Downloading pytz-2026.5-py2.py3-none-any.whl.metadata (22 kB)
+Collecting regex==2026.9.29 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 60))
+  Downloading regex-2026.9.29-cp314-cp314-macosx_11_0_arm64.whl.metadata (40 kB)
+Collecting requests==2.34.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 61))
+  Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting schedule==1.2.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 62))
+  Downloading schedule-1.2.2-py3-none-any.whl.metadata (3.8 kB)
+Collecting scikit-learn==1.9.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 63))
+  Downloading scikit_learn-1.9.1-cp314-cp314-macosx_12_0_arm64.whl.metadata (9.3 kB)
+Collecting scipy==1.18.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 64))
+  Downloading scipy-1.18.1-cp314-cp314-macosx_14_0_arm64.whl.metadata (62 kB)
+Collecting setuptools==84.0.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 65))
+  Using cached setuptools-84.0.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting six==1.17.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 66))
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting soupsieve==3.0.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 67))
+  Downloading soupsieve-3.0.3-py3-none-any.whl.metadata (4.4 kB)
+Collecting stack-data==0.6.3 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 68))
+  Downloading stack_data-0.6.3-py3-none-any.whl.metadata (18 kB)
+Collecting threadpoolctl==3.7.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 69))
+  Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+Collecting tqdm==4.70.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 70))
+  Downloading tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+Collecting traitlets==5.16.1 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 71))
+  Downloading traitlets-5.16.1-py3-none-any.whl.metadata (10 kB)
+Collecting typing_extensions==4.16.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 72))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting tzlocal==5.4.4 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 73))
+  Downloading tzlocal-5.4.4-py3-none-any.whl.metadata (7.7 kB)
+Collecting urllib3==2.8.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 74))
+  Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting vectorbt==1.1.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 75))
+  Downloading vectorbt-1.1.2-py3-none-any.whl.metadata (16 kB)
+Collecting wcwidth==0.9.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 76))
+  Downloading wcwidth-0.9.2-cp310-abi3-macosx_11_0_arm64.whl.metadata (23 kB)
+Collecting websockets==17.2 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 77))
+  Downloading websockets-17.2-cp314-cp314-macosx_11_0_arm64.whl.metadata (6.3 kB)
+Collecting wheel==0.48.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 78))
+  Using cached wheel-0.48.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting widgetsnbextension==4.0.16 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 79))
+  Downloading widgetsnbextension-4.0.16-py3-none-any.whl.metadata (1.6 kB)
+Collecting yfinance==1.7.0 (from -r /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/requirements.lock.txt (line 80))
+  Downloading yfinance-1.7.0-py3-none-any.whl.metadata (6.7 kB)
+Downloading imageio-2.38.1-py3-none-any.whl (328 kB)
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 7.9 MB/s  0:00:00
+Downloading anywidget-0.11.0-py3-none-any.whl (317 kB)
+Downloading asttokens-3.0.2-py3-none-any.whl (28 kB)
+Downloading beautifulsoup4-4.15.0-py3-none-any.whl (109 kB)
+Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+Downloading cffi-2.1.1-cp314-cp314-macosx_11_0_arm64.whl (184 kB)
+Downloading charset_normalizer-3.5.2-cp314-cp314-macosx_10_15_universal2.whl (367 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading comm-0.2.3-py3-none-any.whl (7.3 kB)
+Downloading contourpy-1.4.0-cp314-cp314-macosx_11_0_arm64.whl (283 kB)
+Downloading curl_cffi-0.16.3-cp310-abi3-macosx_11_0_arm64.whl (2.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 23.8 MB/s  0:00:00
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading dateparser-1.4.3-py3-none-any.whl (322 kB)
+Downloading dill-0.4.1-py3-none-any.whl (120 kB)
+Downloading executing-2.3.0-py3-none-any.whl (29 kB)
+Downloading fonttools-4.66.1-cp314-cp314-macosx_10_15_universal2.whl (3.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 26.0 MB/s  0:00:00
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Using cached iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading ipython-9.17.1-py3-none-any.whl (639 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 639.0/639.0 kB 20.2 MB/s  0:00:00
+Downloading prompt_toolkit-3.0.53-py3-none-any.whl (392 kB)
+Downloading ipython_pygments_lexers-1.1.1-py3-none-any.whl (8.1 kB)
+Downloading ipywidgets-8.1.9-py3-none-any.whl (140 kB)
+Downloading jupyterlab_widgets-3.0.17-py3-none-any.whl (217 kB)
+Downloading widgetsnbextension-4.0.16-py3-none-any.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 21.7 MB/s  0:00:00
+Downloading jedi-0.20.0-py2.py3-none-any.whl (4.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 23.6 MB/s  0:00:00
+Downloading parso-0.8.7-py2.py3-none-any.whl (107 kB)
+Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+Downloading kiwisolver-1.5.1-cp314-cp314-macosx_11_0_arm64.whl (64 kB)
+Downloading llvmlite-0.50.0-cp314-cp314-macosx_12_0_arm64.whl (40.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.5/40.5 MB 20.2 MB/s  0:00:01
+Downloading lxml-6.1.3-cp314-cp314-macosx_10_15_universal2.whl (8.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.6/8.6 MB 24.0 MB/s  0:00:00
+Downloading matplotlib-3.11.2-cp314-cp314-macosx_11_0_arm64.whl (9.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 23.7 MB/s  0:00:00
+Downloading matplotlib_inline-0.2.2-py3-none-any.whl (9.5 kB)
+Downloading multitasking-0.0.13-py3-none-any.whl (16 kB)
+Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+Downloading narwhals-2.27.1-py3-none-any.whl (483 kB)
+Downloading numba-0.68.0-cp314-cp314-macosx_12_0_arm64.whl (2.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 19.6 MB/s  0:00:00
+Downloading numpy-2.5.4-cp314-cp314-macosx_14_0_arm64.whl (5.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 17.1 MB/s  0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pandas-3.0.6-cp314-cp314-macosx_11_0_arm64.whl (10.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 19.0 MB/s  0:00:00
+Downloading peewee-4.5.3-py3-none-any.whl (194 kB)
+Downloading pexpect-4.9.0-py2.py3-none-any.whl (63 kB)
+Downloading pillow-12.3.0-cp314-cp314-macosx_11_0_arm64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 21.0 MB/s  0:00:00
+Downloading platformdirs-4.13.0-py3-none-any.whl (32 kB)
+Downloading plotly-7.1.0-py3-none-any.whl (9.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.7/9.7 MB 19.1 MB/s  0:00:00
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading protobuf-7.36.2-cp310-abi3-macosx_10_9_universal2.whl (456 kB)
+Downloading psutil-7.2.2-cp36-abi3-macosx_11_0_arm64.whl (129 kB)
+Downloading psygnal-0.16.1-cp314-cp314-macosx_11_0_arm64.whl (499 kB)
+Downloading ptyprocess-0.7.0-py2.py3-none-any.whl (13 kB)
+Downloading pure_eval-0.2.4-py3-none-any.whl (11 kB)
+Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Using cached pytest-9.1.1-py3-none-any.whl (386 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading pytz-2026.5-py2.py3-none-any.whl (506 kB)
+Downloading regex-2026.9.29-cp314-cp314-macosx_11_0_arm64.whl (293 kB)
+Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Downloading schedule-1.2.2-py3-none-any.whl (12 kB)
+Downloading scikit_learn-1.9.1-cp314-cp314-macosx_12_0_arm64.whl (8.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 13.5 MB/s  0:00:00
+Downloading scipy-1.18.1-cp314-cp314-macosx_14_0_arm64.whl (20.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 20.5/20.5 MB 16.1 MB/s  0:00:01
+Using cached setuptools-84.0.0-py3-none-any.whl (818 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading soupsieve-3.0.3-py3-none-any.whl (41 kB)
+Downloading stack_data-0.6.3-py3-none-any.whl (24 kB)
+Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+Downloading traitlets-5.16.1-py3-none-any.whl (86 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading tzlocal-5.4.4-py3-none-any.whl (18 kB)
+Downloading vectorbt-1.1.2-py3-none-any.whl (459 kB)
+Downloading wcwidth-0.9.2-cp310-abi3-macosx_11_0_arm64.whl (609 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 610.0/610.0 kB 14.2 MB/s  0:00:00
+Downloading websockets-17.2-cp314-cp314-macosx_11_0_arm64.whl (215 kB)
+Using cached wheel-0.48.0-py3-none-any.whl (33 kB)
+Downloading yfinance-1.7.0-py3-none-any.whl (149 kB)
+Installing collected packages: pytz, pure_eval, ptyprocess, multitasking, widgetsnbextension, websockets, wcwidth, urllib3, tzlocal, typing_extensions, traitlets, tqdm, threadpoolctl, soupsieve, six, setuptools, schedule, regex, pyparsing, Pygments, pycparser, psygnal, psutil, protobuf, pluggy, platformdirs, pillow, pexpect, peewee, parso, packaging, numpy, narwhals, mypy_extensions, lxml, llvmlite, kiwisolver, jupyterlab_widgets, iniconfig, idna, fonttools, executing, dill, cycler, comm, cloudpickle, charset-normalizer, certifi, asttokens, wheel, stack-data, scipy, requests, python-dateutil, pytest, prompt_toolkit, plotly, numba, matplotlib-inline, joblib, jedi, ipython_pygments_lexers, ImageIO, contourpy, cffi, beautifulsoup4, scikit-learn, pandas, matplotlib, ipython, dateparser, curl_cffi, yfinance, ipywidgets, anywidget, vectorbt
+
+Successfully installed ImageIO-2.38.1 Pygments-2.21.0 anywidget-0.11.0 asttokens-3.0.2 beautifulsoup4-4.15.0 certifi-2026.7.22 cffi-2.1.1 charset-normalizer-3.5.2 cloudpickle-3.1.2 comm-0.2.3 contourpy-1.4.0 curl_cffi-0.16.3 cycler-0.12.1 dateparser-1.4.3 dill-0.4.1 executing-2.3.0 fonttools-4.66.1 idna-3.20 iniconfig-2.3.1 ipython-9.17.1 ipython_pygments_lexers-1.1.1 ipywidgets-8.1.9 jedi-0.20.0 joblib-1.6.0 jupyterlab_widgets-3.0.17 kiwisolver-1.5.1 llvmlite-0.50.0 lxml-6.1.3 matplotlib-3.11.2 matplotlib-inline-0.2.2 multitasking-0.0.13 mypy_extensions-1.1.0 narwhals-2.27.1 numba-0.68.0 numpy-2.5.4 packaging-26.3 pandas-3.0.6 parso-0.8.7 peewee-4.5.3 pexpect-4.9.0 pillow-12.3.0 platformdirs-4.13.0 plotly-7.1.0 pluggy-1.6.0 prompt_toolkit-3.0.53 protobuf-7.36.2 psutil-7.2.2 psygnal-0.16.1 ptyprocess-0.7.0 pure_eval-0.2.4 pycparser-3.11 pyparsing-3.3.3 pytest-9.1.1 python-dateutil-2.9.0.post0 pytz-2026.5 regex-2026.9.29 requests-2.34.2 schedule-1.2.2 scikit-learn-1.9.1 scipy-1.18.1 setuptools-84.0.0 six-1.17.0 soupsieve-3.0.3 stack-data-0.6.3 threadpoolctl-3.7.0 tqdm-4.70.1 traitlets-5.16.1 typing_extensions-4.16.0 tzlocal-5.4.4 urllib3-2.8.0 vectorbt-1.1.2 wcwidth-0.9.2 websockets-17.2 wheel-0.48.0 widgetsnbextension-4.0.16 yfinance-1.7.0
+
+Exit code: 0
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pip', '--disable-pip-version-check', '--no-cache-dir', 'install', '--no-deps', '--no-build-isolation', '-e', '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group']
+Obtaining file:///Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: cityu-portfolio-research
+  Building editable for cityu-portfolio-research (pyproject.toml): started
+  Building editable for cityu-portfolio-research (pyproject.toml): finished with status 'done'
+  Created wheel for cityu-portfolio-research: filename=cityu_portfolio_research-0.1.0-0.editable-py3-none-any.whl size=1551 sha256=0d2b2662cb32b486dfa1fbc952a70b25647fd4a3be0cfae2ba108c36cc6df1cd
+  Stored in directory: /private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pip-ephem-wheel-cache-hzn133hv/wheels/e8/ab/c0/4803da20cd450483798edadee3f6c364f7a78ccd683b7811b7
+Successfully built cityu-portfolio-research
+Installing collected packages: cityu-portfolio-research
+Successfully installed cityu-portfolio-research-0.1.0
+
+Exit code: 0
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pip', '--disable-pip-version-check', '--no-cache-dir', 'check']
+No broken requirements found.
+
+Exit code: 0
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pytest', 'tests/test_smoke.py', '-q']
+..............                                                           [100%]
+14 passed in 32.89s
+
+Exit code: 0
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'portfolio.demo', '--output', '/private/tmp/cityu-portfolio-s00-uh4hl_y9/smoke_result.csv']
+S00: synthetic HKD prices 100 -> 110 -> 120; initial capital 1000.00 HKD
+Final value: 1200.00 HKD
+Cumulative return: 20.00%
+CSV: /private/tmp/cityu-portfolio-s00-uh4hl_y9/smoke_result.csv
+
+Exit code: 0
+
+Final revalidation after removing PYTHONPATH from the entry-point test.
+Earlier dependency rebuild and test succeeded; initial CSV comparison was deferred because the project CSV was not yet generated.
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pip', '--disable-pip-version-check', '--no-cache-dir', 'check']
+Exit code: 0
+No broken requirements found.
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pytest', 'tests/test_smoke.py', '-q']
+Exit code: 0
+..............                                                           [100%]
+14 passed in 8.54s
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'portfolio.demo', '--output', '/private/tmp/cityu-portfolio-s00-uh4hl_y9/smoke_result.csv']
+Exit code: 0
+S00: synthetic HKD prices 100 -> 110 -> 120; initial capital 1000.00 HKD
+Final value: 1200.00 HKD
+Cumulative return: 20.00%
+CSV: /private/tmp/cityu-portfolio-s00-uh4hl_y9/smoke_result.csv
+

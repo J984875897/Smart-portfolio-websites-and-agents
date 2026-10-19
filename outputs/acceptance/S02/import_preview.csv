@@ -1,0 +1,11 @@
+asset_id,ticker,name,tool_type,asset_class,exchange,currency,share_class,frequency,date,value,source_file,source_sheet,source_row,source_hash,source_name,value_kind,status,is_duplicate,_original_tool_type,_original_asset_class
+p0,0000,Product 0,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,2,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p1,0001,Product 1,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,3,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p2,0002,Product 2,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,4,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p3,0003,Product 3,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,5,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p4,0004,Product 4,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,6,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p5,0005,Product 5,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,7,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p6,0006,Product 6,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,8,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p7,0007,Product 7,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,9,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p8,0008,Product 8,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,10,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity
+p9,0009,Product 9,ETF,equity,HKEX,HKD,,monthly,2025-01-31,0.02,ten_products.csv,,11,14871a8d5cd8a76c6730272761be4c296d91f6ba0c9ea55784c878cb4786c1d9,SYNTHETIC,total_return,valid,False,ETF,equity

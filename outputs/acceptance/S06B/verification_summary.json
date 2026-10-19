@@ -1,0 +1,19 @@
+{
+  "stage": "S06-B",
+  "full_tests_passed": 686,
+  "new_tests": 49,
+  "preexisting_calendar_warnings": 2,
+  "independent_review": "passed",
+  "real_n": 0,
+  "real_source_unchanged": true,
+  "ui_implemented": false,
+  "next_step": "S06-C",
+  "code_sha256": {
+    "src/portfolio/evaluation/__init__.py": "cda6f757e38729f2f70dcaef7f886f72e8f2f9c3cbfa86de81850547b618551a",
+    "src/portfolio/evaluation/correlation.py": "2f73987dfe40a66be08b8b2b356e1ae68354106ee1c6f18a1403d4af25a37ae1",
+    "src/portfolio/evaluation/diversification.py": "dafbe2923d58fc2e0584677a74998ecefec7249eef8b322e3ce70e5eb7e662b1",
+    "src/portfolio/evaluation/risk_preview.py": "d322f4a852b125953d9e6f650c04de8fa66b6eb4dfb0db4fd5e1c0edc02d343f",
+    "src/portfolio/models/validation.py": "cfdc646de75dc696149e3e7c45fd0231453ffaef183c355f2920927647e4a8d4",
+    "scripts/verify_diversification.py": "42ecbef4b81e1c0e684282c18109fd6edec3a62b7184c2d3549917d04dd2222c"
+  }
+}

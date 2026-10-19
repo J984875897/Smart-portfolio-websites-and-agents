@@ -1,0 +1,3 @@
+Command: .venv/bin/python -m pytest tests/test_daily_monthly_verification.py -q
+Before implementation: 4 failed in 0.36s.
+Expected failure: scripts.verify_daily_monthly does not exist (imports inside tests; not collection error).

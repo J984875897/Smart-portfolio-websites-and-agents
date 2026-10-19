@@ -1,0 +1,30 @@
+{
+  "stage": "S06-A",
+  "no_network": true,
+  "source_files_unchanged": true,
+  "synthetic_n100_degenerate": true,
+  "nonconstant_n100_usable": true,
+  "n99_blocked": true,
+  "real_n": 0,
+  "real_block_reason": "数量条件未通过：候选产品池过小",
+  "real_bundle_path": "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32",
+  "historical_universe_certified": false,
+  "portfolio_constructed": false,
+  "correlation_implemented": false,
+  "ui_implemented": false,
+  "source_file_hashes": {
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/factors.csv": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/provenance.csv": "91745ba8de389074a8cfb3283bc83e85034cfa1a787c820f824766676f8ebd9c",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/raw_13c49b284f1f7794836aae6296f021908a81c890f5b7d1bcad9243152c800507.bin": "13c49b284f1f7794836aae6296f021908a81c890f5b7d1bcad9243152c800507",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/assets.csv": "a7b2f742a5a265e8b1d1676b453e2fe63749e50a8ce19a4081b451e3aae69795",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/raw_28835a1c050c759b763fdc4deee436b7eaf3fb710f8c87aebdc0b1f16ac2bfc1.bin": "28835a1c050c759b763fdc4deee436b7eaf3fb710f8c87aebdc0b1f16ac2bfc1",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/fx.csv": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/aliases.csv": "d85f8e658621d48fa47e2603070b50e892aa47e0c1cc9fde8ee70ac8e113d4bf",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/classification_history.csv": "bcb98139e998b881a3d498f8d205d5139533a9bbc7392c782735e2d8836fe8e1",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/issues.csv": "77cd8c1832189f567f04fcdf568d10428c7738ee96997bf56078ddd71a97924b",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/manifest.json": "38151c9e5a879d179d4b45f83f70f6ca38c5f5f6afb57322487e8e213a4058dd",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/raw_3e910018baaed9385c9048469d5e7cf05c755296a33834581a051631a3e22b41.bin": "3e910018baaed9385c9048469d5e7cf05c755296a33834581a051631a3e22b41",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/observations.csv": "78c404939f20e68c3dd5f41910b4325b2ac44ad1fb284f82f514dd48a4e34ded",
+    "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S02/bundles/s01-prices-b8912ef9e8e943e0bd6b8cf22e4f3b32/returns.csv": "08771105eb65d2583775a88b7eab10c6eaf5f9cbf17887b38562a1049aaf7763"
+  }
+}

@@ -1,0 +1,1096 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                         [100%]
+=================================== FAILURES ===================================
+_________________ test_hand_means_covariance_and_annualization _________________
+
+    def test_hand_means_covariance_and_annualization():
+>       r = estimate()
+            ^^^^^^^^^^
+
+tests/test_moments.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = None, classes = None, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+__________ test_ledoit_wolf_against_independent_fourth_moment_formula __________
+
+    def test_ledoit_wolf_against_independent_fourth_moment_formula():
+>       x, _ = hand_input(); r = estimate()
+                                 ^^^^^^^^^^
+
+tests/test_moments.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = None, classes = None, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+________ test_only_training_values_determine_estimates_and_fingerprint _________
+
+    def test_only_training_values_determine_estimates_and_fingerprint():
+>       x,c = hand_input(); baseline = estimate(x,c)
+                                       ^^^^^^^^^^^^^
+
+tests/test_moments.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_______________ test_reorder_is_invariant_and_input_is_unchanged _______________
+
+    def test_reorder_is_invariant_and_input_is_unchanged():
+        x,c = hand_input(); before=x.copy(deep=True); bc=c.copy(deep=True)
+>       r=estimate(x,c); reordered=estimate(x[['C','B','A']].iloc[::-1],c.iloc[::-1])
+          ^^^^^^^^^^^^^
+
+tests/test_moments.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+____ test_sixty_months_one_hundred_assets_have_explicit_rank_and_shrinkage _____
+
+    def test_sixty_months_one_hundred_assets_have_explicit_rank_and_shrinkage():
+        rng = np.random.default_rng(5052)
+        x = pd.DataFrame(rng.normal(.005,.04,(60,100)),
+                         index=pd.period_range('2020-02','2025-01',freq='M').to_timestamp('M').strftime('%Y-%m-%d'),
+                         columns=[f'A{i:03}' for i in range(100)])
+>       r = estimate(x,pd.Series('equity',index=x.columns),train_start='2020-02',train_end='2025-01')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                 A000      A001      A002  ...      A097      A098      A099
+2020-02-29  0.053506 -0.050533  0.058957  ...0.024043  0.003310
+2025-01-31 -0.028801 -0.011451  0.042265  ... -0.014456  0.082298  0.002633
+
+[60 rows x 100 columns]
+classes = A000    equity
+A001    equity
+A002    equity
+A003    equity
+A004    equity
+         ...  
+A095    equity
+A096    equity
+A097    equity
+A098    equity
+A099    equity
+Length: 100, dtype: str
+options = {'train_start': '2020-02', 'train_end': '2025-01'}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_____________ test_single_asset_and_degenerate_case[values0-True] ______________
+
+values = [0.01, 0.01, 0.01], constant = True
+
+    @pytest.mark.parametrize('values,constant', [([.01,.01,.01],True),([0,0,0],True),([0,.01,.02],False)])
+    def test_single_asset_and_degenerate_case(values,constant):
+        x,_=hand_input();x=x[['A']];x['A']=values
+>       r=estimate(x,pd.Series({'A':'equity'}))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A
+2024-01-31  0.01
+2024-02-29  0.01
+2024-03-31  0.01
+classes = A    equity
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_____________ test_single_asset_and_degenerate_case[values1-True] ______________
+
+values = [0, 0, 0], constant = True
+
+    @pytest.mark.parametrize('values,constant', [([.01,.01,.01],True),([0,0,0],True),([0,.01,.02],False)])
+    def test_single_asset_and_degenerate_case(values,constant):
+        x,_=hand_input();x=x[['A']];x['A']=values
+>       r=estimate(x,pd.Series({'A':'equity'}))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =             A
+2024-01-31  0
+2024-02-29  0
+2024-03-31  0
+classes = A    equity
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_____________ test_single_asset_and_degenerate_case[values2-False] _____________
+
+values = [0, 0.01, 0.02], constant = False
+
+    @pytest.mark.parametrize('values,constant', [([.01,.01,.01],True),([0,0,0],True),([0,.01,.02],False)])
+    def test_single_asset_and_degenerate_case(values,constant):
+        x,_=hand_input();x=x[['A']];x['A']=values
+>       r=estimate(x,pd.Series({'A':'equity'}))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A
+2024-01-31  0.00
+2024-02-29  0.01
+2024-03-31  0.02
+classes = A    equity
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+____ test_constant_empirical_volatility_is_not_replaced_by_model_volatility ____
+
+    def test_constant_empirical_volatility_is_not_replaced_by_model_volatility():
+        x,c=hand_input();x['A']=.01
+>       r=estimate(x,c)
+          ^^^^^^^^^^^^^
+
+tests/test_moments.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.01  0.05  0.01
+2024-03-31  0.01  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_training_returns_rejected[nan] __________________
+
+value = nan
+
+    @pytest.mark.parametrize('value', [np.nan,np.inf,-np.inf,-1.01,True,'0.01',1+2j])
+    def test_invalid_training_returns_rejected(value):
+        x,c=hand_input();x=x.astype(object);x.iloc[0,0]=value
+        with pytest.raises(ValueError,match='return'):
+>           estimate(x,c)
+
+tests/test_moments.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31   NaN  0.03   0.0
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_training_returns_rejected[inf] __________________
+
+value = inf
+
+    @pytest.mark.parametrize('value', [np.nan,np.inf,-np.inf,-1.01,True,'0.01',1+2j])
+    def test_invalid_training_returns_rejected(value):
+        x,c=hand_input();x=x.astype(object);x.iloc[0,0]=value
+        with pytest.raises(ValueError,match='return'):
+>           estimate(x,c)
+
+tests/test_moments.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31   inf  0.03   0.0
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_training_returns_rejected[-inf] _________________
+
+value = -inf
+
+    @pytest.mark.parametrize('value', [np.nan,np.inf,-np.inf,-1.01,True,'0.01',1+2j])
+    def test_invalid_training_returns_rejected(value):
+        x,c=hand_input();x=x.astype(object);x.iloc[0,0]=value
+        with pytest.raises(ValueError,match='return'):
+>           estimate(x,c)
+
+tests/test_moments.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  -inf  0.03   0.0
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+________________ test_invalid_training_returns_rejected[-1.01] _________________
+
+value = -1.01
+
+    @pytest.mark.parametrize('value', [np.nan,np.inf,-np.inf,-1.01,True,'0.01',1+2j])
+    def test_invalid_training_returns_rejected(value):
+        x,c=hand_input();x=x.astype(object);x.iloc[0,0]=value
+        with pytest.raises(ValueError,match='return'):
+>           estimate(x,c)
+
+tests/test_moments.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31 -1.01  0.03   0.0
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_training_returns_rejected[True] _________________
+
+value = True
+
+    @pytest.mark.parametrize('value', [np.nan,np.inf,-np.inf,-1.01,True,'0.01',1+2j])
+    def test_invalid_training_returns_rejected(value):
+        x,c=hand_input();x=x.astype(object);x.iloc[0,0]=value
+        with pytest.raises(ValueError,match='return'):
+>           estimate(x,c)
+
+tests/test_moments.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  True  0.03   0.0
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_training_returns_rejected[0.01] _________________
+
+value = '0.01'
+
+    @pytest.mark.parametrize('value', [np.nan,np.inf,-np.inf,-1.01,True,'0.01',1+2j])
+    def test_invalid_training_returns_rejected(value):
+        x,c=hand_input();x=x.astype(object);x.iloc[0,0]=value
+        with pytest.raises(ValueError,match='return'):
+>           estimate(x,c)
+
+tests/test_moments.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03   0.0
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+________________ test_invalid_training_returns_rejected[(1+2j)] ________________
+
+value = (1+2j)
+
+    @pytest.mark.parametrize('value', [np.nan,np.inf,-np.inf,-1.01,True,'0.01',1+2j])
+    def test_invalid_training_returns_rejected(value):
+        x,c=hand_input();x=x.astype(object);x.iloc[0,0]=value
+        with pytest.raises(ValueError,match='return'):
+>           estimate(x,c)
+
+tests/test_moments.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                  A     B     C
+2024-01-31  (1+2j)  0.03   0.0
+2024-02-29    0.03  0.05  0.01
+2024-03-31    0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+____________________ test_invalid_contract_rejected[empty] _____________________
+
+mode = 'empty'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = Empty DataFrame
+Columns: []
+Index: [2024-01-31, 2024-02-29, 2024-03-31]
+classes = Series([], dtype: str), options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_contract_rejected[duplicate_id] _________________
+
+mode = 'duplicate_id'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     A     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+___________________ test_invalid_contract_rejected[blank_id] ___________________
+
+mode = 'blank_id'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                      B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_______________ test_invalid_contract_rejected[duplicate_month] ________________
+
+mode = 'duplicate_month'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-01-31  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+________________ test_invalid_contract_rejected[missing_month] _________________
+
+mode = 'missing_month'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+________________ test_invalid_contract_rejected[not_month_end] _________________
+
+mode = 'not_month_end'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-30  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+__________________ test_invalid_contract_rejected[one_month] ___________________
+
+mode = 'one_month'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str
+options = {'train_start': '2024-01', 'train_end': '2024-01'}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+________________ test_invalid_contract_rejected[missing_class] _________________
+
+mode = 'missing_class'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_contract_rejected[blank_class] __________________
+
+mode = 'blank_class'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A          
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+________________ test_invalid_contract_rejected[unknown_class] _________________
+
+mode = 'unknown_class'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    invented
+B      equity
+C        bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_______________ test_invalid_contract_rejected[duplicate_class] ________________
+
+mode = 'duplicate_class'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+A    equity
+dtype: str
+options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_contract_rejected[extra_class] __________________
+
+mode = 'extra_class'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+D      bond
+dtype: str
+options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+__________________ test_invalid_contract_rejected[bad_start] ___________________
+
+mode = 'bad_start'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str
+options = {'train_start': '2024-1'}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_______________ test_invalid_contract_rejected[reversed_window] ________________
+
+mode = 'reversed_window'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str
+options = {'train_start': '2024-03', 'train_end': '2024-01'}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+_________________ test_invalid_contract_rejected[empty_window] _________________
+
+mode = 'empty_window'
+
+    @pytest.mark.parametrize('mode', ['empty','duplicate_id','blank_id','duplicate_month','missing_month','not_month_end','one_month','missing_class','blank_class','unknown_class','duplicate_class','extra_class','bad_start','reversed_window','empty_window'])
+    def test_invalid_contract_rejected(mode):
+        x,c=hand_input(); options={}
+        if mode=='empty': x=x.iloc[:,:0];c=c.iloc[:0]
+        elif mode=='duplicate_id': x.columns=['A','A','C']
+        elif mode=='blank_id': x.columns=['','B','C']
+        elif mode=='duplicate_month': x.index=['2024-01-31','2024-01-31','2024-03-31']
+        elif mode=='missing_month': x=x.drop('2024-02-29')
+        elif mode=='not_month_end': x.index=['2024-01-30','2024-02-29','2024-03-31']
+        elif mode=='one_month': options=dict(train_start='2024-01',train_end='2024-01')
+        elif mode=='missing_class': c=c.drop('A')
+        elif mode=='blank_class': c['A']=''
+        elif mode=='unknown_class': c['A']='invented'
+        elif mode=='duplicate_class': c=pd.concat([c,c.iloc[:1]])
+        elif mode=='extra_class': c['D']='bond'
+        elif mode=='bad_start': options['train_start']='2024-1'
+        elif mode=='reversed_window': options=dict(train_start='2024-03',train_end='2024-01')
+        elif mode=='empty_window': options=dict(train_start='2030-01',train_end='2030-03')
+>       with pytest.raises(ValueError): estimate(x,c,**options)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_moments.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31  0.01  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str
+options = {'train_start': '2030-01', 'train_end': '2030-03'}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+______________________ test_total_loss_minus_one_is_valid ______________________
+
+    def test_total_loss_minus_one_is_valid():
+        x,c=hand_input();x.loc['2024-01-31','A']=-1
+>       assert np.isfinite(estimate(x,c).sample_cov_ann.to_numpy()).all()
+                           ^^^^^^^^^^^^^
+
+tests/test_moments.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x =                A     B     C
+2024-01-31 -1.00  0.03  0.00
+2024-02-29  0.03  0.05  0.01
+2024-03-31  0.02  0.04  0.02
+classes = A    equity
+B    equity
+C      bond
+dtype: str, options = {}
+
+    def estimate(x=None, classes=None, **options):
+>       from portfolio.models.moments import estimate_moments
+E       ModuleNotFoundError: No module named 'portfolio.models'
+
+tests/test_moments.py:16: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_moments.py::test_hand_means_covariance_and_annualization - ...
+FAILED tests/test_moments.py::test_ledoit_wolf_against_independent_fourth_moment_formula
+FAILED tests/test_moments.py::test_only_training_values_determine_estimates_and_fingerprint
+FAILED tests/test_moments.py::test_reorder_is_invariant_and_input_is_unchanged
+FAILED tests/test_moments.py::test_sixty_months_one_hundred_assets_have_explicit_rank_and_shrinkage
+FAILED tests/test_moments.py::test_single_asset_and_degenerate_case[values0-True]
+FAILED tests/test_moments.py::test_single_asset_and_degenerate_case[values1-True]
+FAILED tests/test_moments.py::test_single_asset_and_degenerate_case[values2-False]
+FAILED tests/test_moments.py::test_constant_empirical_volatility_is_not_replaced_by_model_volatility
+FAILED tests/test_moments.py::test_invalid_training_returns_rejected[nan] - M...
+FAILED tests/test_moments.py::test_invalid_training_returns_rejected[inf] - M...
+FAILED tests/test_moments.py::test_invalid_training_returns_rejected[-inf] - ...
+FAILED tests/test_moments.py::test_invalid_training_returns_rejected[-1.01]
+FAILED tests/test_moments.py::test_invalid_training_returns_rejected[True] - ...
+FAILED tests/test_moments.py::test_invalid_training_returns_rejected[0.01] - ...
+FAILED tests/test_moments.py::test_invalid_training_returns_rejected[(1+2j)]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[empty] - ModuleN...
+FAILED tests/test_moments.py::test_invalid_contract_rejected[duplicate_id] - ...
+FAILED tests/test_moments.py::test_invalid_contract_rejected[blank_id] - Modu...
+FAILED tests/test_moments.py::test_invalid_contract_rejected[duplicate_month]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[missing_month]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[not_month_end]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[one_month] - Mod...
+FAILED tests/test_moments.py::test_invalid_contract_rejected[missing_class]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[blank_class] - M...
+FAILED tests/test_moments.py::test_invalid_contract_rejected[unknown_class]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[duplicate_class]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[extra_class] - M...
+FAILED tests/test_moments.py::test_invalid_contract_rejected[bad_start] - Mod...
+FAILED tests/test_moments.py::test_invalid_contract_rejected[reversed_window]
+FAILED tests/test_moments.py::test_invalid_contract_rejected[empty_window] - ...
+FAILED tests/test_moments.py::test_total_loss_minus_one_is_valid - ModuleNotF...
+32 failed in 0.54s

@@ -1,0 +1,3 @@
+asset_id,ticker,name,date,value,tool_type,asset_class,exchange,currency,frequency
+p0,0000,Product 0,2025-01-31,2,ETF,equity,HKEX,HKD,monthly
+p1,0001,Product 1,2025-01-31,2,ETF,equity,HKEX,HKD,monthly

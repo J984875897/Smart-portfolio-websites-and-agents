@@ -1,0 +1,6 @@
+run_id,created_utc,symbol,start,end_exclusive,status,reason,rows,cache_status
+20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f,2026-10-16T12:20:03.876246+00:00,US_FF3,2025-01-01,2026-01-01,success,complete_requested_months,12,available
+20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f,2026-10-16T12:20:03.876246+00:00,US_FF5,2025-01-01,2026-01-01,success,complete_requested_months,12,available
+20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f,2026-10-16T12:20:03.876246+00:00,AP_EX_JP_FF3,2025-01-01,2026-01-01,success,complete_requested_months,12,available
+20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f,2026-10-16T12:20:03.876246+00:00,AP_EX_JP_FF5,2025-01-01,2026-01-01,success,complete_requested_months,12,available
+20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f,2026-10-16T12:20:03.876246+00:00,HKMA_USDHKD,2025-01-01,2026-01-01,unavailable,transport_error,0,unavailable

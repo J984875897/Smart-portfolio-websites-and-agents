@@ -1,0 +1,242 @@
+FFFFFFFFFFFFFFFF                                                         [100%]
+=================================== FAILURES ===================================
+_____________________ test_calendar_official_dates_and_dst _____________________
+
+    def test_calendar_official_dates_and_dst():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:20: ModuleNotFoundError
+______________ test_ratio_confirmation_nonmutation_and_reordering ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109f5aea0>
+
+    def test_ratio_confirmation_nonmutation_and_reordering(monkeypatch):
+        monkeypatch.setattr(socket, 'create_connection', lambda *a, **k: pytest.fail('network'))
+>       prices = sample(); original = prices.copy(deep=True)
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+____________________ test_incomplete_months_block[previous] ____________________
+
+fault = 'previous'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+______________________ test_incomplete_months_block[last] ______________________
+
+fault = 'last'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+_____________________ test_incomplete_months_block[middle] _____________________
+
+fault = 'middle'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+___________________ test_incomplete_months_block[duplicate] ____________________
+
+fault = 'duplicate'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+____________________ test_incomplete_months_block[weekend] _____________________
+
+fault = 'weekend'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+_________________ test_incomplete_months_block[invalid_price] __________________
+
+fault = 'invalid_price'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+__________________ test_incomplete_months_block[invalid_date] __________________
+
+fault = 'invalid_date'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+_____________________ test_incomplete_months_block[empty] ______________________
+
+fault = 'empty'
+
+    @pytest.mark.parametrize('fault', ['previous', 'last', 'middle', 'duplicate', 'weekend', 'invalid_price', 'invalid_date', 'empty'])
+    def test_incomplete_months_block(fault):
+>       prices = sample()
+                 ^^^^^^^^
+
+tests/test_daily_monthly.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def sample():
+>       from portfolio.data.trading_calendar import trading_schedule
+E       ModuleNotFoundError: No module named 'portfolio.data.trading_calendar'
+
+tests/test_daily_monthly.py:9: ModuleNotFoundError
+_________________________ test_validation_and_maturity _________________________
+
+    def test_validation_and_maturity():
+>       from portfolio.data.daily_monthly import aggregate_daily_prices
+E       ModuleNotFoundError: No module named 'portfolio.data.daily_monthly'
+
+tests/test_daily_monthly.py:61: ModuleNotFoundError
+__________________________ test_readonly_cache[none] ___________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-131/test_readonly_cache_none_0')
+fault = 'none'
+
+    @pytest.mark.parametrize('fault', ['none', 'hash', 'identity', 'partial', 'unavailable'])
+    def test_readonly_cache(tmp_path, fault):
+>       from portfolio.data.monthly_cache import cached_monthly_prices
+E       ModuleNotFoundError: No module named 'portfolio.data.monthly_cache'
+
+tests/test_daily_monthly.py:74: ModuleNotFoundError
+__________________________ test_readonly_cache[hash] ___________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-131/test_readonly_cache_hash_0')
+fault = 'hash'
+
+    @pytest.mark.parametrize('fault', ['none', 'hash', 'identity', 'partial', 'unavailable'])
+    def test_readonly_cache(tmp_path, fault):
+>       from portfolio.data.monthly_cache import cached_monthly_prices
+E       ModuleNotFoundError: No module named 'portfolio.data.monthly_cache'
+
+tests/test_daily_monthly.py:74: ModuleNotFoundError
+________________________ test_readonly_cache[identity] _________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-131/test_readonly_cache_identity_0')
+fault = 'identity'
+
+    @pytest.mark.parametrize('fault', ['none', 'hash', 'identity', 'partial', 'unavailable'])
+    def test_readonly_cache(tmp_path, fault):
+>       from portfolio.data.monthly_cache import cached_monthly_prices
+E       ModuleNotFoundError: No module named 'portfolio.data.monthly_cache'
+
+tests/test_daily_monthly.py:74: ModuleNotFoundError
+_________________________ test_readonly_cache[partial] _________________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-131/test_readonly_cache_partial_0')
+fault = 'partial'
+
+    @pytest.mark.parametrize('fault', ['none', 'hash', 'identity', 'partial', 'unavailable'])
+    def test_readonly_cache(tmp_path, fault):
+>       from portfolio.data.monthly_cache import cached_monthly_prices
+E       ModuleNotFoundError: No module named 'portfolio.data.monthly_cache'
+
+tests/test_daily_monthly.py:74: ModuleNotFoundError
+_______________________ test_readonly_cache[unavailable] _______________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-131/test_readonly_cache_unavailabl0')
+fault = 'unavailable'
+
+    @pytest.mark.parametrize('fault', ['none', 'hash', 'identity', 'partial', 'unavailable'])
+    def test_readonly_cache(tmp_path, fault):
+>       from portfolio.data.monthly_cache import cached_monthly_prices
+E       ModuleNotFoundError: No module named 'portfolio.data.monthly_cache'
+
+tests/test_daily_monthly.py:74: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_daily_monthly.py::test_calendar_official_dates_and_dst - Mo...
+FAILED tests/test_daily_monthly.py::test_ratio_confirmation_nonmutation_and_reordering
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[previous] - ...
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[last] - Modu...
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[middle] - Mo...
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[duplicate]
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[weekend] - M...
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[invalid_price]
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[invalid_date]
+FAILED tests/test_daily_monthly.py::test_incomplete_months_block[empty] - Mod...
+FAILED tests/test_daily_monthly.py::test_validation_and_maturity - ModuleNotF...
+FAILED tests/test_daily_monthly.py::test_readonly_cache[none] - ModuleNotFoun...
+FAILED tests/test_daily_monthly.py::test_readonly_cache[hash] - ModuleNotFoun...
+FAILED tests/test_daily_monthly.py::test_readonly_cache[identity] - ModuleNot...
+FAILED tests/test_daily_monthly.py::test_readonly_cache[partial] - ModuleNotF...
+FAILED tests/test_daily_monthly.py::test_readonly_cache[unavailable] - Module...
+16 failed in 0.33s

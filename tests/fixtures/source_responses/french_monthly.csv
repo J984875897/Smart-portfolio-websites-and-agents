@@ -1,0 +1,10 @@
+Synthetic fixture; NOT downloaded market data.
+Units are percent.
+
+,Mkt-RF,SMB,HML,RMW,CMA,RF
+202501,2.00,-1.00,0.50,0.25,-0.30,0.40
+202502,-3.00,0.00,-99.99,0.10,0.20,0.35
+
+ Annual Factors: January-December
+,Mkt-RF,SMB,HML,RMW,CMA,RF
+2025,10,2,3,4,5,6

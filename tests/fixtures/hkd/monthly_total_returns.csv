@@ -1,0 +1,5 @@
+asset_id,ticker,name,date,value,tool_type,asset_class,exchange,currency,share_class,frequency
+SYNTH_USD,TESTUSD,人工美元ETF示例,2025-01-31,0.01,ETF,equity,SYNTH,USD,,monthly
+SYNTH_HKD,TESTHKD,人工港币ETF示例,2025-01-31,0.01,ETF,equity,SYNTH,HKD,,monthly
+SYNTH_ZERO,TESTZERO,人工零收益示例,2025-01-31,0,ETF,bond,SYNTH,USD,,monthly
+SYNTH_LOSS,TESTLOSS,人工全损示例,2025-01-31,-1,ETF,equity,SYNTH,USD,,monthly

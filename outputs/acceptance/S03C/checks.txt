@@ -1,0 +1,18 @@
+S03-C acceptance 2026-10-16
+Baseline172pass20.55s; full226pass22.63s; focusedcore40/UI14; independentDecimal/scriptPASS.
+Actualbrowser complete3/3, earlydecision2/3, downloadsconfirmedbeforechange thenremoved,1440/720 nooverflow/iconscorrect; screenshotsvisuallychecked.
+Installedlocalpackage outsidecwd returns[0.0031,0.0029,0.0031]; no newdependencies/networkdownloads.
+Spec/task/finalreviews approved; no important findings. Advisory independentminimalboundaryfixtures remains.
+NoGit repository; snapshot /private/tmp/portfolio-s03c-before; localfilespreserved.
+Monthlydeclared-inputscope only; bankcreditriskcashproxy, no actualdeposit/Sharpe/sourcecertification.
+Documentationlinks and implementationchecklist verified.
+SHA256:
+task-1.diff 11f7beb4997dae7745d5d537db81706ffd3ab7c0556e33e0b646527f9c29562b
+task-2.diff 9e71fb039fb4366377ef83377d60b7d53f3ee441089a2f3172651da2ae601516
+final-code.diff 80e25813acd002e25962050fbe7994f87620f303aa892a1683c9f1c87e34ec63
+full_tests.txt dc8e2b59b94fb170e27424e0f154a2474f0b201dec37b3c2958c6dec66bf2641
+verification.txt 5563386f707860125acab33cf36093f44b867afe54cb8fb08fecede2bc3a3b4a
+browser_checks.json 0cbeead9a2a3fb2d189b48f9331909ff14bfc87838d471c7ece9dcc8cd6536bd
+task-1-review.md 0fc188d302b1fcc86aa34a64b4edd8af6b8f67875fee312daaac892cf6611738
+task-2-review.md 8e2a1ee14c05749a5e976d663174987450f5215ef67048ac8f1a0166c35f2486
+final-review.md cc083eb7584ba575c52b0d0b14f5948849e19066fa969df35bd8a5bee08f8440

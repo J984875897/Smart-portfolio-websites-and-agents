@@ -1,0 +1,15 @@
+Installed/source identical: reference_updates (/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/portfolio/data/reference_updates.py)
+Installed/source identical: snapshots (/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/portfolio/data/snapshots.py)
+Installed/source identical: providers.french (/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/portfolio/data/providers/french.py)
+Installed/source identical: providers.hkma (/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/portfolio/data/providers/hkma.py)
+Formal reference snapshot: all original bytes unchanged (including manifest).
+Legacy Yahoo verified: 20261016T034930370828Z-4f4abeddb15b4b57b5b292285d7fda69
+Legacy Yahoo verified: 20261016T032452138649Z-fcda073218944f5fab7663e1add7e088
+Legacy Yahoo verified: 20261016T032413288256Z-59063f7bab694be2b37f76b2ec4f1b51
+Online/offline verification JSON identical; 240 numeric cells in 4 x 12 month factor tables; HKMA unavailable retained.
+Complete suite: 327 passed in 23.93s (full_tests.txt).
+Browser: 1440/720 no page overflow, no exception; native CSV exact, no new supplier runs.
+HTTP homepage/health: 200/200 after package reinstall and app refresh.
+Final auditor fix: rejected HKMA raw pages no longer crash replay; late artifact integrity errors propagate (RED/GREEN61 focused checks).
+Final independent re-review: Approved, no remaining Critical/Important.
+All S04-B plan checkboxes complete; HKMA online limitation explicitly retained.

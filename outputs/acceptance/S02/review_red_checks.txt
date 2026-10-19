@@ -1,0 +1,231 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+___ test_listing_disagreement_blocks_every_row_in_both_orders[currency-USD] ____
+
+field = 'currency', value = 'USD'
+
+    @pytest.mark.parametrize('field,value', [('currency','USD'),('exchange','NYSE'),('share_class','B'),('ticker','ALT')])
+    def test_listing_disagreement_blocks_every_row_in_both_orders(field, value):
+        df=pd.concat([raw(1),raw(1)],ignore_index=True)
+        df['share_class']=''; df.loc[1,'date']='2025-02-28'; df.loc[1,field]=value
+        cfg=config(); cfg.mapping['share_class']='share_class'
+        for incoming in [df,df.iloc[::-1]]:
+            p=preview_import(incoming,cfg,filename='clash.csv')
+>           assert p.rows.status.tolist()==['blocked','blocked']
+E           AssertionError: assert ['valid', 'blocked'] == ['blocked', 'blocked']
+E             
+E             At index 0 diff: 'valid' != 'blocked'
+E             Use -v to get more diff
+
+tests/test_importer.py:164: AssertionError
+___ test_listing_disagreement_blocks_every_row_in_both_orders[exchange-NYSE] ___
+
+field = 'exchange', value = 'NYSE'
+
+    @pytest.mark.parametrize('field,value', [('currency','USD'),('exchange','NYSE'),('share_class','B'),('ticker','ALT')])
+    def test_listing_disagreement_blocks_every_row_in_both_orders(field, value):
+        df=pd.concat([raw(1),raw(1)],ignore_index=True)
+        df['share_class']=''; df.loc[1,'date']='2025-02-28'; df.loc[1,field]=value
+        cfg=config(); cfg.mapping['share_class']='share_class'
+        for incoming in [df,df.iloc[::-1]]:
+            p=preview_import(incoming,cfg,filename='clash.csv')
+>           assert p.rows.status.tolist()==['blocked','blocked']
+E           AssertionError: assert ['valid', 'blocked'] == ['blocked', 'blocked']
+E             
+E             At index 0 diff: 'valid' != 'blocked'
+E             Use -v to get more diff
+
+tests/test_importer.py:164: AssertionError
+___ test_listing_disagreement_blocks_every_row_in_both_orders[share_class-B] ___
+
+field = 'share_class', value = 'B'
+
+    @pytest.mark.parametrize('field,value', [('currency','USD'),('exchange','NYSE'),('share_class','B'),('ticker','ALT')])
+    def test_listing_disagreement_blocks_every_row_in_both_orders(field, value):
+        df=pd.concat([raw(1),raw(1)],ignore_index=True)
+        df['share_class']=''; df.loc[1,'date']='2025-02-28'; df.loc[1,field]=value
+        cfg=config(); cfg.mapping['share_class']='share_class'
+        for incoming in [df,df.iloc[::-1]]:
+            p=preview_import(incoming,cfg,filename='clash.csv')
+>           assert p.rows.status.tolist()==['blocked','blocked']
+E           AssertionError: assert ['valid', 'blocked'] == ['blocked', 'blocked']
+E             
+E             At index 0 diff: 'valid' != 'blocked'
+E             Use -v to get more diff
+
+tests/test_importer.py:164: AssertionError
+____ test_listing_disagreement_blocks_every_row_in_both_orders[ticker-ALT] _____
+
+field = 'ticker', value = 'ALT'
+
+    @pytest.mark.parametrize('field,value', [('currency','USD'),('exchange','NYSE'),('share_class','B'),('ticker','ALT')])
+    def test_listing_disagreement_blocks_every_row_in_both_orders(field, value):
+        df=pd.concat([raw(1),raw(1)],ignore_index=True)
+        df['share_class']=''; df.loc[1,'date']='2025-02-28'; df.loc[1,field]=value
+        cfg=config(); cfg.mapping['share_class']='share_class'
+        for incoming in [df,df.iloc[::-1]]:
+            p=preview_import(incoming,cfg,filename='clash.csv')
+>           assert p.rows.status.tolist()==['blocked','blocked']
+E           AssertionError: assert ['valid', 'blocked'] == ['blocked', 'blocked']
+E             
+E             At index 0 diff: 'valid' != 'blocked'
+E             Use -v to get more diff
+
+tests/test_importer.py:164: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_importer.py::test_listing_disagreement_blocks_every_row_in_both_orders[currency-USD]
+FAILED tests/test_importer.py::test_listing_disagreement_blocks_every_row_in_both_orders[exchange-NYSE]
+FAILED tests/test_importer.py::test_listing_disagreement_blocks_every_row_in_both_orders[share_class-B]
+FAILED tests/test_importer.py::test_listing_disagreement_blocks_every_row_in_both_orders[ticker-ALT]
+4 failed, 15 deselected in 0.60s
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_dataframe_zero_preserved_and_nullable_missing_blocked __________
+
+    def test_dataframe_zero_preserved_and_nullable_missing_blocked():
+        import pandas as pd
+        df=raw(3); df['value']=pd.Series([0,pd.NA,2],dtype='Int64')
+        p=preview_import(df,config(),filename='nullable.csv')
+>       assert p.rows.status.tolist()==['valid','blocked','valid']
+E       AssertionError: assert ['blocked', '...ked', 'valid'] == ['valid', 'blocked', 'valid']
+E         
+E         At index 0 diff: 'blocked' != 'valid'
+E         Use -v to get more diff
+
+tests/test_quality.py:63: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_quality.py::test_dataframe_zero_preserved_and_nullable_missing_blocked
+1 failed, 6 deselected in 0.25s
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_csv_physical_start_lines_survive_blank_and_multiline_records _______
+
+    def test_csv_physical_start_lines_survive_blank_and_multiline_records():
+        df=raw(3); df.loc[1,'name']='Product\nsecond line'; df.loc[2,'value']='oops'
+        lines=df.to_csv(index=False).splitlines(keepends=True)
+        payload=(lines[0]+lines[1]+'\n'+''.join(lines[2:])).encode()
+        frame=read_file(payload,filename='lines.csv')
+        assert len(frame)==3
+        p=preview_import(frame,config())
+>       assert p.rows.source_row.tolist()==[2,4,6]
+E       assert [2, 3, 4] == [2, 4, 6]
+E         
+E         At index 1 diff: 3 != 4
+E         Use -v to get more diff
+
+tests/test_importer.py:175: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_importer.py::test_csv_physical_start_lines_survive_blank_and_multiline_records
+1 failed, 19 deselected in 0.53s
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____ test_duplicate_extreme_rows_require_ack_before_any_metadata_acceptance ____
+
+    def test_duplicate_extreme_rows_require_ack_before_any_metadata_acceptance():
+        import pandas as pd
+        df=pd.concat([raw(1),raw(1)],ignore_index=True); df['value']='70'
+        p=preview_import(df,config(),filename='extreme.csv')
+        pending=commit_import(p)
+>       assert pending.assets.empty and pending.aliases.empty
+E       AssertionError: assert (False)
+E        +  where False =   asset_id ticker       name tool_type  ... exchange currency share_class frequency\n0       p0   0000  Product 0       ETF  ...     HKEX      HKD               monthly\n\n[1 rows x 9 columns].empty
+E        +    where   asset_id ticker       name tool_type  ... exchange currency share_class frequency\n0       p0   0000  Product 0       ETF  ...     HKEX      HKD               monthly\n\n[1 rows x 9 columns] = DataBundle(assets=  asset_id ticker       name tool_type  ... exchange currency share_class frequency\n0       p0   000..._unit': 'percent', 'date_format': '%Y-%m-%d', 'sheet_name': 0, 'classification_overrides': {}, 'alias_mappings': []}}]).assets
+
+tests/test_quality.py:77: AssertionError
+____________ test_duplicate_monthly_collision_rows_all_require_ack _____________
+
+    def test_duplicate_monthly_collision_rows_all_require_ack():
+        import pandas as pd
+        prior=commit_import(preview_import(raw(1),config(),filename='old.csv'))
+        df=pd.concat([raw(1),raw(1)],ignore_index=True); df['date']='2025-01-15'
+        p=preview_import(df,config(),prior,filename='collision.csv')
+>       assert p.rows.status.tolist()==['review','review']
+E       AssertionError: assert ['review', 'duplicate'] == ['review', 'review']
+E         
+E         At index 1 diff: 'duplicate' != 'review'
+E         Use -v to get more diff
+
+tests/test_quality.py:103: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_quality.py::test_duplicate_extreme_rows_require_ack_before_any_metadata_acceptance
+FAILED tests/test_quality.py::test_duplicate_monthly_collision_rows_all_require_ack
+2 failed, 7 deselected in 0.52s
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+___________ test_duplicate_column_names_rejected_before_mapping[csv] ___________
+
+format = 'csv'
+
+    @pytest.mark.parametrize('format',['csv','xlsx','dataframe'])
+    def test_duplicate_column_names_rejected_before_mapping(format):
+        df=raw(1); df.insert(5,'extra_value','9'); df=df.rename(columns={'extra_value':'value'})
+        if format=='dataframe': data=df
+        elif format=='csv': data=df.to_csv(index=False).encode()
+        else:
+            stream=BytesIO(); df.to_excel(stream,index=False); data=stream.getvalue()
+>       with pytest.raises(ValueError,match='[Uu]nique|[Dd]uplicate'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_importer.py:189: Failed
+__________ test_duplicate_column_names_rejected_before_mapping[xlsx] ___________
+
+format = 'xlsx'
+
+    @pytest.mark.parametrize('format',['csv','xlsx','dataframe'])
+    def test_duplicate_column_names_rejected_before_mapping(format):
+        df=raw(1); df.insert(5,'extra_value','9'); df=df.rename(columns={'extra_value':'value'})
+        if format=='dataframe': data=df
+        elif format=='csv': data=df.to_csv(index=False).encode()
+        else:
+            stream=BytesIO(); df.to_excel(stream,index=False); data=stream.getvalue()
+>       with pytest.raises(ValueError,match='[Uu]nique|[Dd]uplicate'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_importer.py:189: Failed
+________ test_duplicate_column_names_rejected_before_mapping[dataframe] ________
+
+format = 'dataframe'
+
+    @pytest.mark.parametrize('format',['csv','xlsx','dataframe'])
+    def test_duplicate_column_names_rejected_before_mapping(format):
+        df=raw(1); df.insert(5,'extra_value','9'); df=df.rename(columns={'extra_value':'value'})
+        if format=='dataframe': data=df
+        elif format=='csv': data=df.to_csv(index=False).encode()
+        else:
+            stream=BytesIO(); df.to_excel(stream,index=False); data=stream.getvalue()
+>       with pytest.raises(ValueError,match='[Uu]nique|[Dd]uplicate'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/test_importer.py:189: Failed
+=============================== warnings summary ===============================
+tests/test_importer.py::test_duplicate_column_names_rejected_before_mapping[csv]
+tests/test_importer.py::test_duplicate_column_names_rejected_before_mapping[dataframe]
+  /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/src/portfolio/data/importer.py:67: UserWarning: DataFrame columns are not unique, some columns will be omitted.
+    for index,source in zip(source_rows,raw.to_dict('records')):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_importer.py::test_duplicate_column_names_rejected_before_mapping[csv]
+FAILED tests/test_importer.py::test_duplicate_column_names_rejected_before_mapping[xlsx]
+FAILED tests/test_importer.py::test_duplicate_column_names_rejected_before_mapping[dataframe]
+3 failed, 20 deselected, 2 warnings in 0.39s
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__ test_distinct_stable_ids_without_tickers_same_file_and_sequential_uploads ___
+
+    def test_distinct_stable_ids_without_tickers_same_file_and_sequential_uploads():
+        df=raw(2); df['ticker']=''; df['asset_id']=['ISIN_A','ISIN_B']
+        p=preview_import(df,config(),filename='stable.csv')
+>       assert p.rows.status.tolist()==['valid','valid']
+E       AssertionError: assert ['valid', 'blocked'] == ['valid', 'valid']
+E         
+E         At index 1 diff: 'blocked' != 'valid'
+E         Use -v to get more diff
+
+tests/test_importer.py:196: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_importer.py::test_distinct_stable_ids_without_tickers_same_file_and_sequential_uploads
+1 failed, 23 deselected in 0.44s

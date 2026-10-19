@@ -1,0 +1,7 @@
+scenario,mean_ann,variance_ann,volatility_ann,effective_holdings,diversification_ratio,positive_weight_count,weight_sum,expected_mean_ann,expected_variance_ann
+two_asset_diagonal,0.08,0.0325,0.18027756377319948,2.0,1.3867504905630728,2,1.0,0.08,0.0325
+two_asset_identical_direction,0.08,0.0625,0.25,2.0,1.0,2,1.0,0.08,0.0625
+negative_contribution,0.068,0.019600000000000003,0.14,1.4705882352941173,1.5714285714285714,2,1.0,0.068,0.0196
+zero_volatility,0.08,0.0,0.0,2.0,,2,1.0,0.08,0.0
+perfect_offset,0.08,0.0,0.0,2.0,,2,1.0,0.08,0.0
+twenty_identical,0.05000000000000001,0.04000000000000001,0.2,19.999999999999996,1.0000000000000002,20,1.0000000000000002,0.05,0.04

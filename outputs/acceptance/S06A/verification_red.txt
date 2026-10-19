@@ -1,0 +1,33 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+________ test_offline_acceptance_outputs_are_independently_inspectable _________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-220/test_offline_acceptance_output0')
+
+    def test_offline_acceptance_outputs_are_independently_inspectable(tmp_path):
+        out=tmp_path/'acceptance'; r=run('--output',out)
+>       assert r.returncode == 0,r.stdout+r.stderr
+E       AssertionError: /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_estimation.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...g/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_estimation.py': [Errno 2] No such file or directory\n").returncode
+
+tests/test_estimation_verification.py:20: AssertionError
+______________ test_source_and_output_directories_cannot_overlap _______________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-220/test_source_and_output_directo0')
+
+    def test_source_and_output_directories_cannot_overlap(tmp_path):
+        source=tmp_path/'source';source.mkdir();sentinel=source/'keep.txt';sentinel.write_text('preserve')
+        for out in [source,source/'child',tmp_path]:
+            r=run('--real-bundle',source,'--output',out)
+            assert r.returncode != 0
+>           assert 'separate directories' in r.stderr
+E           assert 'separate directories' in "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_estimation.py': [Errno 2] No such file or directory\n"
+E            +  where "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: can't open file '/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_estimation.py': [Errno 2] No such file or directory\n" = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '/Users/jac...g/Desktop/CityU/5052_Investment/Assignment/Group/scripts/verify_estimation.py': [Errno 2] No such file or directory\n").stderr
+
+tests/test_estimation_verification.py:44: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_estimation_verification.py::test_offline_acceptance_outputs_are_independently_inspectable
+FAILED tests/test_estimation_verification.py::test_source_and_output_directories_cannot_overlap
+2 failed in 0.42s

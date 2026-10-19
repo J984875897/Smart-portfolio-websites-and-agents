@@ -1,0 +1,15 @@
+Processing ./.
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: cityu-portfolio-research
+  Building wheel for cityu-portfolio-research (pyproject.toml): started
+  Building wheel for cityu-portfolio-research (pyproject.toml): finished with status 'done'
+  Created wheel for cityu-portfolio-research: filename=cityu_portfolio_research-0.1.0-py3-none-any.whl size=70285 sha256=5002a353aec1d8a1e466b8db4cd05461642db8426ff6e1556b8d229cc0657322
+  Stored in directory: /private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pip-ephem-wheel-cache-lglojjfz/wheels/e8/ab/c0/4803da20cd450483798edadee3f6c364f7a78ccd683b7811b7
+Successfully built cityu-portfolio-research
+Installing collected packages: cityu-portfolio-research
+  Attempting uninstall: cityu-portfolio-research
+    Found existing installation: cityu-portfolio-research 0.1.0
+    Uninstalling cityu-portfolio-research-0.1.0:
+      Successfully uninstalled cityu-portfolio-research-0.1.0
+Successfully installed cityu-portfolio-research-0.1.0

@@ -1,0 +1,806 @@
+.FFFFFFFFFFFFFFF                                                         [100%]
+=================================== FAILURES ===================================
+_______ test_auditor_checks_diagnostic_rows_after_rejected_page[False-{] _______
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic0')
+rejected = b'{', cancel_after_response = False
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+>       report = verifier.verify(tmp_path, run_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reference_verification.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_reference_downloads.py:75: in verify
+    raw = json.loads(read_artifact(root, run_id, page['path']))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x10204fa10>, s = '{', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/opt/anaconda3/lib/python3.14/json/decoder.py:361: JSONDecodeError
+___ test_auditor_checks_diagnostic_rows_after_rejected_page[False-not JSON] ____
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic1')
+rejected = b'not JSON', cancel_after_response = False
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+>       report = verifier.verify(tmp_path, run_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reference_verification.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_reference_downloads.py:75: in verify
+    raw = json.loads(read_artifact(root, run_id, page['path']))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x10204fa10>, s = 'not JSON', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/lib/python3.14/json/decoder.py:363: JSONDecodeError
+_____ test_auditor_checks_diagnostic_rows_after_rejected_page[False-\xff] ______
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic2')
+rejected = b'\xff', cancel_after_response = False
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+>       report = verifier.verify(tmp_path, run_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reference_verification.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_reference_downloads.py:75: in verify
+    raw = json.loads(read_artifact(root, run_id, page['path']))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = b'\xff', cls = None, object_hook = None, parse_float = None
+parse_int = None, parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+                raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+>           s = s.decode(detect_encoding(s), 'surrogatepass')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+/opt/anaconda3/lib/python3.14/json/__init__.py:347: UnicodeDecodeError
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": true}, "result": {"records": {}}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic3')
+rejected = b'{"header": {"success": true}, "result": {"records": {}}}'
+cancel_after_response = False
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": false}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic4')
+rejected = b'{"header": {"success": false}}', cancel_after_response = False
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": true}, "result": {"records": [{"end_of_day": "2025-01-03", "usd": "bad"}]}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic5')
+rejected = b'{"header": {"success": true}, "result": {"records": [{"end_of_day": "2025-01-03", "usd": "bad"}]}}'
+cancel_after_response = False
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": true}, "result": {"records": [{"end_of_day": "bad", "usd": 7.8}]}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic6')
+rejected = b'{"header": {"success": true}, "result": {"records": [{"end_of_day": "bad", "usd": 7.8}]}}'
+cancel_after_response = False
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+_______ test_auditor_checks_diagnostic_rows_after_rejected_page[True-{] ________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic7')
+rejected = b'{', cancel_after_response = True
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+>       report = verifier.verify(tmp_path, run_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reference_verification.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_reference_downloads.py:75: in verify
+    raw = json.loads(read_artifact(root, run_id, page['path']))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x10204fa10>, s = '{', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/opt/anaconda3/lib/python3.14/json/decoder.py:361: JSONDecodeError
+____ test_auditor_checks_diagnostic_rows_after_rejected_page[True-not JSON] ____
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic8')
+rejected = b'not JSON', cancel_after_response = True
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+>       report = verifier.verify(tmp_path, run_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reference_verification.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_reference_downloads.py:75: in verify
+    raw = json.loads(read_artifact(root, run_id, page['path']))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x10204fa10>, s = 'not JSON', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/lib/python3.14/json/decoder.py:363: JSONDecodeError
+______ test_auditor_checks_diagnostic_rows_after_rejected_page[True-\xff] ______
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic9')
+rejected = b'\xff', cancel_after_response = True
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+>       report = verifier.verify(tmp_path, run_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reference_verification.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_reference_downloads.py:75: in verify
+    raw = json.loads(read_artifact(root, run_id, page['path']))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = b'\xff', cls = None, object_hook = None, parse_float = None
+parse_int = None, parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+                raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+>           s = s.decode(detect_encoding(s), 'surrogatepass')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+/opt/anaconda3/lib/python3.14/json/__init__.py:347: UnicodeDecodeError
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": true}, "result": {"records": {}}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic10')
+rejected = b'{"header": {"success": true}, "result": {"records": {}}}'
+cancel_after_response = True
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": false}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic11')
+rejected = b'{"header": {"success": false}}', cancel_after_response = True
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": true}, "result": {"records": [{"end_of_day": "2025-01-03", "usd": "bad"}]}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic12')
+rejected = b'{"header": {"success": true}, "result": {"records": [{"end_of_day": "2025-01-03", "usd": "bad"}]}}'
+cancel_after_response = True
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+_ test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": true}, "result": {"records": [{"end_of_day": "bad", "usd": 7.8}]}}] _
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_checks_diagnostic13')
+rejected = b'{"header": {"success": true}, "result": {"records": [{"end_of_day": "bad", "usd": 7.8}]}}'
+cancel_after_response = True
+
+    @pytest.mark.parametrize('rejected', [
+        b'{', b'not JSON', b'\xff',
+        hkma_page({}),
+        json.dumps({'header': {'success': False}}).encode(),
+        hkma_page([{'end_of_day': '2025-01-03', 'usd': 'bad'}]),
+        hkma_page([{'end_of_day': 'bad', 'usd': 7.8}]),
+    ])
+    @pytest.mark.parametrize('cancel_after_response', [False, True])
+    def test_auditor_checks_diagnostic_rows_after_rejected_page(tmp_path, rejected, cancel_after_response):
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(kwargs['offset'])
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else rejected, 200)
+        run_id = run_reference_update(
+            tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01',
+            page_size=1, fetch=fetch,
+            cancelled=lambda: cancel_after_response and len(calls) == 2,
+        )
+        verifier = verifier_module()
+        report = verifier.verify(tmp_path, run_id)
+        item = report['checks'][0]
+        assert (item['status'], item['reason']) == (('cancelled', 'cancelled') if cancel_after_response else ('unavailable', 'parse_error'))
+        assert item['rows'] == 1 and len(item['raw_files']) == 2
+        assert item['table_checked'] and item['numeric_cells_verified'] == 1
+        assert not report['all_requested_sources_success']
+    
+        # A claimed success must never hide malformed evidence.
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        manifest['items'][0].update(status='success', reason='complete_requested_months', pagination_complete=True)
+        manifest_path.write_text(json.dumps(manifest))
+>       with pytest.raises(AssertionError, match='HKMA'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE AssertionError
+
+tests/test_reference_verification.py:72: Failed
+________________ test_auditor_rejects_changed_diagnostic_value _________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-123/test_auditor_rejects_changed_d0')
+
+    def test_auditor_rejects_changed_diagnostic_value(tmp_path):
+        import hashlib
+        calls = []
+        def fetch(*args, **kwargs):
+            calls.append(1)
+            return RawResponse(hkma_page([{'end_of_day': '2025-01-02', 'usd': 7.8}]) if len(calls) == 1 else b'{', 200)
+        run_id = run_reference_update(tmp_path, ['HKMA_USDHKD'], '2025-01-01', '2025-02-01', page_size=1, fetch=fetch)
+        manifest_path = tmp_path / 'runs' / run_id / 'snapshot_manifest.json'
+        manifest = json.loads(manifest_path.read_bytes())
+        table_path = manifest_path.parent / manifest['items'][0]['table_file']
+        altered = table_path.read_bytes().replace(b'7.800000000000', b'7.900000000000')
+        table_path.write_bytes(altered)
+        for file in manifest['files']:
+            if file['path'] == table_path.name:
+                file.update(sha256=hashlib.sha256(altered).hexdigest(), bytes=len(altered))
+        manifest_path.write_text(json.dumps(manifest))
+        with pytest.raises(AssertionError, match='HKMA value'):
+>           verifier_module().verify(tmp_path, run_id)
+
+tests/test_reference_verification.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_reference_downloads.py:75: in verify
+    raw = json.loads(read_artifact(root, run_id, page['path']))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x10204fa10>, s = '{', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/opt/anaconda3/lib/python3.14/json/decoder.py:361: JSONDecodeError
+=========================== short test summary info ============================
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[False-{]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[False-not JSON]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[False-\xff]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": true}, "result": {"records": {}}}]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": false}}]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": true}, "result": {"records": [{"end_of_day": "2025-01-03", "usd": "bad"}]}}]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[False-{"header": {"success": true}, "result": {"records": [{"end_of_day": "bad", "usd": 7.8}]}}]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[True-{]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[True-not JSON]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[True-\xff]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": true}, "result": {"records": {}}}]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": false}}]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": true}, "result": {"records": [{"end_of_day": "2025-01-03", "usd": "bad"}]}}]
+FAILED tests/test_reference_verification.py::test_auditor_checks_diagnostic_rows_after_rejected_page[True-{"header": {"success": true}, "result": {"records": [{"end_of_day": "bad", "usd": 7.8}]}}]
+FAILED tests/test_reference_verification.py::test_auditor_rejects_changed_diagnostic_value
+15 failed, 1 passed in 0.47s

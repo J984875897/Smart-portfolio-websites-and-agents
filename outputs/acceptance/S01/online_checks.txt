@@ -1,0 +1,26 @@
+Probing Yahoo: AAPL
+Probing Yahoo: 0700.HK
+Probing Yahoo: SPY
+Probing Yahoo: 2800.HK
+Probing Yahoo: AGG
+Probing Yahoo: GLD
+Probing Yahoo: HKD=X
+Probing public endpoint: HKMA_USDHKD
+Probing public endpoint: US_FF3
+Probing public endpoint: US_FF5
+Probing public endpoint: AP_EX_JP_FF3
+Probing public endpoint: AP_EX_JP_FF5
+     dataset      status                               reason
+        AAPL     success                      fields_verified
+     0700.HK     success                      fields_verified
+         SPY     success                      fields_verified
+     2800.HK     partial     missing_invalid_prices_or_months
+         AGG     success                      fields_verified
+         GLD     success                      fields_verified
+       HKD=X     partial     missing_invalid_prices_or_months
+ HKMA_USDHKD unavailable             request_or_format_failed
+      US_FF3     success monthly_percent_converted_to_decimal
+      US_FF5     success monthly_percent_converted_to_decimal
+AP_EX_JP_FF3     success monthly_percent_converted_to_decimal
+AP_EX_JP_FF5     success monthly_percent_converted_to_decimal
+S01 gate: FAIL | verified snapshot files: 30

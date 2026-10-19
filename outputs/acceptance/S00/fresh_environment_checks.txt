@@ -1,0 +1,24 @@
+Dependencies were installed into a new temporary virtual environment using requirements.lock.txt.
+Full installation output is retained in rebuild_checks.txt.
+The final project installation is standard (not editable); verification below checks this explicitly.
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-c', "import importlib.metadata as m, json\nfrom pathlib import Path\nfor line in Path('requirements.lock.txt').read_text().splitlines():\n if not line or line.startswith('#'): continue\n name, version = line.split('==')\n assert m.version(name) == version, (name, m.version(name), version)\nd = m.distribution('cityu-portfolio-research')\nassert not json.loads(d.read_text('direct_url.json')).get('dir_info', {}).get('editable', False)\nprint('PASS: all 77 locked dependency versions match; local project uses a standard installation.')\n"]
+Exit code: 0
+PASS: all 77 locked dependency versions match; local project uses a standard installation.
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pip', '--disable-pip-version-check', '--no-cache-dir', 'check']
+Exit code: 0
+No broken requirements found.
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'pytest', 'tests/test_smoke.py', '-q']
+Exit code: 0
+..............                                                           [100%]
+14 passed in 8.24s
+
+Command: ['/private/tmp/cityu-portfolio-s00-uh4hl_y9/venv/bin/python', '-m', 'portfolio.demo', '--output', '/private/tmp/cityu-portfolio-s00-uh4hl_y9/smoke_result.csv']
+Exit code: 0
+S00: synthetic HKD prices 100 -> 110 -> 120; initial capital 1000.00 HKD
+Final value: 1200.00 HKD
+Cumulative return: 20.00%
+CSV: /private/tmp/cityu-portfolio-s00-uh4hl_y9/smoke_result.csv
+
+PASS: both environment CSVs are byte-identical. SHA256: d0a0e817ed5e38fb065604c6009416046d0a059dfc11ef75eed78c4322d04dda

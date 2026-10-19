@@ -1,0 +1,39 @@
+{
+  "synthetic_only": true,
+  "timing": "Source-declared, not independently certified",
+  "scenarios": {
+    "early": {
+      "decision_at": "2025-01-31T09:00:00+00:00",
+      "eligible": [
+        "HKD_COMPLETE"
+      ],
+      "valid_months": {
+        "HKD_COMPLETE": 60,
+        "USD_COMPLETE": 59,
+        "MISSING_MIDDLE": 59,
+        "SHORT_HISTORY": 59,
+        "MISSING_END_FX": 59
+      },
+      "window_start": "2020-02-29",
+      "window_end": "2025-01-31",
+      "assertions": "passed"
+    },
+    "late": {
+      "decision_at": "2025-01-31T22:00:00+00:00",
+      "eligible": [
+        "HKD_COMPLETE",
+        "USD_COMPLETE"
+      ],
+      "valid_months": {
+        "HKD_COMPLETE": 60,
+        "USD_COMPLETE": 60,
+        "MISSING_MIDDLE": 59,
+        "SHORT_HISTORY": 59,
+        "MISSING_END_FX": 59
+      },
+      "window_start": "2020-02-29",
+      "window_end": "2025-01-31",
+      "assertions": "passed"
+    }
+  }
+}

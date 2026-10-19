@@ -1,0 +1,15 @@
+S03-B acceptance verified 2026-10-16 (Asia/Hong_Kong)
+Full pytest: exit 0; 172 passed in 20.57s
+Synthetic script: exit 0; early=1, late=2, fixed60
+Real Chrome: passed; early1, changed input clears old result, late2; widths1440/720; no exceptions or page overflow; screenshots visually inspected
+HTTP=200; health=200
+Task1 independent review: approved
+Task2 independent re-review: approved
+Broad final review: spec compliance approved, code quality approved
+No Git repository; preserve local files and immutable diffs.
+S03 overall pending S03-C.
+task-2-fixed.diff SHA256 fed745e5d089ce6ff561d464c61e32351b50ba4701871ae990cb22142f7ef8d8
+final-code.diff SHA256 9483b483f7b6a3a9e48670649fe8e5650c35c1450490e763012f0d45d74c9ea9
+browser_checks.json SHA256 59d53929f40b22a97526e89512cd7f081a547cedf7324f15cc1f6683a0848510
+full_tests.txt SHA256 3981c6191e105c61e3b29329c44712cceb55f8ec2e3f88030b9c7f221b8b6a2c
+verification.txt SHA256 ef8c2bd2bc510cb642d691535e53b8bfffdfd590615ebce9c65b5d52a7e0b9d7

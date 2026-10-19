@@ -1,0 +1,26 @@
+{
+  "title": "研究数据工作台",
+  "loaded": true,
+  "fontLoaded": true,
+  "icons": [
+    {
+      "text": "keyboard_arrow_right",
+      "font": "\"PingFang SC\", system-ui, sans-serif",
+      "width": 16,
+      "height": 16
+    },
+    {
+      "text": "upload",
+      "font": "\"PingFang SC\", system-ui, sans-serif",
+      "width": 16,
+      "height": 16
+    },
+    {
+      "text": "keyboard_arrow_right",
+      "font": "\"PingFang SC\", system-ui, sans-serif",
+      "width": 16,
+      "height": 16
+    }
+  ],
+  "passed": false
+}

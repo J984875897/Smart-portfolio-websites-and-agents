@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "run_id": "20261016T032452138649Z-fcda073218944f5fab7663e1add7e088",
+  "provider": "Yahoo chart",
+  "created_utc": "2026-10-16T03:24:52.138649+00:00",
+  "start": "2025-01-01",
+  "end_exclusive": "2025-02-01",
+  "timeout": 15,
+  "items": [
+    {
+      "symbol": "SPY",
+      "status": "success",
+      "reason": "fields_verified",
+      "rows": 20,
+      "raw_file": "raw_SPY.json",
+      "daily_file": "daily_SPY.csv",
+      "import_file": "import_SPY.csv",
+      "raw_sha256": "eeca97556405a6ef50125b92c406bdd6d9f6c4b1b75da12e5978689242ca47fe",
+      "valid_rows": 20,
+      "first_date": "2025-01-02",
+      "last_date": "2025-01-31",
+      "observed_months": 1,
+      "missing_months": 0,
+      "dividend_events": 0,
+      "split_events": 0,
+      "capital_gain_events": 0,
+      "quality_scope": "S01 field probe; NOT candidate eligibility",
+      "daily_calendar_audit": "not_performed_S03"
+    }
+  ],
+  "files": [
+    {
+      "path": "raw_SPY.json",
+      "sha256": "eeca97556405a6ef50125b92c406bdd6d9f6c4b1b75da12e5978689242ca47fe",
+      "bytes": 3302
+    },
+    {
+      "path": "daily_SPY.csv",
+      "sha256": "49cd4d1a2249e88f7074e9f43ec3d594fe3487fea8a925677324de0ce94b3eb1",
+      "bytes": 3313
+    },
+    {
+      "path": "import_SPY.csv",
+      "sha256": "ba1091726d582e432a754430f2f77c49400f71997c4baf5517936853747a6770",
+      "bytes": 1825
+    }
+  ]
+}

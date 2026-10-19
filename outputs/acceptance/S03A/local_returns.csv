@@ -1,0 +1,7 @@
+asset_id,date,start_date,end_date,currency,value_kind,frequency,value,local_return,start_price,end_price,status,reason,source_file,source_sheet,source_row,source_hash,start_source_file,start_source_sheet,start_source_row,start_source_hash
+SYNTH_USD,2025-01-31,2024-12-31,2025-01-31,USD,total_return,monthly,0.01,0.01,,,valid,ok,monthly_total_returns.csv,,2,a36d32a958c8bac3ad848057d14520429601e91e0c3b478b4459dddb5c16d21f,,,,
+SYNTH_HKD,2025-01-31,2024-12-31,2025-01-31,HKD,total_return,monthly,0.01,0.01,,,valid,ok,monthly_total_returns.csv,,3,a36d32a958c8bac3ad848057d14520429601e91e0c3b478b4459dddb5c16d21f,,,,
+SYNTH_ZERO,2025-01-31,2024-12-31,2025-01-31,USD,total_return,monthly,0.0,0.0,,,valid,ok,monthly_total_returns.csv,,4,a36d32a958c8bac3ad848057d14520429601e91e0c3b478b4459dddb5c16d21f,,,,
+SYNTH_LOSS,2025-01-31,2024-12-31,2025-01-31,USD,total_return,monthly,-1.0,-1.0,,,valid,ok,monthly_total_returns.csv,,5,a36d32a958c8bac3ad848057d14520429601e91e0c3b478b4459dddb5c16d21f,,,,
+SYNTH_ADJ,2024-12-31,2024-11-30,2024-12-31,USD,adjusted_price,monthly,100.0,,,100.0,blocked,first_period,monthly_adjusted_prices.csv,,2,677654790a7020ac7fef06829d0e09bf6072c542a6063e9f504545c39ad9ed55,,,,
+SYNTH_ADJ,2025-01-31,2024-12-31,2025-01-31,USD,adjusted_price,monthly,101.0,0.010000000000000009,100.0,101.0,valid,ok,monthly_adjusted_prices.csv,,3,677654790a7020ac7fef06829d0e09bf6072c542a6063e9f504545c39ad9ed55,monthly_adjusted_prices.csv,,2,677654790a7020ac7fef06829d0e09bf6072c542a6063e9f504545c39ad9ed55

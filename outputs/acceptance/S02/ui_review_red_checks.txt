@@ -1,0 +1,55 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________ test_identical_upload_reselection_after_sample ________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-41/test_identical_upload_reselect0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106d87820>
+
+    def test_identical_upload_reselection_after_sample(tmp_path, monkeypatch):
+        from io import BytesIO
+        import streamlit
+    
+        # AppTest cannot select browser files; mock only the uploader response.
+        uploaded = BytesIO((ROOT / 'tests/fixtures/imports/ten_products.csv').read_bytes())
+        uploaded.name = 'user.csv'
+        selection = {'file': uploaded}
+        monkeypatch.setattr(streamlit, 'file_uploader', lambda *args, **kwargs: selection['file'])
+        at = start(tmp_path, monkeypatch)
+        assert not at.exception
+        assert at.session_state['source'][1] == 'user.csv'
+        assert any('来源文件：user.csv' in item.value for item in at.caption)
+        assert at.selectbox(key='kind').value == 'price'
+        assert at.selectbox(key='unit').value == 'decimal'
+    
+        load(at, 'dirty_data.csv')
+        at.run()  # The unchanged mounted upload must not override the sample.
+        assert at.session_state['source'][1] == 'SYNTH_dirty_data.csv'
+        click(at, 'check')
+        at.checkbox(key='ack').check().run()
+        assert at.session_state['preview'] is not None
+        assert at.session_state['ack']
+    
+        selection['file'] = None
+        at.run()
+        assert not at.exception
+        assert at.session_state['source'][1] == 'SYNTH_dirty_data.csv'
+        assert at.session_state['preview'] is not None
+        assert at.session_state['ack']
+    
+        selection['file'] = uploaded  # Identical name and bytes, deliberately reselected.
+        at.run()
+        assert not at.exception
+>       assert at.session_state['source'][1] == 'user.csv'
+E       AssertionError: assert 'SYNTH_dirty_data.csv' == 'user.csv'
+E         
+E         - user.csv
+E         + SYNTH_dirty_data.csv
+
+tests/test_data_center.py:208: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 12:02:46.010 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ============================
+FAILED tests/test_data_center.py::test_identical_upload_reselection_after_sample
+1 failed, 12 deselected in 0.94s

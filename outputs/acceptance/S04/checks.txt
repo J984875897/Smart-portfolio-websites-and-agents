@@ -1,0 +1,27 @@
+2026-10-17 / project .venv / macOS local verification
+
+.venv/bin/python -m pytest -q
+474 passed, 2 warnings in 31.66s; exit 0.
+
+.venv/bin/python -m pip check
+No broken requirements found; exit 0.
+
+.venv/bin/python scripts/verify_downloads.py --online --output outputs/acceptance/S04/online_yahoo
+exit 0; run 20261017T100104868999Z-b2827ec6202b4c25b2681bf17d2815f3.
+
+.venv/bin/python scripts/verify_reference_downloads.py --online --output outputs/acceptance/S04/online_reference
+exit 1; run 20261017T100108242997Z-d337fa30f90748aab58694dc3cdba1a9.
+Four French datasets success; HKMA unavailable/tls_error. Partial online coverage retained.
+
+Two-month download: portfolio.data.updates.run_update(Path('data/downloads'), ['SPY','2800.HK','HKD=X'], '2024-12-01', '2025-02-01')
+run 20261017T100317220148Z-f2c2fec30e3e4f29bbdf2970ccf9e572; FX partial.
+
+.venv/bin/python scripts/verify_s04_chain.py --run-id 20261017T100317220148Z-f2c2fec30e3e4f29bbdf2970ccf9e572 --output outputs/acceptance/S04/real_chain
+exit 0; all expected success AND blocking checks passed. Not all sources qualified.
+
+.venv/bin/python scripts/verify_daily_hkd.py --s01-manifest outputs/acceptance/S01/snapshots/20261012T143920Z-6f4d426f/snapshot_manifest.json --output outputs/acceptance/S04/replay_hkd
+exit 0; legacy imported raw-file diagnostics only.
+
+One-off Streamlit AppTest walkthroughs: navigation_checks.json and real_ui_checks.json.
+9 default pages no exceptions; manual C2/C3 boundaries; real cached 2800.HK C2-to-C3 at capture and historical decision.
+No new browser visual check in this summary step.

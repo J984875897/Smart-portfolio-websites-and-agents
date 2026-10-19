@@ -1,0 +1,11 @@
+Command:
+.venv/bin/python -m pytest tests/test_workspace_state.py tests/test_workspace_shell_view.py tests/test_eligibility_hub_view.py tests/test_tool_navigation_uploads.py tests/test_candidate_screening_view.py tests/test_risk_workspace_view.py -q
+
+Final terminal summary (progress dots omitted):
+45 passed in 99.23s (0:01:39)
+
+Additional focused checks after independent review:
+tests/test_tool_navigation_uploads.py: 4 passed in 1.79s
+tests/test_hkd_returns_view.py tests/test_tool_navigation_uploads.py: 11 passed in 3.26s
+
+Independent read-only re-review: no remaining important issues reported; reviewer separately ran 35 targeted tests.

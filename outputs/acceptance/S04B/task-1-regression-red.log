@@ -1,0 +1,61 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_wrong_model_full_history_never_publishes_outside_plan_table _______
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-111/test_wrong_model_full_history_0')
+
+    def test_wrong_model_full_history_never_publishes_outside_plan_table(tmp_path):
+        text=',Mkt-RF,SMB,HML,RMW,CMA,RF\n202001,1,2,3,4,5,6\n202501,1,2,3,4,5,6'
+>       _,m=run(tmp_path,lambda *a:french(text))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reference_updates.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reference_updates.py:22: in run
+    return rid,load_snapshot(tmp_path,rid)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/portfolio/data/snapshots.py:50: in load_snapshot
+    if manifest.get('schema_version')==2: return _load_reference(folder,manifest,run_id)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+folder = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-111/test_wrong_model_full_history_0/runs/20261016T121712184072Z-8137fe6519d042b487013243477a9aee')
+manifest = {'schema_version': 2, 'run_id': '20261016T121712184072Z-8137fe6519d042b487013243477a9aee', 'provider': 'Reference sources', 'created_utc': '2026-10-16T12:17:12.184072+00:00', ...}
+run_id = '20261016T121712184072Z-8137fe6519d042b487013243477a9aee'
+
+    def _load_reference(folder,manifest,run_id):
+        from datetime import date, datetime
+        from .reference_updates import REFERENCE_CATALOG, validate_reference_plan
+        if manifest['run_id']!=run_id or manifest['provider']!='Reference sources': raise ValueError('unsupported snapshot')
+        items=manifest['items']
+        validate_reference_plan([i['dataset'] for i in items],manifest['start'],manifest['end_exclusive'],manifest['timeout'],manifest['page_size'],manifest['max_pages'])
+        datetime.fromisoformat(manifest['created_utc'])
+        if not isinstance(manifest['adapter_version'],str) or not manifest['adapter_version'] or not isinstance(manifest['client_versions'],dict) or any(not isinstance(k,str) or not isinstance(v,str) for k,v in manifest['client_versions'].items()): raise ValueError('invalid versions')
+        entries=_verified_entries(folder,manifest['files'])
+        referenced=set()
+        reasons={'not_requested','cancelled','timeout','transport_error','rate_limited','http_error','parse_error','page_limit','empty_data','complete_requested_months','missing_or_invalid_values_or_months'}
+        for item in items:
+            dataset=item['dataset']
+            if item['symbol']!=dataset or any(item[k]!=v for k,v in REFERENCE_CATALOG[dataset].items()): raise ValueError('invalid identity')
+            if 'import_file' in item or item['status'] not in {'success','partial','unavailable','cancelled'} or item['reason'] not in reasons or isinstance(item['rows'],bool) or not isinstance(item['rows'],int) or item['rows']<0: raise ValueError('invalid reference item')
+            if not isinstance(item['raw_files'],list) or len(set(item['raw_files']))!=len(item['raw_files']): raise ValueError('invalid raw files')
+            for name in [*item['raw_files'],item['source_file'],item['table_file']]:
+                if name is not None:
+                    if name not in entries: raise ValueError('unlisted artifact')
+                    if name in referenced: raise ValueError('duplicate reference')
+                    referenced.add(name)
+            if not isinstance(item['pagination_complete'],bool) or not isinstance(item['missing_months'],list) or len(set(item['missing_months']))!=len(item['missing_months']): raise ValueError('invalid coverage')
+            for month in item['missing_months']:
+                if not isinstance(month,str) or not re.fullmatch(r'\d{4}-\d{2}',month): raise ValueError('invalid month')
+                day=date.fromisoformat(month+'-01').isoformat()
+                if not manifest['start']<=day<manifest['end_exclusive']: raise ValueError('month outside plan')
+            for key in ('first_date','last_date'):
+                day=item[key]
+>               if day is not None and (date.fromisoformat(day).isoformat()!=day or not manifest['start']<=day<manifest['end_exclusive']): raise ValueError('invalid observation date')
+                                                                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               ValueError: invalid observation date
+
+src/portfolio/data/snapshots.py:123: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_reference_updates.py::test_wrong_model_full_history_never_publishes_outside_plan_table
+1 failed in 0.28s

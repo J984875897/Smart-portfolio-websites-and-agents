@@ -1,0 +1,390 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_____________________ test_empty_and_preview_commit_dedup ______________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_empty_and_preview_commit_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109af28b0>
+
+    def test_empty_and_preview_commit_dedup(tmp_path, monkeypatch):
+>       at = start(tmp_path, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_center.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_empty_and_preview_commit_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109af28b0>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+>       assert (ROOT / 'app/main.py').exists(), 'S02 UI entry point is missing'
+E       AssertionError: S02 UI entry point is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = (PosixPath('/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group') / 'app/main.py').exists
+
+tests/test_data_center.py:8: AssertionError
+____________________ test_config_change_invalidates_preview ____________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_config_change_invalidates0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109af3230>
+
+    def test_config_change_invalidates_preview(tmp_path, monkeypatch):
+>       at = load(start(tmp_path, monkeypatch))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_center.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_config_change_invalidates0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109af3230>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+>       assert (ROOT / 'app/main.py').exists(), 'S02 UI entry point is missing'
+E       AssertionError: S02 UI entry point is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = (PosixPath('/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group') / 'app/main.py').exists
+
+tests/test_data_center.py:8: AssertionError
+___________________ test_dirty_ack_and_classification_audit ____________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_dirty_ack_and_classificat0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109caac30>
+
+    def test_dirty_ack_and_classification_audit(tmp_path, monkeypatch):
+>       at = load(start(tmp_path, monkeypatch), 'dirty_data.csv')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_center.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_dirty_ack_and_classificat0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109caac30>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+>       assert (ROOT / 'app/main.py').exists(), 'S02 UI entry point is missing'
+E       AssertionError: S02 UI entry point is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = (PosixPath('/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group') / 'app/main.py').exists
+
+tests/test_data_center.py:8: AssertionError
+____________________ test_fresh_session_loads_disk_version _____________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_fresh_session_loads_disk_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109ca3240>
+
+    def test_fresh_session_loads_disk_version(tmp_path, monkeypatch):
+>       at = load(start(tmp_path, monkeypatch))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_center.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-31/test_fresh_session_loads_disk_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109ca3240>
+
+    def start(tmp_path, monkeypatch):
+        monkeypatch.setenv('PORTFOLIO_IMPORTS_ROOT', str(tmp_path / 'imports'))
+>       assert (ROOT / 'app/main.py').exists(), 'S02 UI entry point is missing'
+E       AssertionError: S02 UI entry point is missing
+E       assert False
+E        +  where False = exists()
+E        +    where exists = (PosixPath('/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group') / 'app/main.py').exists
+
+tests/test_data_center.py:8: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_data_center.py::test_empty_and_preview_commit_dedup - Asser...
+FAILED tests/test_data_center.py::test_config_change_invalidates_preview - As...
+FAILED tests/test_data_center.py::test_dirty_ack_and_classification_audit - A...
+FAILED tests/test_data_center.py::test_fresh_session_loads_disk_version - Ass...
+4 failed in 0.30s
+....FF.                                                                  [100%]
+=================================== FAILURES ===================================
+____________________ test_missing_value_mapping_blocks_rows ____________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-33/test_missing_value_mapping_blo0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c0598c0>
+
+    def test_missing_value_mapping_blocks_rows(tmp_path, monkeypatch):
+        at = load(start(tmp_path, monkeypatch))
+        at.selectbox(key='map_value').set_value('').run()
+        click(at, 'check')
+        assert at.session_state['preview'].counts['blocked'] == 10
+>       assert at.button(key='commit').disabled
+E       AssertionError: assert False
+E        +  where False = Button(key='commit', label='仅保存可接受行（阻止行不入库）').disabled
+E        +    where Button(key='commit', label='仅保存可接受行（阻止行不入库）') = WidgetList(_list=[Button(key='load_sample', label='载入合成示例'), Button(key='check', label='质量检查'), Button(key='apply_override', label='应用分类修正并重新检查'), Button(key='commit', label='仅保存可接受行（阻止行不入库）')])(key='commit')
+E        +      where WidgetList(_list=[Button(key='load_sample', label='载入合成示例'), Button(key='check', label='质量检查'), Button(key='apply_override', label='应用分类修正并重新检查'), Button(key='commit', label='仅保存可接受行（阻止行不入库）')]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...SpecialBlock(\n            type='sidebar'\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).button
+
+tests/test_data_center.py:77: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 11:53:45.042 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______________________ test_manual_alias_and_invalidation ______________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-33/test_manual_alias_and_invalida0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ca97250>
+
+    def test_manual_alias_and_invalidation(tmp_path, monkeypatch):
+        at = load(start(tmp_path, monkeypatch))
+        click(at, 'check')
+        click(at, 'commit')
+        load(at, 'repeated_two.csv')
+        click(at, 'check')
+>       at.text_input(key='alias_ticker').set_value('ALT').run()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_center.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = WidgetList(_list=[TextInput(key='supplier', _value=InitialValue(), label='来源供应商／来源名称'), TextInput(key='date_format', _..._class', _value=InitialValue(), label='默认份额类别'), TextInput(key='default_name', _value=InitialValue(), label='默认产品名称')])
+key = 'alias_ticker'
+
+    def __call__(self, key: str) -> El_co:
+        """Return the first element in this collection with the given user key.
+    
+        The same key can appear on different element types, so this returns the
+        first match in this collection. Use ``get_by_key`` when an ambiguous
+        key should raise.
+        """
+        for e in self._list:
+            if getattr(e, "key", None) == key:
+                return e
+>       raise KeyError(key)
+E       KeyError: 'alias_ticker'
+
+.venv/lib/python3.14/site-packages/streamlit/testing/v1/element_tree.py:379: KeyError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 11:53:45.204 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=============================== warnings summary ===============================
+tests/test_data_center.py: 38 warnings
+  /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/dataframe_util.py:998: UserWarning: Could not serialize pd.DataFrame.attrs: Object of type bytes is not JSON serializable, defaulting to empty attributes.
+    table = convert_pandas_df_to_arrow_table(df)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_data_center.py::test_missing_value_mapping_blocks_rows - As...
+FAILED tests/test_data_center.py::test_manual_alias_and_invalidation - KeyErr...
+2 failed, 5 passed, 38 warnings in 2.23s
+.........FFF                                                             [100%]
+=================================== FAILURES ===================================
+_____________________ test_empty_supplier_is_scoped_error ______________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-36/test_empty_supplier_is_scoped_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cb6c2f0>
+
+    def test_empty_supplier_is_scoped_error(tmp_path, monkeypatch):
+        at = load(start(tmp_path, monkeypatch))
+        click(at, 'check')
+        at.text_input(key='supplier').set_value('').run()
+>       assert not at.exception
+E       assert not ElementList(_list=[Exception(message='source_name is required', stack_trace=['File "/Users/jackliang/Desktop/CityU/505...ror(\'source_name is required\')\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'])])
+E        +  where ElementList(_list=[Exception(message='source_name is required', stack_trace=['File "/Users/jackliang/Desktop/CityU/505...ror(\'source_name is required\')\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...SpecialBlock(\n            type='sidebar'\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).exception
+
+tests/test_data_center.py:140: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 11:56:35.189 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-13 11:56:35.320 Uncaught app execution
+Traceback (most recent call last):
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 136, in exec_func_with_error_handling
+    result = func()
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 924, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py", line 12, in <module>
+    render()
+    ~~~~~~^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/views/data_center.py", line 155, in render
+    config = ImportConfig(mapping=mapping, source_name=supplier, defaults=defaults, value_kind=kind,
+                          return_unit=unit, date_format=date_format, sheet_name=sheet,
+                          classification_overrides=dict(s['overrides']), alias_mappings=dict(s['alias_map']))
+  File "<string>", line 12, in __init__
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/src/portfolio/data/contracts.py", line 32, in __post_init__
+    if not self.source_name.strip(): raise ValueError('source_name is required')
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: source_name is required
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ERROR    streamlit.error_util:error_util.py:117 Uncaught app execution
+Traceback (most recent call last):
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 136, in exec_func_with_error_handling
+    result = func()
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 924, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py", line 12, in <module>
+    render()
+    ~~~~~~^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/views/data_center.py", line 155, in render
+    config = ImportConfig(mapping=mapping, source_name=supplier, defaults=defaults, value_kind=kind,
+                          return_unit=unit, date_format=date_format, sheet_name=sheet,
+                          classification_overrides=dict(s['overrides']), alias_mappings=dict(s['alias_map']))
+  File "<string>", line 12, in __init__
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/src/portfolio/data/contracts.py", line 32, in __post_init__
+    if not self.source_name.strip(): raise ValueError('source_name is required')
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: source_name is required
+_______________ test_only_economic_override_preserves_tool_type ________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-36/test_only_economic_override_pr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cb84050>
+
+    def test_only_economic_override_preserves_tool_type(tmp_path, monkeypatch):
+        at = load(start(tmp_path, monkeypatch))
+        click(at, 'check')
+>       assert at.selectbox(key='override_type').value == ''
+E       AssertionError: assert 'ETF' == ''
+E         
+E         + ETF
+
+tests/test_data_center.py:147: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 11:56:35.337 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_____________________ test_corrupt_xlsx_shows_scoped_error _____________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-36/test_corrupt_xlsx_shows_scoped0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bdf46d0>
+
+    def test_corrupt_xlsx_shows_scoped_error(tmp_path, monkeypatch):
+        at = start(tmp_path, monkeypatch)
+        at.session_state['source'] = (b'not-a-workbook', 'bad.xlsx', False)
+        at.run()
+>       assert not at.exception
+E       assert not ElementList(_list=[Exception(message='File is not a zip file', stack_trace=['File "/Users/jackliang/Desktop/CityU/5052...ib/python3.14/zipfile/__init__.py", line 1547, in _RealGetContents\n    raise BadZipFile("File is not a zip file")'])])
+E        +  where ElementList(_list=[Exception(message='File is not a zip file', stack_trace=['File "/Users/jackliang/Desktop/CityU/5052...ib/python3.14/zipfile/__init__.py", line 1547, in _RealGetContents\n    raise BadZipFile("File is not a zip file")'])]) = AppTest(\n    _script_path='/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py',\n    default_t...SpecialBlock(\n            type='sidebar'\n        ),\n        2: SpecialBlock(\n            type='event'\n        )\n    }\n).exception
+
+tests/test_data_center.py:161: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-13 11:56:35.468 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-13 11:56:35.543 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-13 11:56:35.549 Uncaught app execution
+Traceback (most recent call last):
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 136, in exec_func_with_error_handling
+    result = func()
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 924, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py", line 12, in <module>
+    render()
+    ~~~~~~^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/views/data_center.py", line 119, in render
+    sheets = pd.ExcelFile(BytesIO(payload), engine='openpyxl').sheet_names
+             ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_base.py", line 1621, in __init__
+    self._reader = self._engines[engine](
+                   ~~~~~~~~~~~~~~~~~~~~~^
+        self._io,
+        ^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_openpyxl.py", line 560, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        filepath_or_buffer,
+        ^^^^^^^^^^^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_base.py", line 554, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_openpyxl.py", line 579, in load_workbook
+    return load_workbook(
+        filepath_or_buffer,
+        **(default_kwargs | engine_kwargs),
+    )
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/openpyxl/reader/excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+                         data_only, keep_links, rich_text)
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/openpyxl/reader/excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+                   ~~~~~~~~~~~~~~~~~^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/openpyxl/reader/excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+  File "/opt/anaconda3/lib/python3.14/zipfile/__init__.py", line 1480, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/anaconda3/lib/python3.14/zipfile/__init__.py", line 1547, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+------------------------------ Captured log call -------------------------------
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+WARNING  streamlit.runtime.scriptrunner_utils.script_run_context:script_run_context.py:483 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ERROR    streamlit.error_util:error_util.py:117 Uncaught app execution
+Traceback (most recent call last):
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 136, in exec_func_with_error_handling
+    result = func()
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 924, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/main.py", line 12, in <module>
+    render()
+    ~~~~~~^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/app/views/data_center.py", line 119, in render
+    sheets = pd.ExcelFile(BytesIO(payload), engine='openpyxl').sheet_names
+             ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_base.py", line 1621, in __init__
+    self._reader = self._engines[engine](
+                   ~~~~~~~~~~~~~~~~~~~~~^
+        self._io,
+        ^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_openpyxl.py", line 560, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        filepath_or_buffer,
+        ^^^^^^^^^^^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_base.py", line 554, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/pandas/io/excel/_openpyxl.py", line 579, in load_workbook
+    return load_workbook(
+        filepath_or_buffer,
+        **(default_kwargs | engine_kwargs),
+    )
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/openpyxl/reader/excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+                         data_only, keep_links, rich_text)
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/openpyxl/reader/excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+                   ~~~~~~~~~~~~~~~~~^^^^
+  File "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/openpyxl/reader/excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+  File "/opt/anaconda3/lib/python3.14/zipfile/__init__.py", line 1480, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/anaconda3/lib/python3.14/zipfile/__init__.py", line 1547, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+=========================== short test summary info ============================
+FAILED tests/test_data_center.py::test_empty_supplier_is_scoped_error - asser...
+FAILED tests/test_data_center.py::test_only_economic_override_preserves_tool_type
+FAILED tests/test_data_center.py::test_corrupt_xlsx_shows_scoped_error - asse...
+3 failed, 9 passed in 3.22s

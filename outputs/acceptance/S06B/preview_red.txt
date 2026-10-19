@@ -1,0 +1,36 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+___________ test_constant_universe_returns_unavailable_not_infinite ____________
+
+    def test_constant_universe_returns_unavailable_not_infinite():
+>       from portfolio.evaluation.risk_preview import preview_candidate_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation.risk_preview'
+
+tests/test_risk_preview.py:21: ModuleNotFoundError
+______ test_nonconstant_sample_and_model_are_distinct_bound_and_unchanged ______
+
+    def test_nonconstant_sample_and_model_are_distinct_bound_and_unchanged():
+>       from portfolio.evaluation.risk_preview import preview_candidate_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation.risk_preview'
+
+tests/test_risk_preview.py:34: ModuleNotFoundError
+________________ test_count_failure_is_not_bypassed_by_preview _________________
+
+    def test_count_failure_is_not_bypassed_by_preview():
+>       from portfolio.evaluation.risk_preview import preview_candidate_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation.risk_preview'
+
+tests/test_risk_preview.py:52: ModuleNotFoundError
+_____________ test_weights_must_explicitly_bind_all_qualified_ids ______________
+
+    def test_weights_must_explicitly_bind_all_qualified_ids():
+>       from portfolio.evaluation.risk_preview import preview_candidate_risk
+E       ModuleNotFoundError: No module named 'portfolio.evaluation.risk_preview'
+
+tests/test_risk_preview.py:59: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_risk_preview.py::test_constant_universe_returns_unavailable_not_infinite
+FAILED tests/test_risk_preview.py::test_nonconstant_sample_and_model_are_distinct_bound_and_unchanged
+FAILED tests/test_risk_preview.py::test_count_failure_is_not_bypassed_by_preview
+FAILED tests/test_risk_preview.py::test_weights_must_explicitly_bind_all_qualified_ids
+4 failed in 0.34s

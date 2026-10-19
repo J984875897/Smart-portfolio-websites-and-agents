@@ -1,0 +1,80 @@
+{
+  "checks": [
+    {
+      "viewport": 1440,
+      "bodyWidth": 1440,
+      "errorVisible": false,
+      "icons": [
+        {
+          "text": "keyboard_double_arrow_left",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        }
+      ]
+    },
+    {
+      "viewport": 720,
+      "bodyWidth": 720,
+      "errorVisible": false,
+      "icons": [
+        {
+          "text": "keyboard_double_arrow_left",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_double_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        },
+        {
+          "text": "keyboard_arrow_right",
+          "font": "\"Material Symbols Rounded\""
+        }
+      ]
+    }
+  ],
+  "runsBefore": {
+    "prices": [
+      "20261016T032413288256Z-59063f7bab694be2b37f76b2ec4f1b51",
+      "20261016T032452138649Z-fcda073218944f5fab7663e1add7e088",
+      "20261016T034930370828Z-4f4abeddb15b4b57b5b292285d7fda69",
+      "20261016T132413936814Z-c784827343704f318c02d12381d2abbb"
+    ],
+    "references": [
+      "20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f"
+    ]
+  },
+  "defaultHasNoResult": true,
+  "completeBody": "工作页面\n\n数据导入\n\n港币收益查验\n\n共同窗口查验\n\n港币利率查验\n\n下载与缓存\n\n因子与官方汇率\n\n日线月度查验\n\n日线港币查验\n\nDeploy\n日线港币查验\n\n先检查价格，再选择美元汇率，最后点击计算。只读预览，不保存到数据导入。\n\n1 价格来源与目标月份\n\n价格来源\n\n人工案例\n\n已下载缓存\n\n价格人工案例\n\nSYNTH 合成价格：前月每日 100，首个目标月每日 110，之后每月递增 10%。使用对应市场真实交易日。\n\n价格产品代码\n\n起始目标月份（YYYY-MM）\n\n结束目标月份（YYYY-MM，包含）\n\n我已核实复权价格包含分配与拆股调整\n\n2 美元汇率与估值政策\n\n美元汇率来源\n\n人工案例\n\n已下载缓存\n\nCSV / XLSX 文件\n\n汇率人工案例\n\nSYNTH 合成汇率：前月末 7.8，首个目标月末 7.9，之后每月增加 0.1 港币。\n\n我已核实汇率单位为每美元兑港币（HKD per USD），不求倒数\n\n汇率最大年龄（自然日，含等于）\n\nkeyboard_arrow_right\n\n汇率文件格式与模板\n\n最大 7 日为研究假设，非官方期限；价格与汇率可能异步估值。只检查同月端点，不补齐日历，不使用未来报价。\n\n输入组合：价格 SYNTH 人工合成；汇率 SYNTH 人工合成。混合合成与真实输入仅为演示，不代表实际投资收益。\n\n查验并计算港币收益\n\n3 港币收益与证据\n\n目标月数\n\n1\n\n可预览港币月数\n\n1\n\n当前版本估值预览，不具备历史可得资格（available_at 为空）。空白是阻止，不是零收益；不会送入共同窗口或计算候选数。\n\nkeyboard_arrow_right\n\n原始诊断、端点与来源证据下载",
+  "nativeCsvDownloaded": true,
+  "nativeCsvPath": "/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/outputs/acceptance/S04C2/browser_exports/run-1792206285633/daily_hkd_reconciliation.csv",
+  "confirmationWithdrawsResult": true,
+  "unconfirmedBody": "工作页面\n\n数据导入\n\n港币收益查验\n\n共同窗口查验\n\n港币利率查验\n\n下载与缓存\n\n因子与官方汇率\n\n日线月度查验\n\n日线港币查验\n\nDeploy\n日线港币查验\n\n先检查价格，再选择美元汇率，最后点击计算。只读预览，不保存到数据导入。\n\n1 价格来源与目标月份\n\n价格来源\n\n人工案例\n\n已下载缓存\n\n价格人工案例\n\nSYNTH 合成价格：前月每日 100，首个目标月每日 110，之后每月递增 10%。使用对应市场真实交易日。\n\n价格产品代码\n\n起始目标月份（YYYY-MM）\n\n结束目标月份（YYYY-MM，包含）\n\n我已核实复权价格包含分配与拆股调整\n\n2 美元汇率与估值政策\n\n美元汇率来源\n\n人工案例\n\n已下载缓存\n\nCSV / XLSX 文件\n\n汇率人工案例\n\nSYNTH 合成汇率：前月末 7.8，首个目标月末 7.9，之后每月增加 0.1 港币。\n\n我已核实汇率单位为每美元兑港币（HKD per USD），不求倒数\n\n汇率最大年龄（自然日，含等于）\n\nkeyboard_arrow_right\n\n汇率文件格式与模板\n\n最大 7 日为研究假设，非官方期限；价格与汇率可能异步估值。只检查同月端点，不补齐日历，不使用未来报价。\n\n输入组合：价格 SYNTH 人工合成；汇率 SYNTH 人工合成。混合合成与真实输入仅为演示，不代表实际投资收益。\n\n查验并计算港币收益\n\n3 港币收益与证据\n\n目标月数\n\n1\n\n可预览港币月数\n\n0\n\n当前版本估值预览，不具备历史可得资格（available_at 为空）。空白是阻止，不是零收益；不会送入共同窗口或计算候选数。\n\nkeyboard_arrow_right\n\n原始诊断、端点与来源证据下载",
+  "unconfirmedMetrics": [
+    "目标月数\n\n1",
+    "可预览港币月数\n\n0"
+  ],
+  "unconfirmedCheckbox": false,
+  "runsAfter": {
+    "prices": [
+      "20261016T032413288256Z-59063f7bab694be2b37f76b2ec4f1b51",
+      "20261016T032452138649Z-fcda073218944f5fab7663e1add7e088",
+      "20261016T034930370828Z-4f4abeddb15b4b57b5b292285d7fda69",
+      "20261016T132413936814Z-c784827343704f318c02d12381d2abbb"
+    ],
+    "references": [
+      "20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f"
+    ]
+  },
+  "noNewDownloads": true
+}

@@ -1,0 +1,44 @@
+{
+  "pages": [
+    {
+      "page": "数据导入",
+      "exception": false
+    },
+    {
+      "page": "港币收益查验",
+      "exception": false
+    },
+    {
+      "page": "共同窗口查验",
+      "exception": false
+    },
+    {
+      "page": "港币利率查验",
+      "exception": false
+    },
+    {
+      "page": "下载与缓存",
+      "exception": false
+    },
+    {
+      "page": "因子与官方汇率",
+      "exception": false
+    },
+    {
+      "page": "日线月度查验",
+      "exception": false
+    },
+    {
+      "page": "日线港币查验",
+      "exception": false
+    },
+    {
+      "page": "历史资格查验",
+      "exception": false
+    }
+  ],
+  "network_guard": "socket.create_connection blocked",
+  "manual_c2_hkd_return": 0.11410256410256436,
+  "manual_c2_to_c3": "blocked as expected: no captured source",
+  "synthetic_boundary": "equal passes, one microsecond before blocked"
+}

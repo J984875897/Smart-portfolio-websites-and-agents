@@ -1,0 +1,30 @@
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.DS_Store
+.env
+.env.*
+!.env.example
+data/raw/
+data/processed/
+outputs/runs/
+.worktrees/
+
+# Local downloads and interactive session state
+data/downloads/
+data/reference_downloads/
+.superpowers/
+.streamlit/secrets.toml
+.codex/
+.agents/
+.aws/
+
+# Course handouts are kept locally, outside the source repository
+/Group Project Guidelines.pdf
+/Resources for Group Projects.pdf
+

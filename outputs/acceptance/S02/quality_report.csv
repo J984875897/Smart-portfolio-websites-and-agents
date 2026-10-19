@@ -1,0 +1,9 @@
+source_file,source_sheet,source_row,source_hash,asset_id,code,severity,message
+dirty_data.csv,,2,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p0,invalid_date,blocked,Date must match the explicit date format
+dirty_data.csv,,3,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p1,missing_asset_class,blocked,asset_class is required
+dirty_data.csv,,4,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p2,malformed_value,blocked,Numeric parsing failed
+dirty_data.csv,,5,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p3,missing_value,blocked,Missing value is retained as NaN
+dirty_data.csv,,6,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p4,extreme_return,review,S02 diagnostic: absolute return >=50%; acknowledgement required
+dirty_data.csv,,7,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p5,extreme_return,review,S02 diagnostic: absolute return >=50%; acknowledgement required
+dirty_data.csv,,7,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p5,conflict,blocked,Same observation identity has conflicting values
+dirty_data.csv,,8,4d6cf2ed31eb3173f922a4953de4c4aba354e5b18d3d3dac9c6d2a28d911bbb5,p5,conflict,blocked,Same observation identity has conflicting values

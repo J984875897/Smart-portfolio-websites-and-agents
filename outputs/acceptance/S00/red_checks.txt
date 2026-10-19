@@ -1,0 +1,165 @@
+Command: .venv/bin/python -m pytest tests/test_smoke.py -q
+Expected: failure because portfolio.demo has not been implemented.
+Exit code: 1
+FFFFFFFFFFFFFF                                                           [100%]
+=================================== FAILURES ===================================
+______________________ test_hand_calculated_buy_and_hold _______________________
+
+    def test_hand_calculated_buy_and_hold():
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:14: ModuleNotFoundError
+________________ test_fractional_units_and_loss_are_not_hidden _________________
+
+    def test_fractional_units_and_loss_are_not_hidden():
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:24: ModuleNotFoundError
+__________________ test_invalid_prices_are_rejected[prices0] ___________________
+
+prices = []
+
+    @pytest.mark.parametrize("prices", [[], [100], [100, 0], [100, -1], [100, np.nan], [100, np.inf], [[100, 110], [120, 130]]])
+    def test_invalid_prices_are_rejected(prices):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:34: ModuleNotFoundError
+__________________ test_invalid_prices_are_rejected[prices1] ___________________
+
+prices = [100]
+
+    @pytest.mark.parametrize("prices", [[], [100], [100, 0], [100, -1], [100, np.nan], [100, np.inf], [[100, 110], [120, 130]]])
+    def test_invalid_prices_are_rejected(prices):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:34: ModuleNotFoundError
+__________________ test_invalid_prices_are_rejected[prices2] ___________________
+
+prices = [100, 0]
+
+    @pytest.mark.parametrize("prices", [[], [100], [100, 0], [100, -1], [100, np.nan], [100, np.inf], [[100, 110], [120, 130]]])
+    def test_invalid_prices_are_rejected(prices):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:34: ModuleNotFoundError
+__________________ test_invalid_prices_are_rejected[prices3] ___________________
+
+prices = [100, -1]
+
+    @pytest.mark.parametrize("prices", [[], [100], [100, 0], [100, -1], [100, np.nan], [100, np.inf], [[100, 110], [120, 130]]])
+    def test_invalid_prices_are_rejected(prices):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:34: ModuleNotFoundError
+__________________ test_invalid_prices_are_rejected[prices4] ___________________
+
+prices = [100, nan]
+
+    @pytest.mark.parametrize("prices", [[], [100], [100, 0], [100, -1], [100, np.nan], [100, np.inf], [[100, 110], [120, 130]]])
+    def test_invalid_prices_are_rejected(prices):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:34: ModuleNotFoundError
+__________________ test_invalid_prices_are_rejected[prices5] ___________________
+
+prices = [100, inf]
+
+    @pytest.mark.parametrize("prices", [[], [100], [100, 0], [100, -1], [100, np.nan], [100, np.inf], [[100, 110], [120, 130]]])
+    def test_invalid_prices_are_rejected(prices):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:34: ModuleNotFoundError
+__________________ test_invalid_prices_are_rejected[prices6] ___________________
+
+prices = [[100, 110], [120, 130]]
+
+    @pytest.mark.parametrize("prices", [[], [100], [100, 0], [100, -1], [100, np.nan], [100, np.inf], [[100, 110], [120, 130]]])
+    def test_invalid_prices_are_rejected(prices):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:34: ModuleNotFoundError
+_____________________ test_invalid_capital_is_rejected[0] ______________________
+
+cash = 0
+
+    @pytest.mark.parametrize("cash", [0, -100, np.nan, np.inf])
+    def test_invalid_capital_is_rejected(cash):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:42: ModuleNotFoundError
+____________________ test_invalid_capital_is_rejected[-100] ____________________
+
+cash = -100
+
+    @pytest.mark.parametrize("cash", [0, -100, np.nan, np.inf])
+    def test_invalid_capital_is_rejected(cash):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:42: ModuleNotFoundError
+____________________ test_invalid_capital_is_rejected[nan] _____________________
+
+cash = nan
+
+    @pytest.mark.parametrize("cash", [0, -100, np.nan, np.inf])
+    def test_invalid_capital_is_rejected(cash):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:42: ModuleNotFoundError
+____________________ test_invalid_capital_is_rejected[inf] _____________________
+
+cash = inf
+
+    @pytest.mark.parametrize("cash", [0, -100, np.nan, np.inf])
+    def test_invalid_capital_is_rejected(cash):
+>       from portfolio.demo import buy_and_hold
+E       ModuleNotFoundError: No module named 'portfolio'
+
+tests/test_smoke.py:42: ModuleNotFoundError
+___________________ test_command_line_export_is_reproducible ___________________
+
+tmp_path = PosixPath('/private/var/folders/_2/5m_w643956j04bn0h0mb6gn80000gn/T/pytest-of-jackliang/pytest-0/test_command_line_export_is_re0')
+
+    def test_command_line_export_is_reproducible(tmp_path):
+        project_root = Path(__file__).resolve().parents[1]
+        env = dict(os.environ, PYTHONPATH=str(project_root / "src"))
+        paths = [tmp_path / "first" / "sample.csv", tmp_path / "second" / "sample.csv"]
+        for output in paths:
+            completed = subprocess.run(
+                [sys.executable, "-m", "portfolio.demo", "--output", str(output)],
+                cwd=project_root, env=env, capture_output=True, text=True, timeout=90,
+            )
+>           assert completed.returncode == 0, completed.stderr
+E           AssertionError: /Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python: Error while finding module specification for 'portfolio.demo' (ModuleNotFoundError: No module named 'portfolio')
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/bin/python', '-m', 'port...n: Error while finding module specification for 'portfolio.demo' (ModuleNotFoundError: No module named 'portfolio')\n").returncode
+
+tests/test_smoke.py:57: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_smoke.py::test_hand_calculated_buy_and_hold - ModuleNotFoun...
+FAILED tests/test_smoke.py::test_fractional_units_and_loss_are_not_hidden - M...
+FAILED tests/test_smoke.py::test_invalid_prices_are_rejected[prices0] - Modul...
+FAILED tests/test_smoke.py::test_invalid_prices_are_rejected[prices1] - Modul...
+FAILED tests/test_smoke.py::test_invalid_prices_are_rejected[prices2] - Modul...
+FAILED tests/test_smoke.py::test_invalid_prices_are_rejected[prices3] - Modul...
+FAILED tests/test_smoke.py::test_invalid_prices_are_rejected[prices4] - Modul...
+FAILED tests/test_smoke.py::test_invalid_prices_are_rejected[prices5] - Modul...
+FAILED tests/test_smoke.py::test_invalid_prices_are_rejected[prices6] - Modul...
+FAILED tests/test_smoke.py::test_invalid_capital_is_rejected[0] - ModuleNotFo...
+FAILED tests/test_smoke.py::test_invalid_capital_is_rejected[-100] - ModuleNo...
+FAILED tests/test_smoke.py::test_invalid_capital_is_rejected[nan] - ModuleNot...
+FAILED tests/test_smoke.py::test_invalid_capital_is_rejected[inf] - ModuleNot...
+FAILED tests/test_smoke.py::test_command_line_export_is_reproducible - Assert...
+14 failed in 0.34s

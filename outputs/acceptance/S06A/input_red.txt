@@ -1,0 +1,80 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+________ test_boundary_count_pass_does_not_make_constant_sample_usable _________
+
+    def test_boundary_count_pass_does_not_make_constant_sample_usable():
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:25: ModuleNotFoundError
+_______ test_nonconstant_raw_input_is_qualified_reordered_and_estimated ________
+
+    def test_nonconstant_raw_input_is_qualified_reordered_and_estimated():
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:44: ModuleNotFoundError
+___ test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options0] ___
+
+options = {'k': 30, 'excluded_asset_ids': ['SYNTH_SCREEN_099']}
+
+    @pytest.mark.parametrize('options', [dict(k=30,excluded_asset_ids=['SYNTH_SCREEN_099']),dict(k=101),dict(k=True),dict(k=30,markets=())])
+    def test_rechecks_count_and_scope_instead_of_accepting_cached_pass(options):
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:59: ModuleNotFoundError
+___ test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options1] ___
+
+options = {'k': 101}
+
+    @pytest.mark.parametrize('options', [dict(k=30,excluded_asset_ids=['SYNTH_SCREEN_099']),dict(k=101),dict(k=True),dict(k=30,markets=())])
+    def test_rechecks_count_and_scope_instead_of_accepting_cached_pass(options):
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:59: ModuleNotFoundError
+___ test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options2] ___
+
+options = {'k': True}
+
+    @pytest.mark.parametrize('options', [dict(k=30,excluded_asset_ids=['SYNTH_SCREEN_099']),dict(k=101),dict(k=True),dict(k=30,markets=())])
+    def test_rechecks_count_and_scope_instead_of_accepting_cached_pass(options):
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:59: ModuleNotFoundError
+___ test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options3] ___
+
+options = {'k': 30, 'markets': ()}
+
+    @pytest.mark.parametrize('options', [dict(k=30,excluded_asset_ids=['SYNTH_SCREEN_099']),dict(k=101),dict(k=True),dict(k=30,markets=())])
+    def test_rechecks_count_and_scope_instead_of_accepting_cached_pass(options):
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:59: ModuleNotFoundError
+___________________ test_malformed_monthly_snapshot_rejected ___________________
+
+    def test_malformed_monthly_snapshot_rejected():
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:65: ModuleNotFoundError
+_________ test_real_daily_input_remains_blocked_and_source_unmodified __________
+
+    def test_real_daily_input_remains_blocked_and_source_unmodified():
+>       from portfolio.models.estimation_input import estimate_candidates
+E       ModuleNotFoundError: No module named 'portfolio.models.estimation_input'
+
+tests/test_estimation_input.py:71: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_estimation_input.py::test_boundary_count_pass_does_not_make_constant_sample_usable
+FAILED tests/test_estimation_input.py::test_nonconstant_raw_input_is_qualified_reordered_and_estimated
+FAILED tests/test_estimation_input.py::test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options0]
+FAILED tests/test_estimation_input.py::test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options1]
+FAILED tests/test_estimation_input.py::test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options2]
+FAILED tests/test_estimation_input.py::test_rechecks_count_and_scope_instead_of_accepting_cached_pass[options3]
+FAILED tests/test_estimation_input.py::test_malformed_monthly_snapshot_rejected
+FAILED tests/test_estimation_input.py::test_real_daily_input_remains_blocked_and_source_unmodified
+8 failed in 0.34s

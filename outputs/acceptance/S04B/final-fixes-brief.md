@@ -1,0 +1,11 @@
+# S04-B final fix wave
+
+Read final-review.md. Fix Important auditor failure only plus minor readability in touched auditor code; dense core validation stays recorded nonblocking (no new core refactor).
+
+Files: scripts/verify_reference_downloads.py, tests/test_reference_verification.py, outputs/acceptance/S04B/final-fixes-report.md and RED/GREEN logs. Do not change core/UI/formal caches/docs. No Git, no network. Use .venv.
+
+Observed bug: HKMA valid first page then malformed HTTP200 JSON second page -> core publishes unavailable/parse_error, prior table for diagnostics and both raw pages; verify() re-parses rejected raw JSON and crashes JSONDecodeError. Auditor should still produce incomplete-source report, preserve status/reason, verify every exported diagnostic value against usable retained raw evidence, and retain full raw-file integrity checks. Similar rejected records structure/non-JSON/header/value/date responses or cancellation after response must not crash a legitimately published failed/partial/cancelled snapshot. Do not mask invalid raw evidence in a SUCCESS item; success with malformed source must fail audit. Do not simply drop all diagnostic checks or blanket catch Exception. Parse only evidence needed, explicitly handle rejected/malformed pages with bounded expected parse exceptions and verify table rows against valid source observations. Independent verifier must not call production HKMA/French parser.
+
+TDD: first add regression injecting page1 valid/full (page_size=1) then malformed HTTP200; real run_reference_update(tmp_path,...), statusparse_error, rows1, two retainedrawfiles; verify(tmp_path,rid) returns dict all_sources false and table_checked true. Watch RED. Add meaningful cases e.g schema-malformed secondpage and validtable cancellation with malformedfinalresponse. Existing verifier missingmonth regression stays. Prove corrupted accepted data/success invalid evidence not silently accepted where applicable. Run focused tests/test_reference_verification.py tests/test_reference_updates.py. Save logs, exact commands/counts and self-review to final-fixes-report.md. Return short report; controller handles fullsuite and finalre-review.
+
+Formal snapshot 20261016T122003876246Z-5ad84dbff22343d99fe0fe73ee5d800f immutable; no second live attempt. Required expectations are defined above; ask controller if ambiguity.

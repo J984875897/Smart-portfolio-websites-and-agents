@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "case": "完整报价",
+  "available": true,
+  "valid_months": 3,
+  "currency": "HKD",
+  "frequency": "monthly",
+  "proxy_method": "hibor_1m_simple_act365f",
+  "window_start": "2024-01-31",
+  "window_end": "2024-03-31",
+  "decision_at": "2024-03-31T08:00:00+00:00"
+}
