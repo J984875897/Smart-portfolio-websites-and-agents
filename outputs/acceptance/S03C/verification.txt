@@ -1,1 +1,0 @@
-PASS: five SYNTH cases, independent Decimal calculation, blocked NaNs, immutable inputs, immature March.

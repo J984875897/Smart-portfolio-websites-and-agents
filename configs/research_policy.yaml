@@ -3,10 +3,8 @@
 schema_version: 1
 document_status: draft
 as_of_date: "2026-10-12"
-reference: PROJECT_PLAN.md
 
 confirmed_requirements:
-  assignment_option: 2
   base_currency: HKD
   priority_markets: [US, HK]
   holding_count:
@@ -31,7 +29,7 @@ confirmed_requirements:
     manual_import_with_product_type: true
     paid_apis_enabled: false
 
-# 以下为原计划的研究建议；不属于老师要求，也不是已确认的主基金政策。
+# 以下为原计划的研究建议；不是已确认的正式投资政策。
 development_baseline:
   status: proposed
   target_holding_count: 30
@@ -78,9 +76,9 @@ development_baseline:
     validation: ["2020-01", "2022-12"]
     final_test: ["2023-01", "2025-12"]
 
-# 真实主案例之前必须由小组落实；空值表示待定，不能自动当作无约束。
+# 真实主案例之前必须由项目负责人落实；空值表示待定，不能自动当作无约束。
 main_case_decisions:
-  status: pending_group_decision
+  status: pending_owner_decision
   target_investor: null
   investment_objective: null
   holding_horizon: null

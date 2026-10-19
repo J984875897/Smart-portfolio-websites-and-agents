@@ -1,3 +1,0 @@
-date,month,expected_end_date,last_observed_date,end_price,calendar_close_at,expected_sessions,valid_sessions,missing_dates,status,reason
-2024-12-31,2024-12,2024-12-31,2024-12-31,19.488393783569336,2024-12-31T04:00:00+00:00,20,20,[],valid,ok
-2025-01-31,2025-01,2025-01-28,2025-01-28,19.70022201538086,2025-01-28T04:00:00+00:00,19,19,[],valid,ok

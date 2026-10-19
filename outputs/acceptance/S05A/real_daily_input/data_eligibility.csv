@@ -1,4 +1,0 @@
-asset_id,status,valid_months,missing_months,reason
-HKEX:2800.HK:HKD,excluded,0,60,monthly_preparation_required;ambiguous_return;missing_timing
-NASDAQ:AAPL:USD,excluded,0,60,monthly_preparation_required;ambiguous_return;missing_timing
-NYSE_ARCA:SPY:USD,excluded,0,60,monthly_preparation_required;ambiguous_return;missing_timing

@@ -1,5 +1,0 @@
-cwd=/private/tmp
-installed_core=/Users/jackliang/Desktop/CityU/5052_Investment/Assignment/Group/.venv/lib/python3.14/site-packages/portfolio/data/importer.py
-AppTest outside project/test PYTHONPATH: first_import=10, reopened=10, return=.02; no exceptions
-version=20261013T040020_a03de90cd0
-No real browser upload/download validation claimed.

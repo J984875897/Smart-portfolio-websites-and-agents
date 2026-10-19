@@ -1,6 +1,0 @@
-asset_id,status,valid_months,missing_months,reason
-HKD_COMPLETE,eligible,60,0,ok
-MISSING_END_FX,excluded,59,1,missing_fx_end;invalid_hkd_return;not_available_at_decision
-MISSING_MIDDLE,excluded,59,1,missing_return;missing_timing
-SHORT_HISTORY,excluded,59,1,window_start_history_insufficient;missing_return;missing_timing
-USD_COMPLETE,excluded,59,1,not_available_at_decision

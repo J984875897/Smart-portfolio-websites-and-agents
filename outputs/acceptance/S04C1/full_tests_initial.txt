@@ -1,4 +1,0 @@
-Command: .venv/bin/python -m pytest -q
-Result: 358 passed, 2 warnings in 26.88s, exit 0.
-Warnings: exchange_calendars.exchange_calendar_xhkg.py:363 emits NumPy generic timedelta DeprecationWarning twice.
-This run preceded the test-only deterministic future-month correction; production code was unchanged by that correction.

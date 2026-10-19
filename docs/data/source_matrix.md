@@ -2,9 +2,9 @@
 
 ## 后续实测更新（2026-10-17）
 
-以下 S01 表格保留 2026-10-12 的历史结论；当前界面已具备显式下载和缓存，不能再把文末“没有下载器”理解为现状。新实测及原始证据见 [S04 汇总核查](../../outputs/acceptance/S04/README.md)：Yahoo 2025-01 的 SPY／2800.HK／HKD=X 均成功，四套 French 因子 2025 年各 12 月成功，HKMA 仍为 TLS 失败。覆盖完整前月的两月请求中，两个价格成功、Yahoo FX partial，美元港币收益链路被阻止；没有改写旧 S01 结果。没有验证全部免费产品覆盖、历史名单或退市覆盖。本轮未重新核对收费服务价格／额度，后文权限表仍是原核验日记录。
+以下 S01 表格保留 2026-10-12 的历史结论；当前界面已具备显式下载和缓存，不能再把文末“没有下载器”理解为现状。新实测及原始证据见 S04 汇总核查：Yahoo 2025-01 的 SPY／2800.HK／HKD=X 均成功，四套 French 因子 2025 年各 12 月成功，HKMA 仍为 TLS 失败。覆盖完整前月的两月请求中，两个价格成功、Yahoo FX partial，美元港币收益链路被阻止；没有改写旧 S01 结果。没有验证全部免费产品覆盖、历史名单或退市覆盖。本轮未重新核对收费服务价格／额度，后文权限表仍是原核验日记录。
 
-核验日期：2026-10-12。真实快照 `20261012T143920Z-6f4d426f`；请求日线区间为 **2014-12-01 ≤ 日期 < 2026-01-01**。状态、行数、字段与 SHA-256 见 [source_probe.csv](../../outputs/acceptance/S01/source_probe.csv)；完整查验入口为 [S01 验收记录](../../outputs/acceptance/S01/README.md)。
+核验日期：2026-10-12。真实快照 `20261012T143920Z-6f4d426f`；请求日线区间为 **2014-12-01 ≤ 日期 < 2026-01-01**。状态、行数、字段与 SHA-256 见 source_probe.csv；完整查验入口为 S01 验收记录。
 
 结论：已有无须 key 的真实行情、月度 FX 可得性预览和因子路径，可以继续 S02。**没有验证到一个能免费、稳定地覆盖全部产品及全部关键字段的接口。** 本步只有六个识别样本，不能据此宣称正式候选池合格或满足 K/N ≤ 30%。
 
@@ -37,8 +37,8 @@ French 的文件入口及美国历史生成口径修订见 [Data Library](https:
 | Twelve Data Basic | 文档列 8 credits／分钟、800／日；美国股票／ETF、FX 等，内部非展示使用。具体端点按权重消耗额度 | 缺 key，未实测；免费层用途不能直接推断允许公开界面展示 | 文件导入；免费权限及显示条件确认后再适配 |
 | Twelve Data 香港市场 | XHKG 页面列 Pro+／Venture+；提供试用代码不等于香港全市场免费 | 付费正式香港路径保持关闭 | Yahoo 小样本路径或授权导入 |
 | HKEX 官方市场数据服务 | 有订阅、购买及许可证条件；不能把公开报价页等同于免费全历史 API | 不购买、不调用付费服务 | 授权 CSV／XLSX |
-| WRDS／CRSP | 本次公开页面重定向登录；课程可能提供机构权限，但没有验证当前账号或数据授权 | 不尝试登录，不记录课程注册口令 | 用户在获准账户导出后导入，并记录来源／口径 |
-| Morningstar、其他付费终端 | 课程资源列出的授权来源；本步未验证账户和 API 权限 | 保持未接入 | 授权导出后导入，并在导入时选择产品类型 |
+| WRDS／CRSP | 本次公开页面重定向登录；可能需要机构权限，但没有验证当前账号或数据授权 | 不尝试登录，不记录账户口令 | 用户在获准账户导出后导入，并记录来源／口径 |
+| Morningstar、其他付费终端 | 需要单独授权的数据来源；本步未验证账户和 API 权限 | 保持未接入 | 授权导出后导入，并在导入时选择产品类型 |
 
 依据：[Alpha Vantage 配额说明](https://www.alphavantage.co/support/)、[月度／日度调整 API 文档](https://www.alphavantage.co/documentation/)、[Twelve Data 定价和用途](https://twelvedata.com/pricing)、[XHKG 市场权限](https://twelvedata.com/exchanges/XHKG)、[HKEX 数据服务 FAQ](https://www.hkex.com.hk/Global/Exchange/FAQ/Market-Data/Getting-Market-Data?sc_lang=en)、[WRDS CRSP 入口](https://wrds-www.wharton.upenn.edu/pages/get-data/center-research-security-prices-crsp/)。这些是本次核对时的条件，接入时需重新验证。
 
@@ -68,7 +68,7 @@ French 的文件入口及美国历史生成口径修订见 [Data Library](https:
 - Dividends／Stock Splits／Capital Gains：原始事件分别保存；没有事件的普通日期可记事件量 0，缺价格或 FX 永远不能变成 0。
 - 分红日诊断：同时列 Close 收益、现金再投资收益和 Adj Close 收益，展示差异，不强行令不同算法相等。
 
-AAPL 在 2020-08-31 返回 4:1 拆股；Close 从 124.807503 到 129.039993，收益约 3.39117%，没有虚假的 −75% 跌幅。事件独立依据：[Apple 分红与拆股记录](https://investor.apple.com/dividend-history/default.aspx)。全部 256 条分红／拆股诊断见 [corporate_actions.csv](../../outputs/acceptance/S01/corporate_actions.csv)；分红诊断的最大绝对差约 0.001281（12.81 bps，2800.HK），须在 S03 解释供应商算法与事件日口径，不能称为总收益计算已验收。
+AAPL 在 2020-08-31 返回 4:1 拆股；Close 从 124.807503 到 129.039993，收益约 3.39117%，没有虚假的 −75% 跌幅。事件独立依据：[Apple 分红与拆股记录](https://investor.apple.com/dividend-history/default.aspx)。全部 256 条分红／拆股诊断见 corporate_actions.csv；分红诊断的最大绝对差约 0.001281（12.81 bps，2800.HK），须在 S03 解释供应商算法与事件日口径，不能称为总收益计算已验收。
 
 ## 5. 当前未验证的字段和分支
 

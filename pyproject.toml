@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cityu-portfolio-research"
 version = "0.1.0"
-description = "Reproducible portfolio research for the CityU investment group project"
+description = "Reproducible personal portfolio research workbench"
 requires-python = ">=3.14,<3.15"
 dependencies = [
     "numpy==2.5.4",

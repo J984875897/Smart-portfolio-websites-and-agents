@@ -1,6 +1,0 @@
-Command: .venv/bin/python -m pip check
-Exit code: 0
-No broken requirements found.
-
-Installed metadata compared to requirements.lock.txt: 99 versions match.
-Python 3.14.6. Original 77 versions unchanged; 22 added for S02.

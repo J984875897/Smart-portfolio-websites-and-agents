@@ -1,2 +1,0 @@
-source_file,source_sheet,source_row,source_hash,asset_id,code,severity,message
-2800.HK_daily.csv,,2686,3e910018baaed9385c9048469d5e7cf05c755296a33834581a051631a3e22b41,HKEX:2800.HK:HKD,missing_value,blocked,Missing value is retained as NaN

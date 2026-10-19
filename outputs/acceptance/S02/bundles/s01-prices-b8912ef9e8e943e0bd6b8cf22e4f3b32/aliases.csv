@@ -1,4 +1,0 @@
-source_name,exchange,ticker,share_class,currency,asset_id
-S01_Yahoo_frozen,NASDAQ,AAPL,,USD,NASDAQ:AAPL:USD
-S01_Yahoo_frozen,NYSE_ARCA,SPY,,USD,NYSE_ARCA:SPY:USD
-S01_Yahoo_frozen,HKEX,2800.HK,,HKD,HKEX:2800.HK:HKD

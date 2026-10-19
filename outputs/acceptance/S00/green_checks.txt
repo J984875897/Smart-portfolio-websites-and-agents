@@ -1,4 +1,0 @@
-Command: .venv/bin/python -m pytest tests/test_smoke.py -q
-Exit code: 0
-..............                                                           [100%]
-14 passed in 9.41s

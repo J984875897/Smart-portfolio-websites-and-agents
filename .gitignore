@@ -28,3 +28,23 @@ data/reference_downloads/
 /Group Project Guidelines.pdf
 /Resources for Group Projects.pdf
 
+
+# Private development records and generated evidence (keep local)
+/README_DEVELOPMENT.md
+/README_DEVELOPMET.md
+/Readme_Developmet*
+/PROJECT_PLAN.md
+/Project_Plan*
+/docs/superpowers/
+/outputs/
+*.log
+*.diff
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+/secrets/
+/private/

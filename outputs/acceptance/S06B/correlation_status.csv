@@ -1,6 +1,0 @@
-asset_id,status,reason
-A,available,ok
-B,available,ok
-C,available,ok
-CONST,unavailable_constant,constant_series_correlation_undefined
-NEG,available,ok

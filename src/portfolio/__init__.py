@@ -1,1 +1,1 @@
-"""CityU portfolio research core; features are added by acceptance stage."""
+"""Portfolio research core; features are added by acceptance stage."""

@@ -1,1 +1,0 @@
-Synthetic alignment acceptance passed: early 1, late 2 eligible; fixed 60 months.

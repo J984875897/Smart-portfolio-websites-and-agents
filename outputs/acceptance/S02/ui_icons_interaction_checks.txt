@@ -1,4 +1,0 @@
-Command: .venv/bin/python -m pytest tests/test_data_center.py -q
-Exit: 0
-.............                                                            [100%]
-13 passed in 3.30s

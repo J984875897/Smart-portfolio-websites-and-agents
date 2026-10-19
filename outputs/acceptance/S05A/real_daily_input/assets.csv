@@ -1,4 +1,0 @@
-asset_id,ticker,name,tool_type,asset_class,exchange,currency,share_class,frequency
-HKEX:2800.HK:HKD,2800.HK,2800.HK,ETF,equity,HKEX,HKD,,daily
-NASDAQ:AAPL:USD,AAPL,AAPL,stock,equity,NASDAQ,USD,,daily
-NYSE_ARCA:SPY:USD,SPY,SPY,ETF,equity,NYSE_ARCA,USD,,daily

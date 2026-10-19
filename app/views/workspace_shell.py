@@ -94,7 +94,7 @@ def render_navigation(snapshot):
     s['workspace'] = ROUTES[route].legacy
     s['_workspace_legacy'] = s['workspace']
     with st.sidebar:
-        st.markdown('<div class="desk-brand"><span>CITYU · INVESTMENT RESEARCH</span><strong>投资研究工作台</strong></div>', unsafe_allow_html=True)
+        st.markdown('<div class="desk-brand"><span>SMART PORTFOLIO · RESEARCH</span><strong>投资研究工作台</strong></div>', unsafe_allow_html=True)
         route_button('研究总览', 'overview', 'nav_overview', type='primary' if route == 'overview' else 'secondary', width='stretch')
         with st.expander('完成研究', expanded=True):
             for key in ['prepare_data','eligibility','screen_candidates','risk_preview']:
